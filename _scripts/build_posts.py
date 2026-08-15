@@ -252,6 +252,15 @@ def process_posts():
         })
         print(f"[OK] {filename} → {dst}")
 
+    # posts/posts.json 자동 갱신 (날짜 역순)
+    posts_sorted = sorted(posts_meta, key=lambda p: p['date'], reverse=True)
+    for p in posts_sorted:
+        p['url'] = f"/posts/{p['slug']}.html"
+    json_path = os.path.join(OUTPUT_DIR, 'posts.json')
+    with open(json_path, 'w', encoding='utf-8') as f:
+        json.dump(posts_sorted, f, ensure_ascii=False, indent=2)
+    print(f"[OK] posts/posts.json 갱신 ({len(posts_sorted)}개)")
+
     # posts/index.html의 포스트 목록 섹션 자동 업데이트
     update_posts_index(posts_meta)
 
