@@ -8,8 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    <!-- MSAL.js v3 -->
-    <script src="https://alcdn.msauth.net/browser/3.27.0/js/msal-browser.min.js"></script>
+    <!-- MSAL.js v2 (v3은 alcdn 미지원) -->
+    <script src="https://alcdn.msauth.net/browser/2.38.0/js/msal-browser.min.js"></script>
     <style>
         body { padding-top: 70px; }
 
@@ -323,7 +323,7 @@
             <img src="../images/1920x480-1.png" alt="해커그라운드" class="logo">
             <h2>어드민 로그인</h2>
             <p>해커그라운드 행사 신청자 현황을 확인하려면<br>Microsoft 계정으로 로그인해주세요.</p>
-            <button class="ms-login-btn" id="login-btn" onclick="signIn()" disabled style="opacity:0.5;">
+            <button class="ms-login-btn" id="login-btn" onclick="signIn()">
                 <!-- Microsoft 로고 SVG -->
                 <svg class="ms-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23">
                     <rect x="1" y="1" width="10" height="10" fill="#f25022"/>
@@ -331,7 +331,7 @@
                     <rect x="1" y="12" width="10" height="10" fill="#00a4ef"/>
                     <rect x="12" y="12" width="10" height="10" fill="#ffb900"/>
                 </svg>
-                초기화 중...
+                Microsoft 계정으로 로그인
             </button>
         </div>
     </div>
@@ -434,51 +434,16 @@
     // =============================================
     let currentData = [];
     let currentEvent = '';
-    let accessToken = '';
-    let msalReady = false;  // 초기화 완료 플래그
-
-    // 초기화 타임아웃 (10초 안에 안되면 버튼 활성화)
-    const initTimeout = setTimeout(() => {
-        if (!msalReady) {
-            console.warn('MSAL init timeout — enabling button anyway');
-            msalReady = true;
-            enableLoginBtn();
-        }
-    }, 10000);
-
-    // 로그인 버튼 활성화 헬퍼
-    function enableLoginBtn() {
-        const btn = document.getElementById('login-btn');
-        btn.disabled = false;
-        btn.style.opacity = '';
-        btn.innerHTML = `
-            <svg class="ms-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23">
-                <rect x="1" y="1" width="10" height="10" fill="#f25022"/>
-                <rect x="12" y="1" width="10" height="10" fill="#7fba00"/>
-                <rect x="1" y="12" width="10" height="10" fill="#00a4ef"/>
-                <rect x="12" y="12" width="10" height="10" fill="#ffb900"/>
-            </svg>
-            Microsoft 계정으로 로그인`;
-    }
 
     // =============================================
-    // 초기화 - 이미 로그인돼 있으면 바로 대시보드
+    // 초기화 (MSAL v2 — initialize() 불필요)
     // =============================================
     async function init() {
         let dashboardShown = false;
         try {
-            await msalInstance.initialize();
-            clearTimeout(initTimeout);
-            msalReady = true;
-
             // 리다이렉트 콜백 처리
-            let redirectResponse = null;
-            try {
-                redirectResponse = await msalInstance.handleRedirectPromise();
-            } catch (e) { console.error('handleRedirectPromise error:', e); }
-
+            const redirectResponse = await msalInstance.handleRedirectPromise();
             if (redirectResponse) {
-                accessToken = redirectResponse.accessToken;
                 showDashboard(redirectResponse.account);
                 dashboardShown = true;
                 return;
@@ -487,17 +452,8 @@
             // 기존 세션 확인
             const accounts = msalInstance.getAllAccounts();
             if (accounts.length > 0) {
-                try {
-                    const silentRes = await msalInstance.acquireTokenSilent({
-                        ...loginRequest,
-                        account: accounts[0],
-                    });
-                    accessToken = silentRes.accessToken;
-                    showDashboard(accounts[0]);
-                    dashboardShown = true;
-                } catch (e) {
-                    console.warn('Silent token failed:', e);
-                }
+                showDashboard(accounts[0]);
+                dashboardShown = true;
             }
         } catch (e) {
             console.error('MSAL init error:', e);
@@ -509,20 +465,18 @@
     function showLogin() {
         document.getElementById('login-screen').style.display = 'flex';
         document.getElementById('admin-dashboard').style.display = 'none';
-        enableLoginBtn();  // 초기화 완료 → 버튼 활성화
+        // 버튼은 초기부터 활성화 상태 (v2는 동기 초기화)
     }
 
     // =============================================
     // 로그인 / 로그아웃
     // =============================================
     async function signIn() {
-        if (!msalReady) return;  // 초기화 전 클릭 방어
         document.getElementById('login-btn').disabled = true;
         document.getElementById('login-btn').textContent = '로그인 중...';
         try {
             // 팝업으로 로그인 시도, 실패하면 리다이렉트
             const res = await msalInstance.loginPopup(loginRequest);
-            accessToken = res.accessToken;
             showDashboard(res.account);
         } catch (e) {
             if (e.errorCode === 'popup_window_error' || e.errorCode === 'empty_window_error') {
