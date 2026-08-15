@@ -33,6 +33,9 @@ jobs:
       - name: Generate sitemap.xml
         run: python _scripts/build_sitemap.py
 
+      - name: Inject analytics tags (GTM + Naver)
+        run: python _scripts/inject_analytics.py
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
