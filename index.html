@@ -1,131 +1,291 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>해커그라운드 커뮤니티</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="./css/style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>해커그라운드 - 대구경북 개발자 커뮤니티</title>
+    <meta name="description" content="대구경북 개발자들을 위한 놀이터, 해커그라운드. 세미나, 핸즈온, 네트워킹까지 함께 배우고 성장하는 개발자 커뮤니티">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 </head>
-<body class="bg-gray-950 text-gray-100 font-sans">
-
-  <!-- 네비게이션 -->
-  <nav class="border-b border-gray-800 sticky top-0 bg-gray-950/90 backdrop-blur z-10">
-    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-      <a href="/" class="font-bold text-lg tracking-tight text-white hover:text-emerald-400 transition">
-        ⚡ 해커그라운드
-      </a>
-      <div class="flex gap-6 text-sm text-gray-400">
-        <a href="/events/" class="hover:text-white transition">행사</a>
-        <a href="/posts/" class="hover:text-white transition">정보글</a>
-        <a href="https://github.com/hackersground-kr" target="_blank" class="hover:text-white transition">GitHub</a>
-      </div>
-    </div>
-  </nav>
-
-  <!-- 히어로 -->
-  <header class="max-w-5xl mx-auto px-6 pt-20 pb-16 text-center">
-    <div class="inline-block bg-emerald-500/10 text-emerald-400 text-xs font-semibold px-3 py-1 rounded-full mb-6 border border-emerald-500/20">
-      커뮤니티 · 해커그라운드
-    </div>
-    <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
-      같이 만들고,<br class="hidden md:block" />
-      같이 성장해요 🚀
-    </h1>
-    <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
-      해커그라운드는 개발자들이 함께 배우고 만들고 공유하는 커뮤니티예요.<br />
-      행사 참가, 정보 공유, 사이드프로젝트까지 — 캐주얼하게 시작해요.
-    </p>
-    <div class="flex flex-wrap gap-4 justify-center">
-      <a href="/events/" class="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold px-6 py-3 rounded-xl transition text-sm">
-        🗓️ 행사 보기
-      </a>
-      <a href="/posts/" class="border border-gray-700 hover:border-gray-500 text-gray-300 hover:text-white font-semibold px-6 py-3 rounded-xl transition text-sm">
-        📚 정보글 보기
-      </a>
-    </div>
-  </header>
-
-  <!-- 최근 행사 -->
-  <section class="max-w-5xl mx-auto px-6 py-12">
-    <div class="flex items-center justify-between mb-6">
-      <h2 class="text-xl font-bold">🗓️ 최근 행사</h2>
-      <a href="/events/" class="text-sm text-emerald-400 hover:text-emerald-300 transition">전체 보기 →</a>
-    </div>
-    <div class="grid md:grid-cols-2 gap-4" id="recent-events">
-      <!-- 행사 카드 예시 -->
-      <a href="/events/hackersground-2025.html" class="block bg-gray-900 border border-gray-800 rounded-2xl p-5 hover:border-emerald-500/40 hover:bg-gray-900/80 transition group">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded-full border border-emerald-500/20">오프라인</span>
-          <span class="text-gray-500 text-xs">2025.08 · 대구</span>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="images/1920x480-1.png" alt="해커그라운드 로고" class="logo-image">
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="#home" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="events/" class="nav-link">Events</a></li>
+                <li class="nav-item"><a href="posts/" class="nav-link">Posts</a></li>
+                <li class="nav-item"><a href="#about" class="nav-link">About</a></li>
+            </ul>
+            <div class="nav-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
         </div>
-        <h3 class="font-semibold text-white group-hover:text-emerald-400 transition mb-1">해커그라운드 2025 해커톤</h3>
-        <p class="text-gray-500 text-sm">24시간 해커톤! Azure 기반 프로젝트로 멘토링과 함께 도전하세요.</p>
-      </a>
-      <a href="/events/workshop-azure-ai.html" class="block bg-gray-900 border border-gray-800 rounded-2xl p-5 hover:border-blue-500/40 hover:bg-gray-900/80 transition group">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="bg-blue-500/10 text-blue-400 text-xs px-2 py-0.5 rounded-full border border-blue-500/20">온라인</span>
-          <span class="text-gray-500 text-xs">2025.09 · 온라인</span>
-        </div>
-        <h3 class="font-semibold text-white group-hover:text-blue-400 transition mb-1">Azure AI 입문 워크샵</h3>
-        <p class="text-gray-500 text-sm">Azure OpenAI + Copilot으로 나만의 AI 앱 만들기. 초보자도 OK!</p>
-      </a>
-    </div>
-  </section>
+    </nav>
 
-  <!-- 최근 정보글 -->
-  <section class="max-w-5xl mx-auto px-6 py-12">
-    <div class="flex items-center justify-between mb-6">
-      <h2 class="text-xl font-bold">📚 깨알 정보글</h2>
-      <a href="/posts/" class="text-sm text-emerald-400 hover:text-emerald-300 transition">전체 보기 →</a>
-    </div>
-    <div class="flex flex-col gap-3" id="recent-posts">
-      <a href="/posts/azure-free-tier-guide.html" class="flex items-start gap-4 bg-gray-900 border border-gray-800 rounded-xl p-4 hover:border-gray-600 transition group">
-        <span class="text-2xl mt-0.5">☁️</span>
-        <div>
-          <h3 class="font-semibold text-white group-hover:text-emerald-400 transition text-sm">Azure 무료 크레딧으로 할 수 있는 것들 총정리</h3>
-          <p class="text-gray-500 text-xs mt-1">학생 계정, 스타트업 크레딧, 무료 티어 서비스 총망라 · 2025.07</p>
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-background">
+            <img src="images/[해커그라운드] 캐릭터-01.png" alt="캐릭터1" class="floating-character char-1">
+            <img src="images/[해커그라운드] 캐릭터-02.png" alt="캐릭터2" class="floating-character char-2">
+            <img src="images/[해커그라운드] 캐릭터-03.png" alt="캐릭터3" class="floating-character char-3">
+            <img src="images/[해커그라운드] 캐릭터-04.png" alt="캐릭터4" class="floating-character char-4">
+            <img src="images/[해커그라운드] 캐릭터-05.png" alt="캐릭터5" class="floating-character char-5">
         </div>
-      </a>
-      <a href="/posts/github-copilot-tips.html" class="flex items-start gap-4 bg-gray-900 border border-gray-800 rounded-xl p-4 hover:border-gray-600 transition group">
-        <span class="text-2xl mt-0.5">🤖</span>
-        <div>
-          <h3 class="font-semibold text-white group-hover:text-emerald-400 transition text-sm">GitHub Copilot 생산성 10배 올리는 팁 모음</h3>
-          <p class="text-gray-500 text-xs mt-1">실무에서 쓰는 프롬프트 패턴과 단축키 · 2025.07</p>
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span class="title-main">대구경북 개발자들을 위한 놀이터</span>
+                <span class="title-brand">해커그라운드</span>
+            </h1>
+            <p class="hero-subtitle">
+                세미나, 핸즈온, 네트워킹까지!<br>
+                함께 배우고 성장하는 개발자 커뮤니티에 지금 참여하세요.
+            </p>
+            <div class="hero-cta">
+                <a href="events/" class="cta-button primary">이번 달 행사 전체보기</a>
+                <a href="#about" class="cta-button secondary">커뮤니티 소개</a>
+            </div>
         </div>
-      </a>
-      <a href="/posts/open-source-contribution-start.html" class="flex items-start gap-4 bg-gray-900 border border-gray-800 rounded-xl p-4 hover:border-gray-600 transition group">
-        <span class="text-2xl mt-0.5">🌱</span>
-        <div>
-          <h3 class="font-semibold text-white group-hover:text-emerald-400 transition text-sm">오픈소스 기여 처음 시작하는 법 (겁먹지 말고)</h3>
-          <p class="text-gray-500 text-xs mt-1">첫 PR까지 4단계로 쉽게 따라가기 · 2025.06</p>
+    </section>
+
+    <!-- Calendar Section -->
+    <section id="calendar" class="calendar-section">
+        <div class="container">
+            <h2 class="section-title">이번 달 일정</h2>
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <button class="calendar-nav prev" id="prevMonth">&lt;</button>
+                    <h3 class="calendar-month" id="currentMonth">2025년 8월</h3>
+                    <button class="calendar-nav next" id="nextMonth">&gt;</button>
+                </div>
+                <div class="calendar-grid">
+                    <div class="calendar-day-header">일</div>
+                    <div class="calendar-day-header">월</div>
+                    <div class="calendar-day-header">화</div>
+                    <div class="calendar-day-header">수</div>
+                    <div class="calendar-day-header">목</div>
+                    <div class="calendar-day-header">금</div>
+                    <div class="calendar-day-header">토</div>
+                    <div id="calendarDays" class="calendar-days"></div>
+                </div>
+            </div>
         </div>
-      </a>
-    </div>
-  </section>
+    </section>
 
-  <!-- CTA / 커뮤니티 참여 -->
-  <section class="max-w-5xl mx-auto px-6 py-12 mb-10">
-    <div class="bg-gradient-to-r from-emerald-500/10 to-blue-500/10 border border-emerald-500/20 rounded-2xl p-8 text-center">
-      <h2 class="text-2xl font-bold mb-3">커뮤니티에 참여하세요 👋</h2>
-      <p class="text-gray-400 mb-6 text-sm">행사 제안, 정보글 기여, 질문 모두 환영해요. GitHub에서 같이 만들어가요.</p>
-      <div class="flex flex-wrap gap-3 justify-center">
-        <a href="https://github.com/hackersground-kr/hackersground-kr.github.io/issues/new?template=event.md" target="_blank"
-           class="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold px-5 py-2.5 rounded-xl text-sm transition">
-          행사 제안하기
-        </a>
-        <a href="https://github.com/hackersground-kr/hackersground-kr.github.io/issues/new?template=post.md" target="_blank"
-           class="border border-gray-700 hover:border-gray-500 text-gray-300 hover:text-white font-semibold px-5 py-2.5 rounded-xl text-sm transition">
-          정보글 제안하기
-        </a>
-      </div>
-    </div>
-  </section>
+    <!-- Upcoming Events Section -->
+    <section id="events" class="events-section">
+        <div class="container">
+            <h2 class="section-title">다가오는 행사</h2>
+            <div class="events-grid">
+                <div class="event-card">
+                    <div class="event-category handson">핸즈온</div>
+                    <h3 class="event-title">해커그라운드 2025 해커톤</h3>
+                    <div class="event-meta">
+                        <div class="event-date">
+                            <span class="date-icon">📅</span>
+                            <span>2025. 08. 23–24 (토·일)</span>
+                        </div>
+                        <div class="event-location">
+                            <span class="location-icon">📍</span>
+                            <span>대구 엑스코</span>
+                        </div>
+                    </div>
+                    <p class="event-description">
+                        24시간 해커톤! Azure 기반 프로젝트로 멘토링과 함께 도전하세요.
+                        팀당 2–5인, 참가비 무료.
+                    </p>
+                    <div class="event-footer">
+                        <span class="event-price">무료</span>
+                        <a href="events/hackersground-2025.html" class="event-button">자세히 보기</a>
+                    </div>
+                </div>
 
-  <!-- 푸터 -->
-  <footer class="border-t border-gray-800 py-8 text-center text-gray-600 text-sm">
-    <p>© 2025 해커그라운드 커뮤니티 · <a href="https://github.com/hackersground-kr" class="hover:text-gray-400 transition">GitHub</a></p>
-  </footer>
+                <div class="event-card">
+                    <div class="event-category seminar" style="background: var(--gradient-blue);">온라인</div>
+                    <h3 class="event-title">Azure AI 입문 워크샵</h3>
+                    <div class="event-meta">
+                        <div class="event-date">
+                            <span class="date-icon">📅</span>
+                            <span>2025. 09. 06 (토) 14:00</span>
+                        </div>
+                        <div class="event-location">
+                            <span class="location-icon">💻</span>
+                            <span>Teams 온라인</span>
+                        </div>
+                    </div>
+                    <p class="event-description">
+                        Azure OpenAI + GitHub Copilot으로 나만의 AI 앱 만들기.
+                        초보자도 OK, 완전 무료!
+                    </p>
+                    <div class="event-footer">
+                        <span class="event-price">무료</span>
+                        <a href="events/workshop-azure-ai.html" class="event-button">자세히 보기</a>
+                    </div>
+                </div>
 
+                <div class="event-card">
+                    <div class="event-category handson">핸즈온</div>
+                    <h3 class="event-title">Docker로 나만의 개발 환경 구축하기</h3>
+                    <div class="event-meta">
+                        <div class="event-date">
+                            <span class="date-icon">📅</span>
+                            <span>2025. 09. 14 (일) 14:00</span>
+                        </div>
+                        <div class="event-location">
+                            <span class="location-icon">📍</span>
+                            <span>해커그라운드 (중앙로)</span>
+                        </div>
+                    </div>
+                    <p class="event-description">
+                        Docker 개념부터 나만의 개발 서버 구축까지.
+                        반복적인 설치 작업을 없애는 방법을 배웁니다.
+                    </p>
+                    <div class="event-footer">
+                        <span class="event-price">₩30,000</span>
+                        <a href="events/docker-workshop.html" class="event-button">자세히 보기</a>
+                    </div>
+                </div>
+
+                <div class="event-card">
+                    <div class="event-category networking">네트워킹</div>
+                    <h3 class="event-title">치맥과 함께하는 코드 리뷰 파티</h3>
+                    <div class="event-meta">
+                        <div class="event-date">
+                            <span class="date-icon">📅</span>
+                            <span>2025. 10. 05 (일) 18:00</span>
+                        </div>
+                        <div class="event-location">
+                            <span class="location-icon">📍</span>
+                            <span>해커그라운드 (중앙로)</span>
+                        </div>
+                    </div>
+                    <p class="event-description">
+                        편안한 분위기에서 서로의 코드를 리뷰하고 피드백을 주고받으며
+                        실력도 올리고 친목도 다지는 시간.
+                    </p>
+                    <div class="event-footer">
+                        <span class="event-price">₩15,000</span>
+                        <a href="events/networking-party.html" class="event-button">자세히 보기</a>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align:center; margin-top: 3rem;">
+                <a href="events/" class="cta-button secondary">모든 행사 보기 →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Posts Section -->
+    <section id="posts" class="calendar-section">
+        <div class="container">
+            <h2 class="section-title">📚 깨알 정보글</h2>
+            <div class="posts-list" style="max-width: 900px; margin: 0 auto;">
+                <a href="posts/azure-free-tier-guide.html" class="post-item">
+                    <span class="post-emoji">☁️</span>
+                    <div>
+                        <div class="post-meta">
+                            <span class="post-tag azure">Azure</span>
+                            <span class="post-date">2025.07.15</span>
+                        </div>
+                        <div class="post-title">Azure 무료 크레딧으로 할 수 있는 것들 총정리</div>
+                        <div class="post-excerpt">학생 계정, 스타트업 크레딧, 무료 티어 서비스까지 — 돈 안 쓰고 클라우드 실습하는 법</div>
+                    </div>
+                </a>
+                <a href="posts/github-copilot-tips.html" class="post-item">
+                    <span class="post-emoji">🤖</span>
+                    <div>
+                        <div class="post-meta">
+                            <span class="post-tag github">GitHub</span>
+                            <span class="post-date">2025.07.08</span>
+                        </div>
+                        <div class="post-title">GitHub Copilot 생산성 10배 올리는 팁 모음</div>
+                        <div class="post-excerpt">실무에서 쓰는 프롬프트 패턴, 단축키, 에디터 설정까지 한 번에</div>
+                    </div>
+                </a>
+                <a href="posts/open-source-contribution-start.html" class="post-item">
+                    <span class="post-emoji">🌱</span>
+                    <div>
+                        <div class="post-meta">
+                            <span class="post-tag opensource">오픈소스</span>
+                            <span class="post-date">2025.06.20</span>
+                        </div>
+                        <div class="post-title">오픈소스 기여 처음 시작하는 법 (겁먹지 말고)</div>
+                        <div class="post-excerpt">첫 PR까지 4단계로 쉽게 따라가기 — 오타 수정도 기여입니다</div>
+                    </div>
+                </a>
+            </div>
+            <div style="text-align:center; margin-top: 2.5rem;">
+                <a href="posts/" class="cta-button secondary">모든 정보글 보기 →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2 class="section-title" style="text-align:left;">해커그라운드란?</h2>
+                    <p class="about-description">
+                        <strong>대구경북 No.1 IT 실무 교육 및 네트워킹 플랫폼</strong>
+                    </p>
+                    <p>
+                        현업과 대학 교육의 간극을 메우는 실용적인 지식 공유의 장을 제공하여,
+                        지역 청년들의 IT 역량을 강화하고 건강한 개발자 생태계를 조성합니다.
+                    </p>
+                    <div class="target-audience">
+                        <h3>이런 분들을 위해 만들어졌어요</h3>
+                        <ul>
+                            <li>🎓 <strong>대학생 (1~4학년)</strong> — 실무 지식과 프로젝트 경험에 목마른 컴퓨터공학 및 유관 전공 학생</li>
+                            <li>💼 <strong>취업준비생</strong> — 포트폴리오 강화와 네트워킹을 통해 취업 정보를 얻고 싶은 예비 개발자</li>
+                            <li>👨‍💻 <strong>주니어 개발자 (1~3년차)</strong> — 새로운 기술 스택을 학습하고, 다른 개발자들과 교류하며 성장하고 싶은 현직자</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <img src="images/[해커그라운드] 캐릭터-01.png" alt="해커그라운드 캐릭터" class="about-mascot">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="images/1920x480-1.png" alt="해커그라운드 로고" class="footer-logo-image">
+                </div>
+                <div class="footer-info">
+                    <h3>Contact</h3>
+                    <p>📧 contact@hackersground.kr</p>
+                    <div class="social-links">
+                        <a href="https://github.com/hackersground-kr" target="_blank" class="social-link">
+                            <span>📱 GitHub</span>
+                        </a>
+                        <a href="https://www.youtube.com/@hackersground-kr" target="_blank" class="social-link">
+                            <span>📺 YouTube</span>
+                        </a>
+                        <a href="#" class="social-link">
+                            <span>💬 카카오톡 채널</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 해커그라운드(HackerGround). All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
 </body>
 </html>

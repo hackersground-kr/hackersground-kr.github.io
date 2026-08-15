@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT API로 만드는 토이 프로젝트 - 해커그라운드</title>
+    <meta name="description" content="최신 AI 기술을 활용하여 간단한 챗봇이나 텍스트 생성기를 만들어보며 AI에 대한 이해를 높여보세요.">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        .event-detail-hero {
+            padding: 8rem 0 4rem;
+            background: linear-gradient(135deg, rgba(0, 255, 65, 0.1), rgba(0, 0, 0, 0.9));
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .event-detail-content {
+            padding: 4rem 0;
+        }
+
+        .event-info-card {
+            background: rgba(0, 255, 65, 0.05);
+            border: 1px solid var(--border-green);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .event-meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .meta-icon {
+            font-size: 1.5rem;
+        }
+
+        .meta-content h4 {
+            color: var(--primary-green);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .meta-content p {
+            color: var(--text-white);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .content-section {
+            margin-bottom: 3rem;
+        }
+
+        .content-section h3 {
+            color: var(--primary-green);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-green);
+            padding-bottom: 0.5rem;
+        }
+
+        .ai-highlight {
+            background: rgba(0, 255, 65, 0.1);
+            border-left: 4px solid var(--primary-green);
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .ai-highlight::before {
+            content: '🤖';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 2rem;
+        }
+
+        .project-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .project-card {
+            background: rgba(0, 255, 65, 0.05);
+            border: 1px solid var(--border-green);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 65, 0.1);
+        }
+
+        .project-icon {
+            background: var(--gradient-primary);
+            color: var(--dark-bg);
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-left: 2px solid var(--border-green);
+            padding-left: 2rem;
+            margin-left: 1rem;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 1.5rem;
+            width: 10px;
+            height: 10px;
+            background: var(--primary-green);
+            border-radius: 50%;
+        }
+
+        .timeline-time {
+            color: var(--primary-green);
+            font-weight: 600;
+            min-width: 120px;
+        }
+
+        .timeline-content h4 {
+            color: var(--text-white);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-content p {
+            color: var(--text-gray);
+        }
+
+        .instructor-card {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            background: rgba(0, 255, 65, 0.03);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid var(--border-green);
+        }
+
+        .instructor-avatar {
+            width: 100px;
+            height: 100px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--dark-bg);
+            flex-shrink: 0;
+        }
+
+        .instructor-info h4 {
+            color: var(--text-white);
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .instructor-title {
+            color: var(--primary-green);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .instructor-bio {
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
+        .requirements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .requirement-item {
+            background: rgba(0, 255, 65, 0.03);
+            border: 1px solid var(--border-green);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .requirement-emoji {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .sticky-apply {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-green);
+            padding: 1rem 0;
+            z-index: 1000;
+        }
+
+        .apply-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .apply-info {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .apply-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-green);
+        }
+
+        .apply-deadline {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        .apply-button {
+            padding: 1rem 2rem;
+            background: var(--gradient-primary);
+            color: var(--dark-bg);
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .apply-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px var(--shadow-green);
+        }
+
+        @media (max-width: 768px) {
+            .apply-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .apply-info {
+                gap: 1rem;
+            }
+
+            .instructor-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .project-showcase {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="../images/1920x480-1.png" alt="해커그라운드 로고" class="logo-image">
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="../index.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../index.html#events" class="nav-link">Events</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../index.html#about" class="nav-link">About</a>
+                </li>
+            </ul>
+            <div class="nav-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Event Detail Hero -->
+    <section class="event-detail-hero">
+        <div class="container">
+            <div class="event-category handson">핸즈온 실습</div>
+            <h1 class="hero-title" style="text-align: left; margin-bottom: 2rem;">
+                <span class="title-main" style="font-size: 2rem;">ChatGPT API로 만드는</span>
+                <span class="title-brand" style="font-size: 3rem;">토이 프로젝트 🤖</span>
+            </h1>
+
+            <div class="event-info-card">
+                <div class="event-meta-grid">
+                    <div class="meta-item">
+                        <span class="meta-icon">📅</span>
+                        <div class="meta-content">
+                            <h4>일시</h4>
+                            <p>2025. 10. 19 (일) 14:00 ~ 17:00</p>
+                        </div>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-icon">📍</span>
+                        <div class="meta-content">
+                            <h4>장소</h4>
+                            <p>해커그라운드 (중앙로)</p>
+                        </div>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-icon">👥</span>
+                        <div class="meta-content">
+                            <h4>모집인원</h4>
+                            <p>15명</p>
+                        </div>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-icon">💰</span>
+                        <div class="meta-content">
+                            <h4>참가비</h4>
+                            <p>₩25,000</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Event Detail Content -->
+    <section class="event-detail-content">
+        <div class="container">
+            <!-- 워크샵 소개 -->
+            <div class="content-section">
+                <h3>🚀 AI 시대, 개발자라면 꼭 알아야 할 기술</h3>
+                <p style="color: var(--text-gray); line-height: 1.8; font-size: 1.1rem;">
+                    ChatGPT가 세상을 바꾸고 있습니다. 하지만 단순히 웹에서 대화하는 것을 넘어서,
+                    실제 애플리케이션에 AI를 통합하는 방법을 알고 계시나요?
+                </p>
+                <br>
+                <p style="color: var(--text-gray); line-height: 1.8; font-size: 1.1rem;">
+                    이번 워크샵에서는 <strong style="color: var(--primary-green);">ChatGPT API</strong>를 활용해
+                    실제 작동하는 AI 애플리케이션을 처음부터 끝까지 만들어봅니다.
+                    API 연동부터 배포까지, 3시간 만에 나만의 AI 프로젝트를 완성해보세요!
+                </p>
+
+                <div class="ai-highlight">
+                    <h4 style="color: var(--primary-green); margin-bottom: 1rem;">🎯 실습으로 만들어볼 프로젝트들</h4>
+                    <p>
+                        개인 취향 분석 챗봇, 창작 도우미, 코드 리뷰어, 언어 번역기 등
+                        여러분의 아이디어에 따라 다양한 AI 애플리케이션을 만들 수 있습니다.
+                        중요한 건 "어떻게 만드느냐"가 아니라 "무엇을 만들고 싶은가"입니다!
+                    </p>
+                </div>
+            </div>
+
+            <!-- 만들어볼 프로젝트 예시 -->
+            <div class="content-section">
+                <h3>💡 이런 프로젝트를 만들어봐요</h3>
+                <div class="project-showcase">
+                    <div class="project-card">
+                        <div class="project-icon">💬</div>
+                        <h4 style="color: var(--text-white); margin-bottom: 1rem;">개인 맞춤 챗봇</h4>
+                        <p style="color: var(--text-gray);">
+                            특정 주제(기술, 취미, 전공)에 특화된 개인 전용 AI 어시스턴트를 만들어보세요.
+                        </p>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-icon">✍️</div>
+                        <h4 style="color: var(--text-white); margin-bottom: 1rem;">창작 도우미</h4>
+                        <p style="color: var(--text-gray);">
+                            블로그 글, 에세이, 소설 등을 함께 써주는 AI 라이팅 파트너를 구축해보세요.
+                        </p>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-icon">🔍</div>
+                        <h4 style="color: var(--text-white); margin-bottom: 1rem;">코드 리뷰어</h4>
+                        <p style="color: var(--text-gray);">
+                            내 코드를 분석하고 개선점을 제안하는 AI 멘토를 만들어보세요.
+                        </p>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-icon">🌍</div>
+                        <h4 style="color: var(--text-white); margin-bottom: 1rem;">맞춤형 번역기</h4>
+                        <p style="color: var(--text-gray);">
+                            단순 번역을 넘어 문맥과 뉘앙스까지 고려하는 스마트 번역 앱을 제작해보세요.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 이런 분들께 추천해요 -->
+            <div class="content-section">
+                <h3>🎯 이런 분들께 추천해요</h3>
+                <ul style="color: var(--text-gray); line-height: 1.8;">
+                    <li style="margin-bottom: 1rem;">🤖 <strong>AI에 관심은 많지만 어디서부터 시작할지 모르는 개발자</strong> - 실무에 바로 적용할 수 있는 구체적인 방법을 배워보세요</li>
+                    <li style="margin-bottom: 1rem;">💼 <strong>사이드 프로젝트에 AI를 접목하고 싶은 분</strong> - 기존 아이디어에 AI를 더해 더욱 매력적인 서비스를 만들어보세요</li>
+                    <li style="margin-bottom: 1rem;">🚀 <strong>ChatGPT API 공식 문서만 봐서는 막막한 분</strong> - 실제 코드와 함께 단계별로 따라하며 이해해보세요</li>
+                    <li style="margin-bottom: 1rem;">🎓 <strong>포트폴리오에 AI 프로젝트를 추가하고 싶은 취준생</strong> - 트렌디한 기술로 차별화된 이력을 만들어보세요</li>
+                    <li style="margin-bottom: 1rem;">🔥 <strong>새로운 기술에 항상 도전하고 싶은 주니어 개발자</strong> - AI 시대를 앞서나가는 개발자가 되어보세요</li>
+                </ul>
+            </div>
+
+            <!-- 진행 순서 -->
+            <div class="content-section">
+                <h3>⏰ 진행 순서</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-time">14:00 ~ 14:20</div>
+                        <div class="timeline-content">
+                            <h4>🤝 아이스브레이킹 & OpenAI API 소개</h4>
+                            <p>간단한 자기소개와 함께 ChatGPT API의 기본 개념과 활용 사례를 알아봅니다.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">14:20 ~ 14:50</div>
+                        <div class="timeline-content">
+                            <h4>🔑 API 키 발급 & 환경 설정</h4>
+                            <p>OpenAI 계정 생성, API 키 발급, 개발 환경 설정까지 함께 진행합니다.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">14:50 ~ 15:40</div>
+                        <div class="timeline-content">
+                            <h4>💻 첫 번째 API 호출 & 기본 챗봇 만들기</h4>
+                            <p>간단한 질답 챗봇을 만들며 API 사용법과 프롬프트 엔지니어링을 배웁니다.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">15:40 ~ 15:50</div>
+                        <div class="timeline-content">
+                            <h4>☕ 휴식 시간</h4>
+                            <p>간단한 다과와 함께 잠깐의 휴식을 가져요.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">15:50 ~ 16:40</div>
+                        <div class="timeline-content">
+                            <h4>🚀 개인 프로젝트 개발 시간</h4>
+                            <p>각자의 아이디어로 실제 애플리케이션을 개발합니다. 멘토가 개별 지도해드려요.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">16:40 ~ 17:00</div>
+                        <div class="timeline-content">
+                            <h4>🎉 프로젝트 발표 & 공유</h4>
+                            <p>만든 프로젝트를 서로 소개하고, 아이디어와 코드를 공유하는 시간입니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 연사 소개 -->
+            <div class="content-section">
+                <h3>👨‍💻 연사 소개</h3>
+                <div class="instructor-card">
+                    <div class="instructor-avatar">🤖</div>
+                    <div class="instructor-info">
+                        <h4>이에이아이 멘토</h4>
+                        <div class="instructor-title">AI Engineer @ TechCorp</div>
+                        <div class="instructor-bio">
+                            3년차 AI 엔지니어로 ChatGPT API를 활용한 다양한 서비스를 개발해왔습니다.
+                            스타트업에서 AI 챗봇 서비스를 런칭했고, 현재는 대기업에서 AI 솔루션 개발을 담당하고 있습니다.
+                            "AI는 어려운 게 아니라 새로운 도구일 뿐"이라는 철학으로,
+                            누구나 쉽게 따라할 수 있는 실무 중심의 AI 개발 방법을 알려드리겠습니다.
+                            개인 블로그에서 AI 트렌드와 개발 팁을 꾸준히 공유하고 있습니다.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 준비물 & 사전 준비사항 -->
+            <div class="content-section">
+                <h3>🎒 준비물 & 사전 준비사항</h3>
+                <div class="requirements-grid">
+                    <div class="requirement-item">
+                        <div class="requirement-emoji">💻</div>
+                        <h4 style="color: var(--primary-green); margin-bottom: 1rem;">필수 준비물</h4>
+                        <ul style="color: var(--text-gray); line-height: 1.8; text-align: left;">
+                            <li>개인 노트북 (Windows/Mac/Linux)</li>
+                            <li>인터넷 연결</li>
+                            <li>코드 에디터 (VS Code 권장)</li>
+                        </ul>
+                    </div>
+
+                    <div class="requirement-item">
+                        <div class="requirement-emoji">🔑</div>
+                        <h4 style="color: var(--primary-green); margin-bottom: 1rem;">계정 준비</h4>
+                        <ul style="color: var(--text-gray); line-height: 1.8; text-align: left;">
+                            <li>OpenAI 계정 (현장에서 함께 생성)</li>
+                            <li>신용카드 또는 체크카드 (API 사용료)</li>
+                            <li>GitHub 계정 (선택사항)</li>
+                        </ul>
+                    </div>
+
+                    <div class="requirement-item">
+                        <div class="requirement-emoji">💡</div>
+                        <h4 style="color: var(--primary-green); margin-bottom: 1rem;">추천 사전 지식</h4>
+                        <ul style="color: var(--text-gray); line-height: 1.8; text-align: left;">
+                            <li>Python 또는 JavaScript 기초</li>
+                            <li>REST API 개념 (간단히)</li>
+                            <li>JSON 형식 이해</li>
+                        </ul>
+                    </div>
+
+                    <div class="requirement-item">
+                        <div class="requirement-emoji">💰</div>
+                        <h4 style="color: var(--primary-green); margin-bottom: 1rem;">API 사용료 안내</h4>
+                        <p style="color: var(--text-gray); line-height: 1.8; text-align: left;">
+                            실습 중 API 호출로 약 $2-5 정도의 비용이 발생할 수 있습니다.
+                            (개인별 사용량에 따라 차이)
+                        </p>
+                    </div>
+                </div>
+
+                <div style="background: rgba(0, 255, 65, 0.05); border: 1px solid var(--border-green); border-radius: 15px; padding: 2rem; margin: 2rem 0;">
+                    <h4 style="color: var(--primary-green); margin-bottom: 1rem;">📝 중요 안내사항</h4>
+                    <ul style="color: var(--text-gray); line-height: 1.8;">
+                        <li>💳 <strong>API 사용료</strong>: OpenAI API 사용을 위해 소액의 크레딧 충전이 필요합니다 ($5 권장)</li>
+                        <li>🔒 <strong>개인정보 보호</strong>: API 키는 개인 정보이므로 코드 공유 시 주의해주세요</li>
+                        <li>⚡ <strong>노트북 배터리</strong>: 충전기를 꼭 가져오시거나 완전 충전 후 참석해주세요</li>
+                        <li>❓ <strong>질문 환영</strong>: 어떤 질문이든 언제나 환영합니다. 막히면 바로 손을 들어주세요!</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 워크샵 후 얻을 수 있는 것들 -->
+            <div class="content-section">
+                <div style="background: rgba(0, 255, 65, 0.05); border: 1px solid var(--border-green); border-radius: 20px; padding: 3rem; text-align: center;">
+                    <h3 style="color: var(--primary-green); margin-bottom: 2rem;">🏆 워크샵 완료 후 얻을 수 있는 것들</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                        <div>
+                            <h4 style="color: var(--text-white); margin-bottom: 1rem;">💻 실제 작동하는 AI 앱</h4>
+                            <p style="color: var(--text-gray);">3시간 만에 완성한 나만의 AI 프로젝트</p>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--text-white); margin-bottom: 1rem;">🛠️ 실무 활용 노하우</h4>
+                            <p style="color: var(--text-gray);">API 효율적 사용법과 비용 최적화 팁</p>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--text-white); margin-bottom: 1rem;">📚 학습 자료</h4>
+                            <p style="color: var(--text-gray);">예제 코드와 추가 학습을 위한 리소스</p>
+                        </div>
+                        <div>
+                            <h4 style="color: var(--text-white); margin-bottom: 1rem;">🤝 AI 개발자 네트워크</h4>
+                            <p style="color: var(--text-gray);">같은 관심사를 가진 개발자들과의 연결</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sticky Apply Button -->
+    <div class="sticky-apply">
+        <div class="apply-content">
+            <div class="apply-info">
+                <div class="apply-price">₩25,000</div>
+                <div class="apply-deadline">마감까지 14일 남음</div>
+            </div>
+            <a href="#" class="apply-button" onclick="alert('🚧 준비중입니다! 실제 서비스에서는 결제 페이지로 이동합니다.'); return false;">지금 신청하기</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer" style="margin-bottom: 80px;">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="../images/1920x480-1.png" alt="해커그라운드 로고" class="footer-logo-image">
+                </div>
+                <div class="footer-info">
+                    <h3>Contact</h3>
+                    <p>📧 contact@hackersground.kr</p>
+                    <div class="social-links">
+                        <a href="https://github.com/hackersground-kr" target="_blank" class="social-link">
+                            <span>📱 GitHub</span>
+                        </a>
+                        <a href="https://www.youtube.com/@hackersground-kr" target="_blank" class="social-link">
+                            <span>📺 YouTube</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

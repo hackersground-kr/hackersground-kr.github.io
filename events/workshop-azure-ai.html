@@ -1,108 +1,129 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Azure AI 입문 워크샵 · 행사</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="../css/style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azure AI 입문 워크샵 · 해커그라운드</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        .event-detail-hero { padding: 8rem 0 4rem; background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(0,0,0,0.95)); min-height: 55vh; display: flex; align-items: center; }
+        .event-info-card { background: rgba(0,255,65,0.05); border: 1px solid var(--border-green); border-radius: 20px; padding: 2rem; margin-bottom: 3rem; }
+        .event-meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .meta-item { display: flex; align-items: center; gap: 1rem; }
+        .meta-icon { font-size: 1.5rem; }
+        .meta-content h4 { color: var(--primary-green); margin-bottom: 0.3rem; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; }
+        .meta-content p { color: var(--text-white); font-size: 1rem; font-weight: 500; }
+        .content-section { margin-bottom: 3rem; }
+        .content-section h3 { color: var(--primary-green); font-size: 1.4rem; margin-bottom: 1.5rem; border-bottom: 2px solid var(--border-green); padding-bottom: 0.5rem; }
+        .content-section ul { list-style: none; padding: 0; }
+        .content-section li { padding: 0.75rem 0; border-bottom: 1px solid var(--border-green); color: var(--text-gray); display: flex; align-items: flex-start; gap: 0.75rem; }
+        .content-section li:last-child { border-bottom: none; }
+    </style>
 </head>
-<body class="bg-gray-950 text-gray-100 font-sans">
-
-  <nav class="border-b border-gray-800 sticky top-0 bg-gray-950/90 backdrop-blur z-10">
-    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-      <a href="/" class="font-bold text-lg tracking-tight text-white hover:text-emerald-400 transition">⚡ 해커그라운드</a>
-      <div class="flex gap-6 text-sm text-gray-400">
-        <a href="/events/" class="text-white font-medium">행사</a>
-        <a href="/posts/" class="hover:text-white transition">정보글</a>
-        <a href="https://github.com/hackersground-kr" target="_blank" class="hover:text-white transition">GitHub</a>
-      </div>
-    </div>
-  </nav>
-
-  <main class="max-w-3xl mx-auto px-6 py-12">
-    <nav class="text-sm text-gray-600 mb-8">
-      <a href="/events/" class="hover:text-gray-400 transition">행사</a>
-      <span class="mx-2">›</span>
-      <span class="text-gray-400">Azure AI 입문 워크샵</span>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="/"><img src="../images/1920x480-1.png" alt="해커그라운드 로고" class="logo-image"></a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="/events/" class="nav-link" style="color: var(--primary-green);">Events</a></li>
+                <li class="nav-item"><a href="/posts/" class="nav-link">Posts</a></li>
+                <li class="nav-item"><a href="/#about" class="nav-link">About</a></li>
+            </ul>
+            <div class="nav-toggle" id="mobile-menu">
+                <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+            </div>
+        </div>
     </nav>
 
-    <div class="mb-8">
-      <div class="flex items-center gap-2 mb-4">
-        <span class="bg-blue-500/10 text-blue-400 text-xs px-2 py-0.5 rounded-full border border-blue-500/20">온라인</span>
-        <span class="bg-yellow-500/10 text-yellow-400 text-xs px-2 py-0.5 rounded-full border border-yellow-500/20">모집중</span>
-      </div>
-      <h1 class="text-3xl md:text-4xl font-extrabold mb-4">Azure AI 입문 워크샵 🤖</h1>
-      <p class="text-gray-400 text-lg">Azure OpenAI + GitHub Copilot으로 나만의 AI 앱을 만들어봐요. 처음이어도 OK!</p>
-    </div>
+    <section class="event-detail-hero">
+        <div class="container">
+            <div class="breadcrumb"><a href="/">Home</a><span class="sep">›</span><a href="/events/">Events</a><span class="sep">›</span><span style="color:#9ca3af;">Azure AI 입문 워크샵</span></div>
+            <span class="badge online">온라인</span>
+            <span class="badge recruiting">모집중</span>
+            <h1 class="hero-title" style="font-size: clamp(2rem, 5vw, 3.5rem); margin-top: 1rem;">Azure AI 입문 워크샵 🤖</h1>
+            <p class="hero-subtitle" style="font-size: 1.1rem; max-width: 700px;">Azure OpenAI + GitHub Copilot으로 나만의 AI 앱을 만들어봐요. 처음이어도 OK!</p>
+        </div>
+    </section>
 
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-10">
-      <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 text-center">
-        <div class="text-2xl mb-1">📅</div>
-        <div class="text-xs text-gray-500 mb-1">일정</div>
-        <div class="text-sm font-semibold">2025.09.06</div>
-      </div>
-      <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 text-center">
-        <div class="text-2xl mb-1">⏰</div>
-        <div class="text-xs text-gray-500 mb-1">시간</div>
-        <div class="text-sm font-semibold">14:00–17:00</div>
-      </div>
-      <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 text-center">
-        <div class="text-2xl mb-1">💻</div>
-        <div class="text-xs text-gray-500 mb-1">장소</div>
-        <div class="text-sm font-semibold">Teams 온라인</div>
-      </div>
-      <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 text-center">
-        <div class="text-2xl mb-1">💰</div>
-        <div class="text-xs text-gray-500 mb-1">참가비</div>
-        <div class="text-sm font-semibold text-emerald-400">무료</div>
-      </div>
-    </div>
+    <section class="event-detail-section">
+        <div class="container" style="max-width: 900px;">
+            <div class="event-info-card">
+                <div class="event-meta-grid">
+                    <div class="meta-item"><span class="meta-icon">📅</span><div class="meta-content"><h4>일정</h4><p>2025.09.06 (토)</p></div></div>
+                    <div class="meta-item"><span class="meta-icon">⏰</span><div class="meta-content"><h4>시간</h4><p>14:00 – 17:00</p></div></div>
+                    <div class="meta-item"><span class="meta-icon">💻</span><div class="meta-content"><h4>장소</h4><p>Teams 온라인</p></div></div>
+                    <div class="meta-item"><span class="meta-icon">💰</span><div class="meta-content"><h4>참가비</h4><p style="color: var(--primary-green);">무료</p></div></div>
+                </div>
+                <div class="cta-banner">
+                    <div class="cta-text">
+                        <div style="font-size: 1.1rem; font-weight: 600;">온라인 신청하기</div>
+                        <div class="deadline">마감: 2025.09.04 (목)</div>
+                    </div>
+                    <a href="https://aka.ms/hackers-ground" target="_blank" class="cta-button primary">신청하기 →</a>
+                </div>
+            </div>
 
-    <div class="bg-gradient-to-r from-blue-500/10 to-emerald-500/10 border border-blue-500/20 rounded-2xl p-6 mb-10 flex flex-col md:flex-row items-center justify-between gap-4">
-      <div>
-        <div class="font-semibold mb-1">온라인 신청하기</div>
-        <div class="text-gray-400 text-sm">마감: 2025.09.04 (목)</div>
-      </div>
-      <a href="https://aka.ms/hackers-ground" target="_blank"
-         class="bg-blue-500 hover:bg-blue-400 text-white font-bold px-6 py-3 rounded-xl transition text-sm whitespace-nowrap">
-        신청하기 →
-      </a>
-    </div>
+            <div class="content-section">
+                <h3>배우게 될 것들</h3>
+                <ul>
+                    <li>☁️ Azure OpenAI Service 기초 설정 및 API 호출</li>
+                    <li>🤖 GitHub Copilot 활용 코딩 효율화</li>
+                    <li>🌐 간단한 챗봇 앱 배포 (Azure Static Web Apps)</li>
+                    <li>💬 프롬프트 엔지니어링 기초</li>
+                </ul>
+            </div>
 
-    <article class="prose">
-      <h2>배우게 될 것들</h2>
-      <ul>
-        <li>Azure OpenAI Service 기초 설정 및 API 호출</li>
-        <li>GitHub Copilot 활용 코딩 효율화</li>
-        <li>간단한 챗봇 앱 배포 (Azure Static Web Apps)</li>
-        <li>프롬프트 엔지니어링 기초</li>
-      </ul>
+            <div class="content-section">
+                <h3>준비물</h3>
+                <ul>
+                    <li>💻 노트북 (Windows/Mac 무관)</li>
+                    <li>🐙 GitHub 계정 (없으면 당일 생성 가능)</li>
+                    <li>🪟 Microsoft 계정 (없으면 당일 생성 가능)</li>
+                    <li>☁️ Azure 구독 (무료 계정 OK, 당일 생성 가능)</li>
+                </ul>
+            </div>
 
-      <h2>준비물</h2>
-      <ul>
-        <li>노트북 (Windows/Mac 무관)</li>
-        <li>GitHub 계정 (없으면 당일 생성 가능)</li>
-        <li>Microsoft 계정 (없으면 당일 생성 가능)</li>
-        <li>Azure 구독 (무료 계정 OK, 당일 생성 가능)</li>
-      </ul>
+            <div class="content-section">
+                <h3>진행 방식</h3>
+                <ul>
+                    <li>🛠️ 핸즈온 위주 — 강의 최소, 실습 최대</li>
+                    <li>📁 코드 레포 미리 제공 (클론만 하면 됨)</li>
+                    <li>💬 질문 언제든 채팅/음성으로 OK</li>
+                </ul>
+            </div>
 
-      <h2>진행 방식</h2>
-      <ul>
-        <li>핸즈온 위주 — 강의 최소, 실습 최대</li>
-        <li>코드 레포 미리 제공 (클론만 하면 됨)</li>
-        <li>질문 언제든 채팅/음성으로 OK</li>
-      </ul>
+            <div class="community-cta">
+                <h3>궁금한 점이 있나요?</h3>
+                <p>"Azure 써보고 싶었는데 어디서 시작해야 할지 몰랐어요" — 이 분들을 위한 워크샵이에요 😊</p>
+                <div class="btn-group">
+                    <a href="https://aka.ms/hackers-ground" target="_blank" class="btn-primary">신청하기</a>
+                    <a href="https://github.com/hackersground-kr/hackersground-kr.github.io/discussions" target="_blank" class="btn-secondary">질문하기</a>
+                </div>
+            </div>
+        </div>
+    </section>
 
-      <blockquote>
-        "Azure 써보고 싶었는데 어디서 시작해야 할지 몰랐어요" — 이 분들을 위한 워크샵이에요 😊
-      </blockquote>
-    </article>
-  </main>
-
-  <footer class="border-t border-gray-800 py-8 text-center text-gray-600 text-sm">
-    <p>© 2025 해커그라운드 커뮤니티 · <a href="https://github.com/hackersground-kr" class="hover:text-gray-400 transition">GitHub</a></p>
-  </footer>
-
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo"><img src="../images/1920x480-1.png" alt="해커그라운드 로고" class="footer-logo-image"></div>
+                <div class="footer-info">
+                    <h3>Contact</h3>
+                    <p>📧 contact@hackersground.kr</p>
+                    <div class="social-links">
+                        <a href="https://github.com/hackersground-kr" target="_blank" class="social-link"><span>📱 GitHub</span></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom"><p>&copy; 2025 해커그라운드(HackerGround). All rights reserved.</p></div>
+        </div>
+    </footer>
+    <script src="../js/main.js"></script>
 </body>
 </html>

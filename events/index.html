@@ -1,123 +1,176 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>행사 목록 · 해커그라운드</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="../css/style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>행사 · 해커그라운드</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 </head>
-<body class="bg-gray-950 text-gray-100 font-sans">
-
-  <nav class="border-b border-gray-800 sticky top-0 bg-gray-950/90 backdrop-blur z-10">
-    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-      <a href="/" class="font-bold text-lg tracking-tight text-white hover:text-emerald-400 transition">
-        ⚡ 해커그라운드
-      </a>
-      <div class="flex gap-6 text-sm text-gray-400">
-        <a href="/events/" class="text-white font-medium">행사</a>
-        <a href="/posts/" class="hover:text-white transition">정보글</a>
-        <a href="https://github.com/hackersground-kr" target="_blank" class="hover:text-white transition">GitHub</a>
-      </div>
-    </div>
-  </nav>
-
-  <main class="max-w-5xl mx-auto px-6 py-12">
-    <div class="mb-10">
-      <h1 class="text-3xl font-extrabold mb-3">🗓️ 행사</h1>
-      <p class="text-gray-400">온라인/오프라인 행사 신청 정보를 모아뒀어요. 같이 가요!</p>
-    </div>
-
-    <!-- 필터 -->
-    <div class="flex gap-2 mb-8 flex-wrap">
-      <button onclick="filterEvents('all')" id="filter-all"
-        class="filter-btn active px-4 py-1.5 rounded-full text-sm border border-emerald-500 text-emerald-400 bg-emerald-500/10 transition">
-        전체
-      </button>
-      <button onclick="filterEvents('offline')" id="filter-offline"
-        class="filter-btn px-4 py-1.5 rounded-full text-sm border border-gray-700 text-gray-400 hover:border-gray-500 hover:text-white transition">
-        오프라인
-      </button>
-      <button onclick="filterEvents('online')" id="filter-online"
-        class="filter-btn px-4 py-1.5 rounded-full text-sm border border-gray-700 text-gray-400 hover:border-gray-500 hover:text-white transition">
-        온라인
-      </button>
-      <button onclick="filterEvents('upcoming')" id="filter-upcoming"
-        class="filter-btn px-4 py-1.5 rounded-full text-sm border border-gray-700 text-gray-400 hover:border-gray-500 hover:text-white transition">
-        예정된 행사
-      </button>
-    </div>
-
-    <!-- 행사 카드 목록 -->
-    <div class="grid md:grid-cols-2 gap-4" id="events-grid">
-
-      <a href="./hackersground-2025.html" data-type="offline" data-status="upcoming"
-         class="event-card block bg-gray-900 border border-gray-800 rounded-2xl p-5 hover:border-emerald-500/40 transition group">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded-full border border-emerald-500/20">오프라인</span>
-          <span class="bg-yellow-500/10 text-yellow-400 text-xs px-2 py-0.5 rounded-full border border-yellow-500/20">모집중</span>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="/"><img src="../images/1920x480-1.png" alt="해커그라운드 로고" class="logo-image"></a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="/events/" class="nav-link" style="color: var(--primary-green);">Events</a></li>
+                <li class="nav-item"><a href="/posts/" class="nav-link">Posts</a></li>
+                <li class="nav-item"><a href="/#about" class="nav-link">About</a></li>
+            </ul>
+            <div class="nav-toggle" id="mobile-menu">
+                <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+            </div>
         </div>
-        <h3 class="font-semibold text-white group-hover:text-emerald-400 transition mb-1">해커그라운드 2025 해커톤</h3>
-        <p class="text-gray-500 text-sm mb-3">24시간 해커톤! Azure 기반 프로젝트로 멘토링과 함께 도전하세요.</p>
-        <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-600">
-          <span>📅 2025.08.23–24</span>
-          <span>📍 대구 엑스코</span>
-        </div>
-      </a>
+    </nav>
 
-      <a href="./workshop-azure-ai.html" data-type="online" data-status="upcoming"
-         class="event-card block bg-gray-900 border border-gray-800 rounded-2xl p-5 hover:border-blue-500/40 transition group">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="bg-blue-500/10 text-blue-400 text-xs px-2 py-0.5 rounded-full border border-blue-500/20">온라인</span>
-          <span class="bg-yellow-500/10 text-yellow-400 text-xs px-2 py-0.5 rounded-full border border-yellow-500/20">모집중</span>
+    <div class="page-header">
+        <div class="container">
+            <div class="breadcrumb"><a href="/">Home</a><span class="sep">›</span>Events</div>
+            <h1>🗓️ 행사</h1>
+            <p>온라인/오프라인 행사 신청 정보를 모아뒀어요. 같이 가요!</p>
         </div>
-        <h3 class="font-semibold text-white group-hover:text-blue-400 transition mb-1">Azure AI 입문 워크샵</h3>
-        <p class="text-gray-500 text-sm mb-3">Azure OpenAI + Copilot으로 나만의 AI 앱 만들기. 초보자도 OK!</p>
-        <div class="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-600">
-          <span>📅 2025.09.06</span>
-          <span>💻 Teams 온라인</span>
-        </div>
-      </a>
-
     </div>
 
-    <!-- 행사 제안 CTA -->
-    <div class="mt-10 bg-gray-900 border border-gray-800 rounded-2xl p-6 text-center">
-      <p class="text-gray-400 mb-4 text-sm">새 행사를 제안하고 싶다면 GitHub 이슈로 남겨주세요!</p>
-      <a href="https://github.com/hackersground-kr/hackersground-kr.github.io/issues/new?template=event.md"
-         target="_blank"
-         class="inline-block bg-emerald-500 hover:bg-emerald-400 text-black font-semibold px-5 py-2.5 rounded-xl text-sm transition">
-        ➕ 행사 제안하기
-      </a>
-    </div>
-  </main>
+    <section class="events-section">
+        <div class="container">
+            <div class="filter-bar">
+                <button onclick="filterEvents('all')" id="filter-all" class="filter-btn active">전체</button>
+                <button onclick="filterEvents('offline')" id="filter-offline" class="filter-btn">오프라인</button>
+                <button onclick="filterEvents('online')" id="filter-online" class="filter-btn">온라인</button>
+                <button onclick="filterEvents('upcoming')" id="filter-upcoming" class="filter-btn">모집중</button>
+            </div>
 
-  <footer class="border-t border-gray-800 py-8 text-center text-gray-600 text-sm">
-    <p>© 2025 해커그라운드 커뮤니티 · <a href="https://github.com/hackersground-kr" class="hover:text-gray-400 transition">GitHub</a></p>
-  </footer>
+            <div class="events-grid">
+                <div class="event-card" data-type="offline" data-status="upcoming">
+                    <div class="event-category handson">핸즈온</div>
+                    <h3 class="event-title">해커그라운드 2025 해커톤</h3>
+                    <div class="event-meta">
+                        <div class="event-date"><span class="date-icon">📅</span><span>2025. 08. 23–24 (토·일)</span></div>
+                        <div class="event-location"><span class="location-icon">📍</span><span>대구 엑스코</span></div>
+                    </div>
+                    <p class="event-description">24시간 해커톤! Azure 기반 프로젝트로 멘토링과 함께 도전하세요. 팀당 2–5인.</p>
+                    <div class="event-footer">
+                        <span class="event-price">무료</span>
+                        <a href="hackersground-2025.html" class="event-button">자세히 보기</a>
+                    </div>
+                </div>
 
-  <script>
-    function filterEvents(type) {
-      // 버튼 스타일 초기화
-      document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.remove('border-emerald-500', 'text-emerald-400', 'bg-emerald-500/10');
-        btn.classList.add('border-gray-700', 'text-gray-400');
-      });
-      const active = document.getElementById('filter-' + type);
-      if (active) {
-        active.classList.add('border-emerald-500', 'text-emerald-400', 'bg-emerald-500/10');
-        active.classList.remove('border-gray-700', 'text-gray-400');
-      }
+                <div class="event-card" data-type="online" data-status="upcoming">
+                    <div class="event-category seminar" style="background: var(--gradient-blue);">온라인</div>
+                    <h3 class="event-title">Azure AI 입문 워크샵</h3>
+                    <div class="event-meta">
+                        <div class="event-date"><span class="date-icon">📅</span><span>2025. 09. 06 (토) 14:00</span></div>
+                        <div class="event-location"><span class="location-icon">💻</span><span>Teams 온라인</span></div>
+                    </div>
+                    <p class="event-description">Azure OpenAI + GitHub Copilot으로 나만의 AI 앱 만들기. 초보자도 OK!</p>
+                    <div class="event-footer">
+                        <span class="event-price">무료</span>
+                        <a href="workshop-azure-ai.html" class="event-button">자세히 보기</a>
+                    </div>
+                </div>
 
-      // 카드 필터링
-      document.querySelectorAll('.event-card').forEach(card => {
-        const show =
-          type === 'all' ||
-          card.dataset.type === type ||
-          (type === 'upcoming' && card.dataset.status === 'upcoming');
-        card.style.display = show ? '' : 'none';
-      });
-    }
-  </script>
+                <div class="event-card" data-type="offline" data-status="upcoming">
+                    <div class="event-category handson">핸즈온</div>
+                    <h3 class="event-title">Docker로 나만의 개발 환경 구축하기</h3>
+                    <div class="event-meta">
+                        <div class="event-date"><span class="date-icon">📅</span><span>2025. 09. 14 (일) 14:00</span></div>
+                        <div class="event-location"><span class="location-icon">📍</span><span>해커그라운드 (중앙로)</span></div>
+                    </div>
+                    <p class="event-description">Docker 개념부터 나만의 개발 서버 구축까지. 반복적인 설치 작업을 없애는 방법을 배웁니다.</p>
+                    <div class="event-footer">
+                        <span class="event-price">₩30,000</span>
+                        <a href="docker-workshop.html" class="event-button">자세히 보기</a>
+                    </div>
+                </div>
+
+                <div class="event-card" data-type="offline" data-status="upcoming">
+                    <div class="event-category seminar">세미나</div>
+                    <h3 class="event-title">현업 멘토의 주니어 시절 성장 스토리</h3>
+                    <div class="event-meta">
+                        <div class="event-date"><span class="date-icon">📅</span><span>2025. 09. 21 (일) 14:00</span></div>
+                        <div class="event-location"><span class="location-icon">📍</span><span>해커그라운드 (중앙로)</span></div>
+                    </div>
+                    <p class="event-description">5년차 시니어 개발자가 들려주는 진솔한 성장 스토리와 주니어 시절 시행착오, 극복 방법.</p>
+                    <div class="event-footer">
+                        <span class="event-price">무료</span>
+                        <a href="growth-story.html" class="event-button">자세히 보기</a>
+                    </div>
+                </div>
+
+                <div class="event-card" data-type="offline" data-status="upcoming">
+                    <div class="event-category networking">네트워킹</div>
+                    <h3 class="event-title">치맥과 함께하는 코드 리뷰 파티</h3>
+                    <div class="event-meta">
+                        <div class="event-date"><span class="date-icon">📅</span><span>2025. 10. 05 (일) 18:00</span></div>
+                        <div class="event-location"><span class="location-icon">📍</span><span>해커그라운드 (중앙로)</span></div>
+                    </div>
+                    <p class="event-description">편안한 분위기에서 서로의 코드를 리뷰하고 친목을 다지는 시간.</p>
+                    <div class="event-footer">
+                        <span class="event-price">₩15,000</span>
+                        <a href="networking-party.html" class="event-button">자세히 보기</a>
+                    </div>
+                </div>
+
+                <div class="event-card" data-type="offline" data-status="upcoming">
+                    <div class="event-category handson">핸즈온</div>
+                    <h3 class="event-title">ChatGPT API로 만드는 토이 프로젝트</h3>
+                    <div class="event-meta">
+                        <div class="event-date"><span class="date-icon">📅</span><span>2025. 10. 19 (일) 14:00</span></div>
+                        <div class="event-location"><span class="location-icon">📍</span><span>해커그라운드 (중앙로)</span></div>
+                    </div>
+                    <p class="event-description">최신 AI 기술을 활용하여 간단한 챗봇이나 텍스트 생성기를 만들어보며 AI 이해를 높여보세요.</p>
+                    <div class="event-footer">
+                        <span class="event-price">₩25,000</span>
+                        <a href="chatgpt-workshop.html" class="event-button">자세히 보기</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="community-cta" style="margin-top: 4rem;">
+                <h3>새 행사를 제안하고 싶다면?</h3>
+                <p>GitHub 이슈로 제안해주세요. 커뮤니티와 함께 만들어가요!</p>
+                <div class="btn-group">
+                    <a href="https://github.com/hackersground-kr/hackersground-kr.github.io/issues/new?template=event.md" target="_blank" class="btn-primary">➕ 행사 제안하기</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="../images/1920x480-1.png" alt="해커그라운드 로고" class="footer-logo-image">
+                </div>
+                <div class="footer-info">
+                    <h3>Contact</h3>
+                    <p>📧 contact@hackersground.kr</p>
+                    <div class="social-links">
+                        <a href="https://github.com/hackersground-kr" target="_blank" class="social-link"><span>📱 GitHub</span></a>
+                        <a href="https://www.youtube.com/@hackersground-kr" target="_blank" class="social-link"><span>📺 YouTube</span></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 해커그라운드(HackerGround). All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script>
+        function filterEvents(type) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('filter-' + type).classList.add('active');
+            document.querySelectorAll('.event-card').forEach(card => {
+                const show = type === 'all' || card.dataset.type === type || (type === 'upcoming' && card.dataset.status === 'upcoming');
+                card.style.display = show ? '' : 'none';
+            });
+        }
+    </script>
 </body>
 </html>
