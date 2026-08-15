@@ -475,30 +475,24 @@
         document.getElementById('login-btn').disabled = true;
         document.getElementById('login-btn').textContent = '로그인 중...';
         try {
-            // 팝업으로 로그인 시도, 실패하면 리다이렉트
-            const res = await msalInstance.loginPopup(loginRequest);
-            showDashboard(res.account);
+            // 리다이렉트 방식 (팝업은 block_nested_popups 오류 유발)
+            await msalInstance.loginRedirect(loginRequest);
         } catch (e) {
-            if (e.errorCode === 'popup_window_error' || e.errorCode === 'empty_window_error') {
-                // 팝업 차단된 경우 리다이렉트로 전환
-                await msalInstance.loginRedirect(loginRequest);
-            } else {
-                alert('로그인에 실패했어요: ' + e.message);
-                document.getElementById('login-btn').disabled = false;
-                document.getElementById('login-btn').innerHTML = `
-                    <svg class="ms-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23">
-                        <rect x="1" y="1" width="10" height="10" fill="#f25022"/>
-                        <rect x="12" y="1" width="10" height="10" fill="#7fba00"/>
-                        <rect x="1" y="12" width="10" height="10" fill="#00a4ef"/>
-                        <rect x="12" y="12" width="10" height="10" fill="#ffb900"/>
-                    </svg>
-                    Microsoft 계정으로 로그인`;
-            }
+            alert('로그인에 실패했어요: ' + e.message);
+            document.getElementById('login-btn').disabled = false;
+            document.getElementById('login-btn').innerHTML = `
+                <svg class="ms-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23">
+                    <rect x="1" y="1" width="10" height="10" fill="#f25022"/>
+                    <rect x="12" y="1" width="10" height="10" fill="#7fba00"/>
+                    <rect x="1" y="12" width="10" height="10" fill="#00a4ef"/>
+                    <rect x="12" y="12" width="10" height="10" fill="#ffb900"/>
+                </svg>
+                Microsoft 계정으로 로그인`;
         }
     }
 
     async function signOut() {
-        await msalInstance.logoutPopup({ postLogoutRedirectUri: '/admin/' });
+        await msalInstance.logoutRedirect({ postLogoutRedirectUri: '/admin/' });
     }
 
     // =============================================
