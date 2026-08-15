@@ -16,7 +16,9 @@ const STORAGE_KEY = process.env.AZURE_STORAGE_ACCOUNT_KEY;
 const TABLE_NAME = 'EventRegistrations';
 const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGIN || 'https://hackersground-kr.github.io')
   .split(',').map(o => o.trim()).filter(Boolean);
-// 허용된 어드민 이메일 목록 (콤마로 구분, 소문자로 비교)
+
+// 어드민 인증: Azure 엔터프라이즈 앱에서 appRoleAssignmentRequired=true로 관리
+// ADMIN_ALLOWED_EMAILS가 설정된 경우 추가 필터로 동작, 미설정 시 로그인된 사용자 전체 허용
 const ADMIN_EMAILS = (process.env.ADMIN_ALLOWED_EMAILS || '')
   .split(',').map(e => e.trim().toLowerCase()).filter(Boolean);
 
@@ -40,14 +42,23 @@ app.http('getRegistrations', {
       return { status: 204, headers: getCorsHeaders(request.headers.get('origin') || '') };
     }
 
-    // 이메일 헤더로 어드민 인증
+    // 이메일 헤더 확인 (Azure AD 로그인 후 MSAL이 전송)
     const adminEmail = (request.headers.get('x-admin-email') || '').toLowerCase();
-    if (!adminEmail || (ADMIN_EMAILS.length > 0 && !ADMIN_EMAILS.includes(adminEmail))) {
-      context.log(`[admin] 접근 거부: ${adminEmail || '(없음)'}`);
+    if (!adminEmail) {
+      context.log('[admin] 접근 거부: 이메일 헤더 없음');
       return {
         status: 403,
-        headers: getCorsHeaders(request.headers.get("origin") || ""),
-        jsonBody: { error: '접근 권한이 없어요. 어드민 이메일을 확인해주세요.' },
+        headers: getCorsHeaders(request.headers.get('origin') || ''),
+        jsonBody: { error: '로그인이 필요합니다.' },
+      };
+    }
+    // ADMIN_ALLOWED_EMAILS 설정 시 추가 필터 적용 (미설정 시 Azure AD 할당 사용자 전체 허용)
+    if (ADMIN_EMAILS.length > 0 && !ADMIN_EMAILS.includes(adminEmail)) {
+      context.log(`[admin] 접근 거부 (이메일 필터): ${adminEmail}`);
+      return {
+        status: 403,
+        headers: getCorsHeaders(request.headers.get('origin') || ''),
+        jsonBody: { error: '접근 권한이 없어요. Azure 엔터프라이즈 앱에서 사용자 할당을 확인해주세요.' },
       };
     }
     context.log(`[admin] 접근 허용: ${adminEmail}`);
