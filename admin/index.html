@@ -456,34 +456,43 @@
     // 초기화 - 이미 로그인돼 있으면 바로 대시보드
     // =============================================
     async function init() {
-        await msalInstance.initialize();
-        msalReady = true;
-
-        // 리다이렉트 콜백 처리
+        let dashboardShown = false;
         try {
-            const response = await msalInstance.handleRedirectPromise();
-            if (response) {
-                accessToken = response.accessToken;
-                showDashboard(response.account);
+            await msalInstance.initialize();
+            msalReady = true;
+
+            // 리다이렉트 콜백 처리
+            let redirectResponse = null;
+            try {
+                redirectResponse = await msalInstance.handleRedirectPromise();
+            } catch (e) { console.error('handleRedirectPromise error:', e); }
+
+            if (redirectResponse) {
+                accessToken = redirectResponse.accessToken;
+                showDashboard(redirectResponse.account);
+                dashboardShown = true;
                 return;
             }
-        } catch (e) { console.error(e); }
 
-        // 기존 세션 확인
-        const accounts = msalInstance.getAllAccounts();
-        if (accounts.length > 0) {
-            try {
-                const silentRes = await msalInstance.acquireTokenSilent({
-                    ...loginRequest,
-                    account: accounts[0],
-                });
-                accessToken = silentRes.accessToken;
-                showDashboard(accounts[0]);
-            } catch {
-                showLogin();
+            // 기존 세션 확인
+            const accounts = msalInstance.getAllAccounts();
+            if (accounts.length > 0) {
+                try {
+                    const silentRes = await msalInstance.acquireTokenSilent({
+                        ...loginRequest,
+                        account: accounts[0],
+                    });
+                    accessToken = silentRes.accessToken;
+                    showDashboard(accounts[0]);
+                    dashboardShown = true;
+                } catch (e) {
+                    console.warn('Silent token failed:', e);
+                }
             }
-        } else {
-            showLogin();
+        } catch (e) {
+            console.error('MSAL init error:', e);
+        } finally {
+            if (!dashboardShown) showLogin();
         }
     }
 
