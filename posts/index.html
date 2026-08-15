@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>정보글 · 해커그라운드</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body class="bg-gray-950 text-gray-100 font-sans">
+
+  <nav class="border-b border-gray-800 sticky top-0 bg-gray-950/90 backdrop-blur z-10">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/" class="font-bold text-lg tracking-tight text-white hover:text-emerald-400 transition">⚡ 해커그라운드</a>
+      <div class="flex gap-6 text-sm text-gray-400">
+        <a href="/events/" class="hover:text-white transition">행사</a>
+        <a href="/posts/" class="text-white font-medium">정보글</a>
+        <a href="https://github.com/hackersground-kr" target="_blank" class="hover:text-white transition">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-5xl mx-auto px-6 py-12">
+    <div class="mb-10">
+      <h1 class="text-3xl font-extrabold mb-3">📚 깨알 정보글</h1>
+      <p class="text-gray-400">개발, 클라우드, 커리어 — 유용한 정보를 모아뒀어요.</p>
+    </div>
+
+    <!-- 태그 필터 -->
+    <div class="flex gap-2 mb-8 flex-wrap">
+      <button onclick="filterPosts('all')" id="filter-all"
+        class="filter-btn active px-4 py-1.5 rounded-full text-sm border border-emerald-500 text-emerald-400 bg-emerald-500/10">
+        전체
+      </button>
+      <button onclick="filterPosts('azure')" id="filter-azure"
+        class="filter-btn px-4 py-1.5 rounded-full text-sm border border-gray-700 text-gray-400 hover:border-gray-500 hover:text-white transition">
+        Azure
+      </button>
+      <button onclick="filterPosts('github')" id="filter-github"
+        class="filter-btn px-4 py-1.5 rounded-full text-sm border border-gray-700 text-gray-400 hover:border-gray-500 hover:text-white transition">
+        GitHub
+      </button>
+      <button onclick="filterPosts('career')" id="filter-career"
+        class="filter-btn px-4 py-1.5 rounded-full text-sm border border-gray-700 text-gray-400 hover:border-gray-500 hover:text-white transition">
+        커리어
+      </button>
+      <button onclick="filterPosts('opensource')" id="filter-opensource"
+        class="filter-btn px-4 py-1.5 rounded-full text-sm border border-gray-700 text-gray-400 hover:border-gray-500 hover:text-white transition">
+        오픈소스
+      </button>
+    </div>
+
+    <!-- 정보글 목록 -->
+    <div class="flex flex-col gap-3" id="posts-list">
+
+      <a href="./azure-free-tier-guide.html" data-tag="azure"
+         class="post-item flex items-start gap-4 bg-gray-900 border border-gray-800 rounded-xl p-4 hover:border-gray-600 transition group">
+        <span class="text-3xl mt-0.5 shrink-0">☁️</span>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 flex-wrap mb-1">
+            <span class="text-xs text-blue-400 bg-blue-500/10 border border-blue-500/20 px-2 py-0.5 rounded-full">Azure</span>
+            <span class="text-xs text-gray-600">2025.07.15</span>
+          </div>
+          <h3 class="font-semibold text-white group-hover:text-emerald-400 transition text-sm">Azure 무료 크레딧으로 할 수 있는 것들 총정리</h3>
+          <p class="text-gray-500 text-xs mt-1">학생 계정, 스타트업 크레딧, 무료 티어 서비스까지 — 돈 안 쓰고 클라우드 실습하는 법</p>
+        </div>
+      </a>
+
+      <a href="./github-copilot-tips.html" data-tag="github"
+         class="post-item flex items-start gap-4 bg-gray-900 border border-gray-800 rounded-xl p-4 hover:border-gray-600 transition group">
+        <span class="text-3xl mt-0.5 shrink-0">🤖</span>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 flex-wrap mb-1">
+            <span class="text-xs text-purple-400 bg-purple-500/10 border border-purple-500/20 px-2 py-0.5 rounded-full">GitHub</span>
+            <span class="text-xs text-gray-600">2025.07.08</span>
+          </div>
+          <h3 class="font-semibold text-white group-hover:text-emerald-400 transition text-sm">GitHub Copilot 생산성 10배 올리는 팁 모음</h3>
+          <p class="text-gray-500 text-xs mt-1">실무에서 쓰는 프롬프트 패턴, 단축키, 에디터 설정까지 한 번에</p>
+        </div>
+      </a>
+
+      <a href="./open-source-contribution-start.html" data-tag="opensource"
+         class="post-item flex items-start gap-4 bg-gray-900 border border-gray-800 rounded-xl p-4 hover:border-gray-600 transition group">
+        <span class="text-3xl mt-0.5 shrink-0">🌱</span>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 flex-wrap mb-1">
+            <span class="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">오픈소스</span>
+            <span class="text-xs text-gray-600">2025.06.20</span>
+          </div>
+          <h3 class="font-semibold text-white group-hover:text-emerald-400 transition text-sm">오픈소스 기여 처음 시작하는 법 (겁먹지 말고)</h3>
+          <p class="text-gray-500 text-xs mt-1">첫 PR까지 4단계로 쉽게 따라가기 — 오타 수정도 기여입니다</p>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- 정보글 제안 CTA -->
+    <div class="mt-10 bg-gray-900 border border-gray-800 rounded-2xl p-6 text-center">
+      <p class="text-gray-400 mb-4 text-sm">공유하고 싶은 팁이나 정보가 있다면 제안해주세요!</p>
+      <a href="https://github.com/hackersground-kr/hackersground-kr.github.io/issues/new?template=post.md"
+         target="_blank"
+         class="inline-block bg-emerald-500 hover:bg-emerald-400 text-black font-semibold px-5 py-2.5 rounded-xl text-sm transition">
+        ✍️ 정보글 제안하기
+      </a>
+    </div>
+  </main>
+
+  <footer class="border-t border-gray-800 py-8 text-center text-gray-600 text-sm">
+    <p>© 2025 해커그라운드 커뮤니티 · <a href="https://github.com/hackersground-kr" class="hover:text-gray-400 transition">GitHub</a></p>
+  </footer>
+
+  <script>
+    function filterPosts(tag) {
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('border-emerald-500', 'text-emerald-400', 'bg-emerald-500/10');
+        btn.classList.add('border-gray-700', 'text-gray-400');
+      });
+      const active = document.getElementById('filter-' + tag);
+      if (active) {
+        active.classList.add('border-emerald-500', 'text-emerald-400', 'bg-emerald-500/10');
+        active.classList.remove('border-gray-700', 'text-gray-400');
+      }
+      document.querySelectorAll('.post-item').forEach(item => {
+        item.style.display = (tag === 'all' || item.dataset.tag === tag) ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GitHub Copilot 생산성 10배 팁 · 해커그라운드</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body class="bg-gray-950 text-gray-100 font-sans">
+
+  <nav class="border-b border-gray-800 sticky top-0 bg-gray-950/90 backdrop-blur z-10">
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="/" class="font-bold text-lg tracking-tight text-white hover:text-emerald-400 transition">⚡ 해커그라운드</a>
+      <div class="flex gap-6 text-sm text-gray-400">
+        <a href="/events/" class="hover:text-white transition">행사</a>
+        <a href="/posts/" class="text-white font-medium">정보글</a>
+        <a href="https://github.com/hackersground-kr" target="_blank" class="hover:text-white transition">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-3xl mx-auto px-6 py-12">
+    <nav class="text-sm text-gray-600 mb-8">
+      <a href="/posts/" class="hover:text-gray-400 transition">정보글</a>
+      <span class="mx-2">›</span>
+      <span class="text-gray-400">GitHub Copilot 팁</span>
+    </nav>
+
+    <header class="mb-10">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-xs text-purple-400 bg-purple-500/10 border border-purple-500/20 px-2 py-0.5 rounded-full">GitHub</span>
+        <span class="text-xs text-gray-600">2025.07.08</span>
+      </div>
+      <h1 class="text-3xl md:text-4xl font-extrabold mb-4">🤖 GitHub Copilot 생산성 10배 올리는 팁 모음</h1>
+      <p class="text-gray-400 text-lg">그냥 Tab만 누르던 분들을 위한 실전 가이드</p>
+    </header>
+
+    <article class="prose">
+      <h2>기본 단축키 (VS Code 기준)</h2>
+      <ul>
+        <li><code>Tab</code> — 제안 수락</li>
+        <li><code>Esc</code> — 제안 거절</li>
+        <li><code>Alt + ]</code> / <code>Alt + [</code> — 다음/이전 제안 보기</li>
+        <li><code>Ctrl + Enter</code> — 패널에서 여러 제안 한꺼번에 보기</li>
+        <li><code>Ctrl + I</code> — Copilot 인라인 채팅 열기</li>
+      </ul>
+
+      <h2>주석으로 코드 유도하기</h2>
+      <p>Copilot은 주석을 기반으로 코드를 생성해요. 주석을 자세하게 쓸수록 더 정확한 코드가 나와요.</p>
+      <ul>
+        <li>"함수 만들어줘" ❌</li>
+        <li>"주어진 배열에서 중복을 제거하고 내림차순으로 정렬하는 함수" ✅</li>
+      </ul>
+
+      <h2>Copilot Chat 활용 패턴</h2>
+      <ul>
+        <li><code>/explain</code> — 선택한 코드 설명해줘</li>
+        <li><code>/fix</code> — 에러 고쳐줘</li>
+        <li><code>/tests</code> — 유닛 테스트 생성</li>
+        <li><code>/doc</code> — 문서 주석 생성</li>
+        <li><code>@workspace</code> — 전체 프로젝트 컨텍스트로 질문</li>
+      </ul>
+
+      <h2>꿀팁 모음</h2>
+      <ul>
+        <li>파일 맨 위에 목적을 주석으로 써두면 전체적으로 더 맥락에 맞는 제안이 와요</li>
+        <li>테스트 코드 먼저 작성하면 Copilot이 구현을 맞춰서 생성해요 (TDD 친화적)</li>
+        <li>여러 줄 삭제 후 다시 타이핑하면 더 나은 버전 제안을 받을 수 있어요</li>
+        <li>영어 주석이 한국어보다 제안 품질이 조금 더 높은 경향이 있어요</li>
+      </ul>
+
+      <blockquote>
+        Copilot은 페어 프로그래밍 파트너예요. 제안을 무조건 믿지 말고, 리뷰하는 습관을 들이세요.
+      </blockquote>
+    </article>
+  </main>
+
+  <footer class="border-t border-gray-800 py-8 text-center text-gray-600 text-sm">
+    <p>© 2025 해커그라운드 커뮤니티 · <a href="https://github.com/hackersground-kr" class="hover:text-gray-400 transition">GitHub</a></p>
+  </footer>
+
+</body>
+</html>
