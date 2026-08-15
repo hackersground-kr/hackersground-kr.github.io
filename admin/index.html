@@ -426,7 +426,7 @@
     const msalInstance = new msal.PublicClientApplication(msalConfig);
 
     const loginRequest = {
-        scopes: [`api://${CLIENT_ID}/user_impersonation`],
+        scopes: ['openid', 'profile', 'email', 'User.Read'],
     };
 
     // =============================================
@@ -436,6 +436,15 @@
     let currentEvent = '';
     let accessToken = '';
     let msalReady = false;  // 초기화 완료 플래그
+
+    // 초기화 타임아웃 (10초 안에 안되면 버튼 활성화)
+    const initTimeout = setTimeout(() => {
+        if (!msalReady) {
+            console.warn('MSAL init timeout — enabling button anyway');
+            msalReady = true;
+            enableLoginBtn();
+        }
+    }, 10000);
 
     // 로그인 버튼 활성화 헬퍼
     function enableLoginBtn() {
@@ -459,6 +468,7 @@
         let dashboardShown = false;
         try {
             await msalInstance.initialize();
+            clearTimeout(initTimeout);
             msalReady = true;
 
             // 리다이렉트 콜백 처리
@@ -585,20 +595,15 @@
                 ? `${API_BASE}/registrations?event=${encodeURIComponent(eventId)}`
                 : `${API_BASE}/registrations`;
 
+            const accounts = msalInstance.getAllAccounts();
+            const userEmail = accounts.length > 0 ? accounts[0].username : '';
+
             const res = await fetch(url, {
-                headers: { 'Authorization': `Bearer ${accessToken}` },
+                headers: { 'X-Admin-Email': userEmail },
             });
 
-            if (res.status === 401) {
-                // 토큰 만료 → 재취득 시도
-                const accounts = msalInstance.getAllAccounts();
-                if (accounts.length > 0) {
-                    const silentRes = await msalInstance.acquireTokenSilent({
-                        ...loginRequest, account: accounts[0]
-                    });
-                    accessToken = silentRes.accessToken;
-                    return loadRegistrations(eventId);
-                }
+            if (res.status === 401 || res.status === 403) {
+                alert('접근 권한이 없어요. 어드민 이메일 등록 여부를 확인해주세요.');
                 showLogin();
                 return;
             }

@@ -15,11 +15,14 @@ const STORAGE_ACCOUNT = process.env.AZURE_STORAGE_ACCOUNT_NAME;
 const STORAGE_KEY = process.env.AZURE_STORAGE_ACCOUNT_KEY;
 const TABLE_NAME = 'EventRegistrations';
 const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || 'https://hackersground-kr.github.io';
+// 허용된 어드민 이메일 목록 (콤마로 구분, 소문자로 비교)
+const ADMIN_EMAILS = (process.env.ADMIN_ALLOWED_EMAILS || '')
+  .split(',').map(e => e.trim().toLowerCase()).filter(Boolean);
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
   'Access-Control-Allow-Methods': 'GET, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Admin-Email',
   'Content-Type': 'application/json',
 };
 
@@ -33,21 +36,17 @@ app.http('getRegistrations', {
       return { status: 204, headers: CORS_HEADERS };
     }
 
-    // Easy Auth가 검증한 사용자 정보 헤더 확인
-    const principalHeader = request.headers.get('x-ms-client-principal');
-    if (!principalHeader) {
+    // 이메일 헤더로 어드민 인증
+    const adminEmail = (request.headers.get('x-admin-email') || '').toLowerCase();
+    if (!adminEmail || (ADMIN_EMAILS.length > 0 && !ADMIN_EMAILS.includes(adminEmail))) {
+      context.log(`[admin] 접근 거부: ${adminEmail || '(없음)'}`);
       return {
-        status: 401,
+        status: 403,
         headers: CORS_HEADERS,
-        jsonBody: { error: 'Microsoft 계정 로그인이 필요해요.' },
+        jsonBody: { error: '접근 권한이 없어요. 어드민 이메일을 확인해주세요.' },
       };
     }
-
-    let userInfo = {};
-    try {
-      userInfo = JSON.parse(Buffer.from(principalHeader, 'base64').toString('utf-8'));
-      context.log(`[admin] 접근: ${userInfo.userDetails || '알 수 없음'}`);
-    } catch { /* 파싱 실패해도 헤더 존재 = 인증 성공 */ }
+    context.log(`[admin] 접근 허용: ${adminEmail}`);
 
     if (!STORAGE_ACCOUNT || !STORAGE_KEY) {
       return { status: 500, headers: CORS_HEADERS, jsonBody: { error: '서버 설정 오류입니다.' } };
@@ -84,7 +83,7 @@ app.http('getRegistrations', {
         headers: CORS_HEADERS,
         jsonBody: {
           total: rows.length,
-          accessedBy: userInfo.userDetails || '알 수 없음',
+          accessedBy: adminEmail,
           registrations: rows,
         },
       };
