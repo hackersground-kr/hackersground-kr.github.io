@@ -1,0 +1,17 @@
+{
+  "name": "hackersground-api",
+  "version": "1.0.0",
+  "description": "해커그라운드 행사 신청 API (Azure Functions v4)",
+  "main": "src/functions/*.js",
+  "scripts": {
+    "start": "func start",
+    "build": "echo 'No build step'"
+  },
+  "dependencies": {
+    "@azure/data-tables": "^13.2.2",
+    "@azure/communication-email": "^1.0.0"
+  },
+  "devDependencies": {
+    "@azure/functions": "^4.5.0"
+  }
+}

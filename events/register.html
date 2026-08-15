@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>행사 신청 · 해커그라운드</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        .register-hero {
+            padding: 8rem 0 4rem;
+            background: linear-gradient(135deg, rgba(0,255,65,0.08), rgba(0,0,0,0.97));
+            min-height: 40vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .register-section {
+            padding: 4rem 0 6rem;
+            background: var(--dark-bg);
+        }
+
+        .register-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        /* 행사 정보 사이드 */
+        .event-info-side .event-detail-box {
+            background: rgba(0,255,65,0.04);
+            border: 1px solid var(--border-green);
+            border-radius: 20px;
+            padding: 2rem;
+            position: sticky;
+            top: 6rem;
+        }
+
+        .event-info-side h3 {
+            color: var(--primary-green);
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-green);
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(0,255,65,0.08);
+            font-size: 0.9rem;
+        }
+
+        .detail-row:last-child { border-bottom: none; }
+        .detail-row .icon { font-size: 1.1rem; flex-shrink: 0; }
+        .detail-row .label { color: #6b7280; font-size: 0.78rem; margin-bottom: 0.2rem; }
+        .detail-row .value { color: var(--text-white); font-weight: 500; }
+
+        /* 폼 스타일 */
+        .register-form {
+            background: rgba(0,255,65,0.03);
+            border: 1px solid var(--border-green);
+            border-radius: 20px;
+            padding: 2.5rem;
+        }
+
+        .register-form h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--text-white);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #d1d5db;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group label .required {
+            color: var(--primary-green);
+            margin-left: 0.25rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border-green);
+            border-radius: 10px;
+            padding: 0.85rem 1rem;
+            color: var(--text-white);
+            font-size: 0.95rem;
+            font-family: 'Noto Sans KR', sans-serif;
+            transition: border-color 0.2s ease;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(0,255,65,0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-group select option {
+            background: #111;
+            color: var(--text-white);
+        }
+
+        .form-hint {
+            font-size: 0.78rem;
+            color: #6b7280;
+            margin-top: 0.4rem;
+        }
+
+        .form-submit {
+            width: 100%;
+            padding: 1rem;
+            background: var(--gradient-primary);
+            color: var(--dark-bg);
+            font-weight: 700;
+            font-size: 1rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Noto Sans KR', sans-serif;
+            margin-top: 0.5rem;
+        }
+
+        .form-submit:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--shadow-green);
+        }
+
+        .form-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* 성공/에러 메시지 */
+        .form-message {
+            display: none;
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            margin-top: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .form-message.success {
+            background: rgba(0,255,65,0.08);
+            border: 1px solid var(--border-green);
+            color: var(--primary-green);
+        }
+
+        .form-message.error {
+            background: rgba(239,68,68,0.08);
+            border: 1px solid rgba(239,68,68,0.3);
+            color: #f87171;
+        }
+
+        /* 로딩 스피너 */
+        .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(0,0,0,0.3);
+            border-top-color: var(--dark-bg);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 768px) {
+            .register-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .event-info-side .event-detail-box { position: static; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="/"><img src="../images/1920x480-1.png" alt="해커그라운드 로고" class="logo-image"></a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="/events/" class="nav-link" style="color: var(--primary-green);">Events</a></li>
+                <li class="nav-item"><a href="/posts/" class="nav-link">Posts</a></li>
+                <li class="nav-item"><a href="/#about" class="nav-link">About</a></li>
+            </ul>
+            <div class="nav-toggle" id="mobile-menu">
+                <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <section class="register-hero">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="/">Home</a><span class="sep">›</span>
+                <a href="/events/">Events</a><span class="sep">›</span>
+                <span id="breadcrumb-event" style="color:#9ca3af;">행사 신청</span>
+            </div>
+            <h1 class="hero-title" style="font-size: clamp(1.8rem, 4vw, 3rem); margin-top: 1rem;" id="page-title">
+                ✍️ 행사 신청
+            </h1>
+            <p class="hero-subtitle" style="font-size: 1rem;" id="page-subtitle">
+                아래 폼을 작성해서 신청해주세요. 확인 후 연락드릴게요!
+            </p>
+        </div>
+    </section>
+
+    <section class="register-section">
+        <div class="container">
+            <div class="register-grid">
+
+                <!-- 행사 정보 (JS에서 동적 주입) -->
+                <div class="event-info-side">
+                    <div class="event-detail-box">
+                        <h3>📋 행사 정보</h3>
+                        <div id="event-details">
+                            <!-- JS로 채워짐 -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 신청 폼 -->
+                <div>
+                    <form class="register-form" id="register-form" novalidate>
+                        <h3>신청 정보 입력</h3>
+
+                        <div class="form-group">
+                            <label for="name">이름 <span class="required">*</span></label>
+                            <input type="text" id="name" name="name" placeholder="홍길동" required autocomplete="name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">이메일 <span class="required">*</span></label>
+                            <input type="email" id="email" name="email" placeholder="hong@example.com" required autocomplete="email">
+                            <p class="form-hint">신청 확인 이메일을 보내드려요.</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">전화번호</label>
+                            <input type="tel" id="phone" name="phone" placeholder="010-1234-5678" autocomplete="tel">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="affiliation">소속</label>
+                            <input type="text" id="affiliation" name="affiliation" placeholder="XX대학교 / XX회사 / 개인">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message">한마디 (선택)</label>
+                            <textarea id="message" name="message" placeholder="기대하는 점이나 질문이 있다면 남겨주세요 😊"></textarea>
+                        </div>
+
+                        <button type="submit" class="form-submit" id="submit-btn">
+                            <span id="btn-text">신청하기 →</span>
+                            <div class="spinner" id="spinner"></div>
+                        </button>
+
+                        <div class="form-message success" id="msg-success">
+                            🎉 신청이 완료됐어요!<br>
+                            <span id="success-detail"></span>
+                        </div>
+                        <div class="form-message error" id="msg-error">
+                            😅 <span id="error-detail">오류가 발생했어요. 잠시 후 다시 시도해주세요.</span>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo"><img src="../images/1920x480-1.png" alt="해커그라운드 로고" class="footer-logo-image"></div>
+                <div class="footer-info">
+                    <h3>Contact</h3>
+                    <p>📧 contact@hackersground.kr</p>
+                    <div class="social-links">
+                        <a href="https://github.com/hackersground-kr" target="_blank" class="social-link"><span>📱 GitHub</span></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom"><p>&copy; 2025 해커그라운드(HackerGround). All rights reserved.</p></div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script>
+    // =============================================
+    // 행사 데이터 (새 행사 추가 시 여기에 등록)
+    // =============================================
+    const EVENTS = {
+        'hackersground-2025': {
+            name: '해커그라운드 2025 해커톤',
+            emoji: '🏕️',
+            date: '2025. 08. 23–24 (토·일)',
+            location: '대구 엑스코 (EXCO)',
+            type: '오프라인',
+            price: '무료',
+            capacity: '팀당 2–5인',
+            deadline: '2025.08.10 (일)',
+        },
+        'workshop-azure-ai': {
+            name: 'Azure AI 입문 워크샵',
+            emoji: '🤖',
+            date: '2025. 09. 06 (토)',
+            location: 'Teams 온라인',
+            type: '온라인',
+            price: '무료',
+            capacity: '선착순 50명',
+            deadline: '2025.09.04 (목)',
+        },
+        'docker-workshop': {
+            name: 'Docker로 나만의 개발 환경 구축하기',
+            emoji: '🐳',
+            date: '2025. 09. 14 (일)',
+            location: '해커그라운드 (중앙로)',
+            type: '오프라인',
+            price: '₩30,000',
+            capacity: '선착순 20명',
+            deadline: '2025.09.10 (수)',
+        },
+        'growth-story': {
+            name: '현업 멘토의 주니어 시절 성장 스토리',
+            emoji: '📚',
+            date: '2025. 09. 21 (일)',
+            location: '해커그라운드 (중앙로)',
+            type: '오프라인',
+            price: '무료',
+            capacity: '선착순 30명',
+            deadline: '2025.09.17 (수)',
+        },
+        'networking-party': {
+            name: '치맥과 함께하는 코드 리뷰 파티',
+            emoji: '🍺',
+            date: '2025. 10. 05 (일)',
+            location: '해커그라운드 (중앙로)',
+            type: '오프라인',
+            price: '₩15,000',
+            capacity: '선착순 20명',
+            deadline: '2025.10.01 (수)',
+        },
+        'chatgpt-workshop': {
+            name: 'ChatGPT API로 만드는 토이 프로젝트',
+            emoji: '💬',
+            date: '2025. 10. 19 (일)',
+            location: '해커그라운드 (중앙로)',
+            type: '오프라인',
+            price: '₩25,000',
+            capacity: '선착순 20명',
+            deadline: '2025.10.15 (수)',
+        },
+    };
+
+    // API 엔드포인트 (Azure Functions URL)
+    // 배포 후 실제 URL로 변경하세요
+    const API_URL = 'https://hackersground-api.azurewebsites.net/api/register';
+
+    // =============================================
+    // 페이지 초기화
+    // =============================================
+    const params = new URLSearchParams(window.location.search);
+    const eventId = params.get('event') || '';
+    const event = EVENTS[eventId];
+
+    if (event) {
+        // 타이틀 업데이트
+        document.title = `${event.name} 신청 · 해커그라운드`;
+        document.getElementById('breadcrumb-event').textContent = event.name;
+        document.getElementById('page-title').innerHTML = `✍️ ${event.emoji} ${event.name} 신청`;
+
+        // 행사 정보 렌더링
+        const details = [
+            { icon: '📅', label: '일정', value: event.date },
+            { icon: '📍', label: '장소', value: event.location },
+            { icon: '🏷️', label: '유형', value: event.type },
+            { icon: '💰', label: '참가비', value: event.price },
+            { icon: '👥', label: '정원', value: event.capacity },
+            { icon: '⏰', label: '마감', value: event.deadline },
+        ];
+        document.getElementById('event-details').innerHTML = details.map(d => `
+            <div class="detail-row">
+                <span class="icon">${d.icon}</span>
+                <div>
+                    <div class="label">${d.label}</div>
+                    <div class="value">${d.value}</div>
+                </div>
+            </div>
+        `).join('');
+    } else {
+        document.getElementById('event-details').innerHTML =
+            '<p style="color:#6b7280;font-size:0.9rem;">행사 정보를 불러올 수 없어요.<br>URL에 ?event=행사ID 를 확인해주세요.</p>';
+    }
+
+    // =============================================
+    // 폼 제출
+    // =============================================
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const btn = document.getElementById('submit-btn');
+        const spinner = document.getElementById('spinner');
+        const btnText = document.getElementById('btn-text');
+        const msgSuccess = document.getElementById('msg-success');
+        const msgError = document.getElementById('msg-error');
+
+        // 초기화
+        msgSuccess.style.display = 'none';
+        msgError.style.display = 'none';
+
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+
+        if (!name || !email) {
+            showError('이름과 이메일은 필수예요.');
+            return;
+        }
+
+        // 로딩 상태
+        btn.disabled = true;
+        btnText.style.display = 'none';
+        spinner.style.display = 'block';
+
+        const payload = {
+            eventId: eventId || 'unknown',
+            eventName: event ? event.name : '알 수 없는 행사',
+            name,
+            email,
+            phone: document.getElementById('phone').value.trim(),
+            affiliation: document.getElementById('affiliation').value.trim(),
+            message: document.getElementById('message').value.trim(),
+        };
+
+        try {
+            const res = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+
+            const data = await res.json();
+
+            if (res.ok && data.success) {
+                msgSuccess.style.display = 'block';
+                document.getElementById('success-detail').textContent = data.message || `${name}님, 확인 이메일을 보내드릴게요!`;
+                document.getElementById('register-form').reset();
+            } else {
+                showError(data.error || '신청 처리 중 오류가 발생했어요.');
+            }
+        } catch (err) {
+            showError('네트워크 오류가 발생했어요. 잠시 후 다시 시도해주세요.');
+            console.error(err);
+        } finally {
+            btn.disabled = false;
+            btnText.style.display = 'block';
+            spinner.style.display = 'none';
+        }
+    });
+
+    function showError(msg) {
+        const el = document.getElementById('msg-error');
+        document.getElementById('error-detail').textContent = msg;
+        el.style.display = 'block';
+    }
+    </script>
+</body>
+</html>
