@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-MZT9L6Z5');</script>
+    <!-- End Google Tag Manager -->
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TEMR2FR1P9"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-TEMR2FR1P9');
+    </script>
+    <!-- End Google Analytics 4 -->
+    <meta name="naver-site-verification" content="713b4f34ec9a62ae39ba8e83e99fbab81d3faf89" />
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary-green:#00FF41;
+    --secondary-green:#39FF14;
+    --primary-purple:#6B46C1;
+    --secondary-purple:#8B5CF6;
+    --primary-blue:#3B82F6;
+    --secondary-blue:#60A5FA;
+    --dark-bg:#000000;
+    --text-white:#FFFFFF;
+    --text-gray:#B9C0C9;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{width:1080px; height:1350px; background:var(--dark-bg); overflow:hidden;}
+  body{font-family:'Noto Sans KR',sans-serif; color:var(--text-white); position:relative;}
+
+  .card{
+    width:1080px; height:1350px; position:relative;
+    background:
+      radial-gradient(circle at 88% 10%, rgba(0,255,65,0.13), transparent 42%),
+      radial-gradient(circle at 8% 92%, rgba(139,92,246,0.15), transparent 45%),
+      var(--dark-bg);
+    display:flex; flex-direction:column;
+    padding:76px 76px 60px 76px;
+  }
+  .grid-overlay{
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(0,255,65,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,65,0.05) 1px, transparent 1px);
+    background-size: 54px 54px;
+    pointer-events:none;
+  }
+  .frame-border{
+    position:absolute; inset:28px;
+    border:2px solid rgba(0,255,65,0.35);
+    border-radius:28px;
+    pointer-events:none;
+  }
+  .mascot{
+    position:absolute;
+    z-index:1;
+    filter: drop-shadow(0 0 40px rgba(0,0,0,0.6));
+  }
+
+  .header-row{
+    display:flex; align-items:center; justify-content:space-between;
+    position:relative; z-index:2;
+  }
+  .brand{
+    display:flex; align-items:center; gap:14px;
+    font-family:'Fira Code',monospace; font-weight:600; font-size:24px;
+    color:var(--primary-green); letter-spacing:1px;
+  }
+  .brand .dot{width:10px;height:10px;border-radius:50%; background:var(--primary-green); box-shadow:0 0 12px var(--primary-green);}
+  .page-num{
+    font-family:'Fira Code',monospace; font-size:22px; color:var(--text-gray);
+    border:1px solid rgba(255,255,255,0.25); border-radius:100px; padding:8px 20px;
+  }
+
+  .story-body{
+    flex:1; display:flex; flex-direction:column; justify-content:center;
+    position:relative; z-index:2;
+  }
+
+  .slogan{
+    font-weight:900; font-size:100px; line-height:1.28; letter-spacing:-2px;
+    max-width:900px;
+  }
+  .slogan .accent{ color:var(--primary-green); }
+  .slogan .accent.purple{ color:var(--secondary-purple); }
+  .slogan .accent.blue{ color:var(--secondary-blue); }
+
+  .desc{
+    margin-top:36px; font-size:36px; font-weight:400; color:var(--text-gray);
+    line-height:1.6; max-width:820px;
+  }
+
+  .cover-badge{
+    display:inline-flex; align-items:center; gap:16px; margin-top:40px;
+    border:3px solid var(--primary-green); border-radius:100px;
+    padding:16px 40px; font-family:'Fira Code',monospace;
+    font-weight:700; font-size:28px; color:var(--text-white);
+    box-shadow:0 0 30px rgba(0,255,65,0.25);
+    width:fit-content; position:relative; z-index:2;
+  }
+
+  .progress-row{
+    display:flex; gap:12px; margin-top:auto; padding-top:50px;
+    position:relative; z-index:2;
+  }
+  .progress-dot{
+    width:14px; height:14px; border-radius:50%;
+    background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.25);
+  }
+  .progress-dot.active{
+    background:var(--primary-green); border-color:var(--primary-green);
+    box-shadow:0 0 10px var(--primary-green);
+  }
+
+  .footer{
+    margin-top:34px; display:flex; align-items:center; justify-content:space-between;
+    position:relative; z-index:2;
+  }
+  .footer .meta{ font-family:'Fira Code',monospace; font-size:22px; color:var(--text-gray); }
+  .footer .logo-mini{ font-weight:900; font-size:26px; color:var(--text-white); letter-spacing:0.5px; }
+  .footer .logo-mini span{ color:var(--primary-green); }
+</style>
+</head>
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MZT9L6Z5"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+  <div class="card" id="card">
+    <div class="grid-overlay"></div>
+    <div class="frame-border"></div>
+    <img class="mascot" src="images/char5.png" style="width:270px; right:-50px; bottom:-30px; opacity:0.25;">
+  <div class="header-row">
+    <div class="brand"><span class="dot"></span>HACKERSGROUND.KR</div>
+    <div class="page-num">01 / 09</div>
+  </div>
+
+  <div class="story-body">
+    <div class="slogan">개발은<br>이제 다 된다</div>
+    <div class="desc">코드 짜는 건 더 이상 병목이 아니다</div>
+  </div>
+  <div class="progress-row"><div class="progress-dot"></div><div class="progress-dot active"></div><div class="progress-dot"></div><div class="progress-dot"></div><div class="progress-dot"></div><div class="progress-dot"></div><div class="progress-dot"></div><div class="progress-dot"></div><div class="progress-dot"></div><div class="progress-dot"></div></div>
+  <div class="footer">
+    <div class="meta">TOPIC · BUSINESS</div>
+    <div class="logo-mini">HACKERS<span>GROUND</span></div>
+  </div>
+
+  </div>
+</body>
+</html>

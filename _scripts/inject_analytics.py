@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-모든 HTML 파일에 Google Tag Manager & 네이버 서치어드바이저 태그를 자동 삽입합니다.
-- <head> 최상단: GTM 스크립트 + 네이버 site-verification 메타태그
+모든 HTML 파일에 Google Tag Manager & GA4 & 네이버 서치어드바이저 태그를 자동 삽입합니다.
+- <head> 최상단: GTM 스크립트 + GA4 스크립트 + 네이버 site-verification 메타태그
 - <body> 직후: GTM noscript iframe
 
 GitHub Actions(main.yaml)에서 배포 전 자동 실행됩니다.
@@ -16,6 +16,7 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 GTM_ID = "GTM-MZT9L6Z5"
+GA4_ID = "G-TEMR2FR1P9"
 NAVER_VERIFICATION = "713b4f34ec9a62ae39ba8e83e99fbab81d3faf89"
 
 GTM_HEAD_SNIPPET = f"""    <!-- Google Tag Manager -->
@@ -25,6 +26,15 @@ GTM_HEAD_SNIPPET = f"""    <!-- Google Tag Manager -->
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     }})(window,document,'script','dataLayer','{GTM_ID}');</script>
     <!-- End Google Tag Manager -->
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={GA4_ID}"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){{dataLayer.push(arguments);}}
+    gtag('js', new Date());
+    gtag('config', '{GA4_ID}');
+    </script>
+    <!-- End Google Analytics 4 -->
     <meta name="naver-site-verification" content="{NAVER_VERIFICATION}" />"""
 
 GTM_BODY_SNIPPET = f"""    <!-- Google Tag Manager (noscript) -->
