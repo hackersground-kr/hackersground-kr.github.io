@@ -783,6 +783,7 @@ body {
 .post-tag.github { background: rgba(139,92,246,0.15); color: #a78bfa; border: 1px solid rgba(139,92,246,0.3); }
 .post-tag.career { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
 .post-tag.opensource { background: rgba(0,255,65,0.1); color: var(--primary-green); border: 1px solid var(--border-green); }
+.post-tag.archive { background: rgba(156,163,175,0.12); color: #9ca3af; border: 1px solid rgba(156,163,175,0.25); }
 
 .post-date {
     font-size: 0.8rem;
