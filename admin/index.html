@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>어드민 · 해커그라운드</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <!-- MSAL.js v3 -->
+    <script src="https://alcdn.msauth.net/browser/3.27.0/js/msal-browser.min.js"></script>
+    <style>
+        body { padding-top: 70px; }
+
+        /* 로그인 화면 */
+        .login-screen {
+            min-height: calc(100vh - 70px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--dark-bg);
+        }
+
+        .login-card {
+            background: rgba(0,255,65,0.04);
+            border: 1px solid var(--border-green);
+            border-radius: 24px;
+            padding: 3rem 2.5rem;
+            text-align: center;
+            max-width: 420px;
+            width: 100%;
+        }
+
+        .login-card .logo {
+            width: 180px;
+            margin-bottom: 2rem;
+        }
+
+        .login-card h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--text-white);
+        }
+
+        .login-card p {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .ms-login-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: #fff;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.9rem 2rem;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Noto Sans KR', sans-serif;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .ms-login-btn:hover { background: #f0f0f0; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+        .ms-login-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        .ms-logo {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* 어드민 대시보드 */
+        .admin-dashboard {
+            display: none;
+            padding: 2.5rem 0 5rem;
+            background: var(--dark-bg);
+            min-height: calc(100vh - 70px);
+        }
+
+        .admin-topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .admin-topbar h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: rgba(0,255,65,0.06);
+            border: 1px solid var(--border-green);
+            border-radius: 50px;
+            padding: 0.5rem 1rem 0.5rem 0.5rem;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--dark-bg);
+        }
+
+        .user-name { font-size: 0.85rem; color: #d1d5db; }
+        .logout-btn {
+            background: none;
+            border: 1px solid #374151;
+            color: #9ca3af;
+            padding: 0.35rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-family: 'Noto Sans KR', sans-serif;
+            transition: all 0.2s;
+        }
+        .logout-btn:hover { border-color: #6b7280; color: #d1d5db; }
+
+        /* 이벤트 셀렉터 */
+        .event-selector {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .event-tab {
+            padding: 0.5rem 1.25rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            background: transparent;
+            border: 1px solid var(--border-green);
+            color: #9ca3af;
+            transition: all 0.2s;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        .event-tab:hover,
+        .event-tab.active {
+            border-color: var(--primary-green);
+            color: var(--primary-green);
+            background: rgba(0,255,65,0.08);
+        }
+
+        /* 통계 카드 */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(0,255,65,0.04);
+            border: 1px solid var(--border-green);
+            border-radius: 16px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .stat-card .stat-num {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--primary-green);
+            line-height: 1;
+            margin-bottom: 0.4rem;
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+
+        /* 테이블 */
+        .table-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .table-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary-green);
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--gradient-primary);
+            color: var(--dark-bg);
+            font-weight: 600;
+            font-size: 0.82rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Noto Sans KR', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .download-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+        .download-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+        .table-wrap {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border-green);
+            border-radius: 16px;
+            overflow: hidden;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+            min-width: 640px;
+        }
+
+        thead th {
+            background: rgba(0,255,65,0.06);
+            color: var(--primary-green);
+            font-weight: 600;
+            padding: 0.85rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-green);
+            white-space: nowrap;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid rgba(0,255,65,0.06);
+            transition: background 0.15s;
+        }
+
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:hover { background: rgba(0,255,65,0.03); }
+
+        tbody td {
+            padding: 0.85rem 1rem;
+            color: #d1d5db;
+            vertical-align: top;
+        }
+
+        tbody td .email { color: #9ca3af; font-size: 0.82rem; }
+        tbody td .date { color: #6b7280; font-size: 0.78rem; }
+        tbody td .message { color: #6b7280; font-size: 0.82rem; font-style: italic; max-width: 200px; }
+
+        .event-badge {
+            font-size: 0.72rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            background: rgba(0,255,65,0.1);
+            color: var(--primary-green);
+            border: 1px solid var(--border-green);
+            white-space: nowrap;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+        }
+
+        .loading-row td {
+            text-align: center;
+            padding: 2rem;
+            color: #6b7280;
+        }
+
+        @media (max-width: 768px) {
+            .admin-topbar { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 네비게이션 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="/"><img src="../images/1920x480-1.png" alt="해커그라운드 로고" class="logo-image"></a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="/events/" class="nav-link">Events</a></li>
+                <li class="nav-item"><a href="/posts/" class="nav-link">Posts</a></li>
+                <li class="nav-item"><a href="/admin/" class="nav-link" style="color: var(--primary-green);">Admin</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 로그인 화면 -->
+    <div class="login-screen" id="login-screen">
+        <div class="login-card">
+            <img src="../images/1920x480-1.png" alt="해커그라운드" class="logo">
+            <h2>어드민 로그인</h2>
+            <p>해커그라운드 행사 신청자 현황을 확인하려면<br>Microsoft 계정으로 로그인해주세요.</p>
+            <button class="ms-login-btn" id="login-btn" onclick="signIn()">
+                <!-- Microsoft 로고 SVG -->
+                <svg class="ms-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23">
+                    <rect x="1" y="1" width="10" height="10" fill="#f25022"/>
+                    <rect x="12" y="1" width="10" height="10" fill="#7fba00"/>
+                    <rect x="1" y="12" width="10" height="10" fill="#00a4ef"/>
+                    <rect x="12" y="12" width="10" height="10" fill="#ffb900"/>
+                </svg>
+                Microsoft 계정으로 로그인
+            </button>
+        </div>
+    </div>
+
+    <!-- 어드민 대시보드 -->
+    <div class="admin-dashboard" id="admin-dashboard">
+        <div class="container">
+            <div class="admin-topbar">
+                <h1>📋 신청자 관리</h1>
+                <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
+                    <div class="user-badge">
+                        <div class="user-avatar" id="user-avatar">?</div>
+                        <span class="user-name" id="user-name">로딩 중...</span>
+                    </div>
+                    <button class="logout-btn" onclick="signOut()">로그아웃</button>
+                </div>
+            </div>
+
+            <!-- 행사 선택 탭 -->
+            <div class="event-selector" id="event-tabs">
+                <button class="event-tab active" data-event="" onclick="selectEvent(this, '')">전체</button>
+                <button class="event-tab" data-event="hackersground-2025" onclick="selectEvent(this, 'hackersground-2025')">해커그라운드 2025</button>
+                <button class="event-tab" data-event="workshop-azure-ai" onclick="selectEvent(this, 'workshop-azure-ai')">Azure AI 워크샵</button>
+                <button class="event-tab" data-event="docker-workshop" onclick="selectEvent(this, 'docker-workshop')">Docker 워크샵</button>
+                <button class="event-tab" data-event="growth-story" onclick="selectEvent(this, 'growth-story')">성장스토리 세미나</button>
+                <button class="event-tab" data-event="networking-party" onclick="selectEvent(this, 'networking-party')">치맥 파티</button>
+                <button class="event-tab" data-event="chatgpt-workshop" onclick="selectEvent(this, 'chatgpt-workshop')">ChatGPT 워크샵</button>
+            </div>
+
+            <!-- 통계 -->
+            <div class="stats-row" id="stats-row">
+                <div class="stat-card">
+                    <div class="stat-num" id="stat-total">-</div>
+                    <div class="stat-label">총 신청자</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num" id="stat-today">-</div>
+                    <div class="stat-label">오늘 신청</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-num" id="stat-with-affil">-</div>
+                    <div class="stat-label">소속 입력</div>
+                </div>
+            </div>
+
+            <!-- 신청자 테이블 -->
+            <div class="table-header">
+                <h3 id="table-title">전체 신청자</h3>
+                <button class="download-btn" id="csv-btn" onclick="downloadCSV()" disabled>
+                    ⬇️ CSV 다운로드
+                </button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>행사</th>
+                            <th>이름</th>
+                            <th>이메일</th>
+                            <th>전화</th>
+                            <th>소속</th>
+                            <th>한마디</th>
+                            <th>신청일시</th>
+                        </tr>
+                    </thead>
+                    <tbody id="registrations-tbody">
+                        <tr class="loading-row"><td colspan="8">로딩 중...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // =============================================
+    // MSAL 설정
+    // =============================================
+    const CLIENT_ID = '76ca8444-205c-44bb-b5db-e6c70d26891f';
+    const TENANT_ID = 'bee29138-c48d-48ef-8133-9a68070b7096';
+    const API_BASE  = 'https://hackersground-api.azurewebsites.net/api';
+
+    const msalConfig = {
+        auth: {
+            clientId: CLIENT_ID,
+            authority: `https://login.microsoftonline.com/${TENANT_ID}`,
+            redirectUri: window.location.origin + '/admin/',
+        },
+        cache: { cacheLocation: 'sessionStorage' },
+    };
+
+    const msalInstance = new msal.PublicClientApplication(msalConfig);
+
+    const loginRequest = {
+        scopes: [`api://${CLIENT_ID}/user_impersonation`],
+    };
+
+    // =============================================
+    // 현재 데이터 상태
+    // =============================================
+    let currentData = [];
+    let currentEvent = '';
+    let accessToken = '';
+
+    // =============================================
+    // 초기화 - 이미 로그인돼 있으면 바로 대시보드
+    // =============================================
+    async function init() {
+        await msalInstance.initialize();
+
+        // 리다이렉트 콜백 처리
+        try {
+            const response = await msalInstance.handleRedirectPromise();
+            if (response) {
+                accessToken = response.accessToken;
+                showDashboard(response.account);
+                return;
+            }
+        } catch (e) { console.error(e); }
+
+        // 기존 세션 확인
+        const accounts = msalInstance.getAllAccounts();
+        if (accounts.length > 0) {
+            try {
+                const silentRes = await msalInstance.acquireTokenSilent({
+                    ...loginRequest,
+                    account: accounts[0],
+                });
+                accessToken = silentRes.accessToken;
+                showDashboard(accounts[0]);
+            } catch {
+                showLogin();
+            }
+        } else {
+            showLogin();
+        }
+    }
+
+    // =============================================
+    // 로그인 / 로그아웃
+    // =============================================
+    async function signIn() {
+        document.getElementById('login-btn').disabled = true;
+        document.getElementById('login-btn').textContent = '로그인 중...';
+        try {
+            // 팝업으로 로그인 시도, 실패하면 리다이렉트
+            const res = await msalInstance.loginPopup(loginRequest);
+            accessToken = res.accessToken;
+            showDashboard(res.account);
+        } catch (e) {
+            if (e.errorCode === 'popup_window_error' || e.errorCode === 'empty_window_error') {
+                // 팝업 차단된 경우 리다이렉트로 전환
+                await msalInstance.loginRedirect(loginRequest);
+            } else {
+                alert('로그인에 실패했어요: ' + e.message);
+                document.getElementById('login-btn').disabled = false;
+                document.getElementById('login-btn').innerHTML = `
+                    <svg class="ms-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23">
+                        <rect x="1" y="1" width="10" height="10" fill="#f25022"/>
+                        <rect x="12" y="1" width="10" height="10" fill="#7fba00"/>
+                        <rect x="1" y="12" width="10" height="10" fill="#00a4ef"/>
+                        <rect x="12" y="12" width="10" height="10" fill="#ffb900"/>
+                    </svg>
+                    Microsoft 계정으로 로그인`;
+            }
+        }
+    }
+
+    async function signOut() {
+        await msalInstance.logoutPopup({ postLogoutRedirectUri: '/admin/' });
+    }
+
+    // =============================================
+    // 화면 전환
+    // =============================================
+    function showLogin() {
+        document.getElementById('login-screen').style.display = 'flex';
+        document.getElementById('admin-dashboard').style.display = 'none';
+    }
+
+    function showDashboard(account) {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('admin-dashboard').style.display = 'block';
+
+        const name = account.name || account.username;
+        document.getElementById('user-name').textContent = name;
+        document.getElementById('user-avatar').textContent = name.charAt(0).toUpperCase();
+
+        loadRegistrations('');
+    }
+
+    // =============================================
+    // 행사 탭 선택
+    // =============================================
+    function selectEvent(el, eventId) {
+        document.querySelectorAll('.event-tab').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+        currentEvent = eventId;
+
+        const titles = {
+            '': '전체 신청자',
+            'hackersground-2025': '해커그라운드 2025 해커톤',
+            'workshop-azure-ai': 'Azure AI 입문 워크샵',
+            'docker-workshop': 'Docker 워크샵',
+            'growth-story': '성장스토리 세미나',
+            'networking-party': '치맥 코드리뷰 파티',
+            'chatgpt-workshop': 'ChatGPT 워크샵',
+        };
+        document.getElementById('table-title').textContent = titles[eventId] || eventId;
+        loadRegistrations(eventId);
+    }
+
+    // =============================================
+    // 신청자 데이터 로드
+    // =============================================
+    async function loadRegistrations(eventId) {
+        const tbody = document.getElementById('registrations-tbody');
+        tbody.innerHTML = '<tr class="loading-row"><td colspan="8">🔄 로딩 중...</td></tr>';
+        document.getElementById('csv-btn').disabled = true;
+
+        try {
+            const url = eventId
+                ? `${API_BASE}/registrations?event=${encodeURIComponent(eventId)}`
+                : `${API_BASE}/registrations`;
+
+            const res = await fetch(url, {
+                headers: { 'Authorization': `Bearer ${accessToken}` },
+            });
+
+            if (res.status === 401) {
+                // 토큰 만료 → 재취득 시도
+                const accounts = msalInstance.getAllAccounts();
+                if (accounts.length > 0) {
+                    const silentRes = await msalInstance.acquireTokenSilent({
+                        ...loginRequest, account: accounts[0]
+                    });
+                    accessToken = silentRes.accessToken;
+                    return loadRegistrations(eventId);
+                }
+                showLogin();
+                return;
+            }
+
+            const data = await res.json();
+            currentData = data.registrations || [];
+            renderTable(currentData);
+            renderStats(currentData);
+            document.getElementById('csv-btn').disabled = currentData.length === 0;
+
+        } catch (err) {
+            tbody.innerHTML = `<tr class="loading-row"><td colspan="8">❌ 오류: ${err.message}</td></tr>`;
+        }
+    }
+
+    // =============================================
+    // 테이블 렌더링
+    // =============================================
+    function renderTable(rows) {
+        const tbody = document.getElementById('registrations-tbody');
+        if (rows.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="8" class="empty-state">신청자가 없어요.</td></tr>';
+            return;
+        }
+
+        const EVENT_NAMES = {
+            'hackersground-2025': '해커톤 2025',
+            'workshop-azure-ai': 'Azure AI',
+            'docker-workshop': 'Docker',
+            'growth-story': '성장스토리',
+            'networking-party': '치맥파티',
+            'chatgpt-workshop': 'ChatGPT',
+        };
+
+        tbody.innerHTML = rows.map((r, i) => `
+            <tr>
+                <td style="color:#6b7280;">${i + 1}</td>
+                <td><span class="event-badge">${EVENT_NAMES[r.eventId] || r.eventId}</span></td>
+                <td><strong>${r.name}</strong></td>
+                <td>
+                    <div>${r.email}</div>
+                    ${r.phone ? `<div class="email">${r.phone}</div>` : ''}
+                </td>
+                <td>${r.phone || '<span style="color:#4b5563">-</span>'}</td>
+                <td>${r.affiliation || '<span style="color:#4b5563">-</span>'}</td>
+                <td class="message">${r.message || '<span style="color:#4b5563">-</span>'}</td>
+                <td class="date">${formatDate(r.registeredAt)}</td>
+            </tr>
+        `).join('');
+    }
+
+    // =============================================
+    // 통계 렌더링
+    // =============================================
+    function renderStats(rows) {
+        const today = new Date().toISOString().slice(0, 10);
+        const todayCount = rows.filter(r => r.registeredAt?.startsWith(today)).length;
+        const affiliCount = rows.filter(r => r.affiliation).length;
+
+        document.getElementById('stat-total').textContent = rows.length;
+        document.getElementById('stat-today').textContent = todayCount;
+        document.getElementById('stat-with-affil').textContent = affiliCount;
+    }
+
+    // =============================================
+    // CSV 다운로드
+    // =============================================
+    function downloadCSV() {
+        if (currentData.length === 0) return;
+
+        const headers = ['#', '행사', '이름', '이메일', '전화', '소속', '한마디', '신청일시'];
+        const rows = currentData.map((r, i) => [
+            i + 1, r.eventId, r.name, r.email,
+            r.phone, r.affiliation, r.message, formatDate(r.registeredAt)
+        ]);
+
+        const csvContent = [headers, ...rows]
+            .map(row => row.map(v => `"${String(v ?? '').replace(/"/g, '""')}"`).join(','))
+            .join('\n');
+
+        const bom = '\uFEFF'; // UTF-8 BOM (Excel 한글 지원)
+        const blob = new Blob([bom + csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `신청자_${currentEvent || '전체'}_${new Date().toISOString().slice(0,10)}.csv`;
+        link.click();
+    }
+
+    // =============================================
+    // 유틸
+    // =============================================
+    function formatDate(isoStr) {
+        if (!isoStr) return '-';
+        try {
+            return new Date(isoStr).toLocaleString('ko-KR', {
+                year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit',
+            });
+        } catch { return isoStr; }
+    }
+
+    // 초기화
+    init();
+    </script>
+</body>
+</html>
