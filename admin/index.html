@@ -323,7 +323,7 @@
             <img src="../images/1920x480-1.png" alt="해커그라운드" class="logo">
             <h2>어드민 로그인</h2>
             <p>해커그라운드 행사 신청자 현황을 확인하려면<br>Microsoft 계정으로 로그인해주세요.</p>
-            <button class="ms-login-btn" id="login-btn" onclick="signIn()">
+            <button class="ms-login-btn" id="login-btn" onclick="signIn()" disabled style="opacity:0.5;">
                 <!-- Microsoft 로고 SVG -->
                 <svg class="ms-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23">
                     <rect x="1" y="1" width="10" height="10" fill="#f25022"/>
@@ -331,7 +331,7 @@
                     <rect x="1" y="12" width="10" height="10" fill="#00a4ef"/>
                     <rect x="12" y="12" width="10" height="10" fill="#ffb900"/>
                 </svg>
-                Microsoft 계정으로 로그인
+                초기화 중...
             </button>
         </div>
     </div>
@@ -435,12 +435,29 @@
     let currentData = [];
     let currentEvent = '';
     let accessToken = '';
+    let msalReady = false;  // 초기화 완료 플래그
+
+    // 로그인 버튼 활성화 헬퍼
+    function enableLoginBtn() {
+        const btn = document.getElementById('login-btn');
+        btn.disabled = false;
+        btn.style.opacity = '';
+        btn.innerHTML = `
+            <svg class="ms-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23">
+                <rect x="1" y="1" width="10" height="10" fill="#f25022"/>
+                <rect x="12" y="1" width="10" height="10" fill="#7fba00"/>
+                <rect x="1" y="12" width="10" height="10" fill="#00a4ef"/>
+                <rect x="12" y="12" width="10" height="10" fill="#ffb900"/>
+            </svg>
+            Microsoft 계정으로 로그인`;
+    }
 
     // =============================================
     // 초기화 - 이미 로그인돼 있으면 바로 대시보드
     // =============================================
     async function init() {
         await msalInstance.initialize();
+        msalReady = true;
 
         // 리다이렉트 콜백 처리
         try {
@@ -470,10 +487,17 @@
         }
     }
 
+    function showLogin() {
+        document.getElementById('login-screen').style.display = 'flex';
+        document.getElementById('admin-dashboard').style.display = 'none';
+        enableLoginBtn();  // 초기화 완료 → 버튼 활성화
+    }
+
     // =============================================
     // 로그인 / 로그아웃
     // =============================================
     async function signIn() {
+        if (!msalReady) return;  // 초기화 전 클릭 방어
         document.getElementById('login-btn').disabled = true;
         document.getElementById('login-btn').textContent = '로그인 중...';
         try {
@@ -507,11 +531,6 @@
     // =============================================
     // 화면 전환
     // =============================================
-    function showLogin() {
-        document.getElementById('login-screen').style.display = 'flex';
-        document.getElementById('admin-dashboard').style.display = 'none';
-    }
-
     function showDashboard(account) {
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('admin-dashboard').style.display = 'block';
