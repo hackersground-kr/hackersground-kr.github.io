@@ -315,93 +315,31 @@
 
     <script src="../js/main.js"></script>
     <script>
-    // =============================================
-    // 행사 데이터 (새 행사 추가 시 여기에 등록)
-    // =============================================
-    const EVENTS = {
-        'hackersground-2025': {
-            name: '해커그라운드 2025 해커톤',
-            emoji: '🏕️',
-            date: '2025. 08. 23–24 (토·일)',
-            location: '대구 엑스코 (EXCO)',
-            type: '오프라인',
-            price: '무료',
-            capacity: '팀당 2–5인',
-            deadline: '2025.08.10 (일)',
-        },
-        'workshop-azure-ai': {
-            name: 'Azure AI 입문 워크샵',
-            emoji: '🤖',
-            date: '2025. 09. 06 (토)',
-            location: 'Teams 온라인',
-            type: '온라인',
-            price: '무료',
-            capacity: '선착순 50명',
-            deadline: '2025.09.04 (목)',
-        },
-        'docker-workshop': {
-            name: 'Docker로 나만의 개발 환경 구축하기',
-            emoji: '🐳',
-            date: '2025. 09. 14 (일)',
-            location: '해커그라운드 (중앙로)',
-            type: '오프라인',
-            price: '₩30,000',
-            capacity: '선착순 20명',
-            deadline: '2025.09.10 (수)',
-        },
-        'growth-story': {
-            name: '현업 멘토의 주니어 시절 성장 스토리',
-            emoji: '📚',
-            date: '2025. 09. 21 (일)',
-            location: '해커그라운드 (중앙로)',
-            type: '오프라인',
-            price: '무료',
-            capacity: '선착순 30명',
-            deadline: '2025.09.17 (수)',
-        },
-        'networking-party': {
-            name: '치맥과 함께하는 코드 리뷰 파티',
-            emoji: '🍺',
-            date: '2025. 10. 05 (일)',
-            location: '해커그라운드 (중앙로)',
-            type: '오프라인',
-            price: '₩15,000',
-            capacity: '선착순 20명',
-            deadline: '2025.10.01 (수)',
-        },
-        'chatgpt-workshop': {
-            name: 'ChatGPT API로 만드는 토이 프로젝트',
-            emoji: '💬',
-            date: '2025. 10. 19 (일)',
-            location: '해커그라운드 (중앙로)',
-            type: '오프라인',
-            price: '₩25,000',
-            capacity: '선착순 20명',
-            deadline: '2025.10.15 (수)',
-        },
-        'vibe-coding-workshop': {
-            name: '바이브코딩으로 홈페이지 만들자!',
-            emoji: '💻',
-            date: '2026. 09 (날짜 확정 예정)',
-            location: '대구 수성구 (상세 장소 추후 공지)',
-            type: '오프라인',
-            price: '₩50,000',
-            capacity: '선착순 20명',
-            deadline: '날짜 확정 후 공지',
-        },
-    };
+
 
     // Azure Functions API 엔드포인트
     const API_URL = 'https://hackersground-api.azurewebsites.net/api/register';
 
     // =============================================
-    // 페이지 초기화
+    // events.json에서 행사 데이터 로드 후 초기화
+    // 새 행사 추가는 events/events.json 파일만 수정하세요
     // =============================================
-    const params = new URLSearchParams(window.location.search);
-    const eventId = params.get('event') || '';
-    const event = EVENTS[eventId];
+    async function initPage() {
+        const params = new URLSearchParams(window.location.search);
+        const eventId = params.get('event') || '';
 
-    if (event) {
+        let event = null;
+        try {
+            const res = await fetch('/events/events.json');
+            if (res.ok) {
+                const EVENTS = await res.json();
+                event = EVENTS[eventId] || null;
+            }
+        } catch (e) {
+            console.error('events.json 로드 실패:', e);
+        }
+
+        if (event) {
         // 타이틀 업데이트
         document.title = `${event.name} 신청 · 해커그라운드`;
         document.getElementById('breadcrumb-event').textContent = event.name;
@@ -433,6 +371,10 @@
     // =============================================
     // 폼 제출
     // =============================================
+    } // end initPage
+
+    initPage();
+
     document.getElementById('register-form').addEventListener('submit', async (e) => {
         e.preventDefault();
 
