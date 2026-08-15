@@ -299,6 +299,21 @@
         @media (max-width: 768px) {
             .admin-topbar { flex-direction: column; align-items: flex-start; }
         }
+
+        #past-events-section .event-tab {
+            opacity: 0.75;
+            font-size: 0.82rem;
+        }
+        #past-events-section .event-tab.active {
+            opacity: 1;
+        }
+        #past-events-section .section-label {
+            font-size: 0.72rem;
+            color: #4b5563;
+            margin-bottom: 0.4rem;
+            padding-left: 0.25rem;
+            letter-spacing: 0.03em;
+        }
     </style>
 </head>
 <body>
@@ -350,15 +365,19 @@
                 </div>
             </div>
 
-            <!-- 행사 선택 탭 -->
-            <div class="event-selector" id="event-tabs">
-                <button class="event-tab active" data-event="" onclick="selectEvent(this, '')">전체</button>
-                <button class="event-tab" data-event="hackersground-2025" onclick="selectEvent(this, 'hackersground-2025')">해커그라운드 2025</button>
-                <button class="event-tab" data-event="workshop-azure-ai" onclick="selectEvent(this, 'workshop-azure-ai')">Azure AI 워크샵</button>
-                <button class="event-tab" data-event="docker-workshop" onclick="selectEvent(this, 'docker-workshop')">Docker 워크샵</button>
-                <button class="event-tab" data-event="growth-story" onclick="selectEvent(this, 'growth-story')">성장스토리 세미나</button>
-                <button class="event-tab" data-event="networking-party" onclick="selectEvent(this, 'networking-party')">치맥 파티</button>
-                <button class="event-tab" data-event="chatgpt-workshop" onclick="selectEvent(this, 'chatgpt-workshop')">ChatGPT 워크샵</button>
+            <!-- 행사 선택 탭 (events.json에서 동적 로드) -->
+            <div id="event-tabs-container">
+                <!-- 진행 예정 / 진행 중 행사 -->
+                <div id="active-events-section" style="margin-bottom:0.5rem;">
+                    <div class="event-selector" id="event-tabs-active">
+                        <button class="event-tab active" data-event="" onclick="selectEvent(this, '')">전체</button>
+                    </div>
+                </div>
+                <!-- 지난 행사 (30일 초과) -->
+                <div id="past-events-section" style="display:none; margin-top:0.75rem;">
+                    <div style="font-size:0.75rem; color:#666; margin-bottom:0.4rem; padding-left:0.25rem;">📁 지난 행사</div>
+                    <div class="event-selector" id="event-tabs-past" style="opacity:0.65;"></div>
+                </div>
             </div>
 
             <!-- 통계 -->
@@ -434,6 +453,65 @@
     // =============================================
     let currentData = [];
     let currentEvent = '';
+    let eventsMap = {};  // events.json에서 로드
+
+    // events.json 로드 후 탭 동적 생성
+    async function loadEventTabs() {
+        try {
+            const res = await fetch('/events/events.json');
+            eventsMap = await res.json();
+        } catch (e) {
+            console.warn('events.json 로드 실패, 기본값 사용');
+            eventsMap = {};
+            return;
+        }
+
+        const now = new Date();
+        const cutoff = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000); // 30일 전
+
+        const activeContainer = document.getElementById('event-tabs-active');
+        const pastContainer   = document.getElementById('event-tabs-past');
+        let hasPast = false;
+
+        // date 파싱: "2025. 08. 23–24 (토·일)" → 첫 날짜만 추출
+        function parseEventDate(dateStr) {
+            if (!dateStr) return null;
+            const m = dateStr.match(/(\d{4})\.\s*(\d{1,2})\.\s*(\d{1,2})/);
+            if (!m) return null;
+            return new Date(parseInt(m[1]), parseInt(m[2]) - 1, parseInt(m[3]));
+        }
+
+        // 날짜순 정렬 (미래 먼저)
+        const entries = Object.entries(eventsMap).sort((a, b) => {
+            const da = parseEventDate(a[1].date) || new Date(9999, 0, 1);
+            const db = parseEventDate(b[1].date) || new Date(9999, 0, 1);
+            return da - db;
+        });
+
+        for (const [id, ev] of entries) {
+            const evDate = parseEventDate(ev.date);
+            // 날짜 불명확 → active로 처리
+            const isPast = evDate && evDate < cutoff;
+
+            const btn = document.createElement('button');
+            btn.className = 'event-tab';
+            btn.dataset.event = id;
+            btn.dataset.name = ev.name;
+            btn.onclick = () => selectEvent(btn, id);
+            btn.textContent = (ev.emoji ? ev.emoji + ' ' : '') + ev.name;
+
+            if (isPast) {
+                pastContainer.appendChild(btn);
+                hasPast = true;
+            } else {
+                activeContainer.appendChild(btn);
+            }
+        }
+
+        if (hasPast) {
+            document.getElementById('past-events-section').style.display = 'block';
+        }
+    }
 
     // =============================================
     // 초기화 (MSAL v2 — initialize() 불필요)
@@ -506,7 +584,8 @@
         document.getElementById('user-name').textContent = name;
         document.getElementById('user-avatar').textContent = name.charAt(0).toUpperCase();
 
-        loadRegistrations('');
+        // events.json에서 탭 동적 생성 후 전체 데이터 로드
+        loadEventTabs().then(() => loadRegistrations(''));
     }
 
     // =============================================
@@ -517,16 +596,13 @@
         el.classList.add('active');
         currentEvent = eventId;
 
-        const titles = {
-            '': '전체 신청자',
-            'hackersground-2025': '해커그라운드 2025 해커톤',
-            'workshop-azure-ai': 'Azure AI 입문 워크샵',
-            'docker-workshop': 'Docker 워크샵',
-            'growth-story': '성장스토리 세미나',
-            'networking-party': '치맥 코드리뷰 파티',
-            'chatgpt-workshop': 'ChatGPT 워크샵',
-        };
-        document.getElementById('table-title').textContent = titles[eventId] || eventId;
+        let title = '전체 신청자';
+        if (eventId && eventsMap[eventId]) {
+            title = eventsMap[eventId].name;
+        } else if (eventId) {
+            title = el.dataset.name || eventId;
+        }
+        document.getElementById('table-title').textContent = title;
         loadRegistrations(eventId);
     }
 

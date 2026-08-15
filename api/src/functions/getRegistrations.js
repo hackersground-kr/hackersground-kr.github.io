@@ -14,17 +14,21 @@ const { TableClient, AzureNamedKeyCredential } = require('@azure/data-tables');
 const STORAGE_ACCOUNT = process.env.AZURE_STORAGE_ACCOUNT_NAME;
 const STORAGE_KEY = process.env.AZURE_STORAGE_ACCOUNT_KEY;
 const TABLE_NAME = 'EventRegistrations';
-const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || 'https://hackersground-kr.github.io';
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGIN || 'https://hackersground-kr.github.io')
+  .split(',').map(o => o.trim()).filter(Boolean);
 // 허용된 어드민 이메일 목록 (콤마로 구분, 소문자로 비교)
 const ADMIN_EMAILS = (process.env.ADMIN_ALLOWED_EMAILS || '')
   .split(',').map(e => e.trim().toLowerCase()).filter(Boolean);
 
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
-  'Access-Control-Allow-Methods': 'GET, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Admin-Email',
-  'Content-Type': 'application/json',
-};
+function getCorsHeaders(requestOrigin) {
+  const origin = ALLOWED_ORIGINS.includes(requestOrigin) ? requestOrigin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': origin,
+    'Access-Control-Allow-Methods': 'GET, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Admin-Email',
+    'Content-Type': 'application/json',
+  };
+}
 
 app.http('getRegistrations', {
   methods: ['GET', 'OPTIONS'],
@@ -33,7 +37,7 @@ app.http('getRegistrations', {
   handler: async (request, context) => {
 
     if (request.method === 'OPTIONS') {
-      return { status: 204, headers: CORS_HEADERS };
+      return { status: 204, headers: getCorsHeaders(request.headers.get('origin') || '') };
     }
 
     // 이메일 헤더로 어드민 인증
@@ -42,14 +46,14 @@ app.http('getRegistrations', {
       context.log(`[admin] 접근 거부: ${adminEmail || '(없음)'}`);
       return {
         status: 403,
-        headers: CORS_HEADERS,
+        headers: getCorsHeaders(request.headers.get("origin") || ""),
         jsonBody: { error: '접근 권한이 없어요. 어드민 이메일을 확인해주세요.' },
       };
     }
     context.log(`[admin] 접근 허용: ${adminEmail}`);
 
     if (!STORAGE_ACCOUNT || !STORAGE_KEY) {
-      return { status: 500, headers: CORS_HEADERS, jsonBody: { error: '서버 설정 오류입니다.' } };
+      return { status: 500, headers: getCorsHeaders(request.headers.get("origin") || ""), jsonBody: { error: '서버 설정 오류입니다.' } };
     }
 
     const eventId = request.query.get('event') || null;
@@ -80,7 +84,7 @@ app.http('getRegistrations', {
 
       return {
         status: 200,
-        headers: CORS_HEADERS,
+        headers: getCorsHeaders(request.headers.get("origin") || ""),
         jsonBody: {
           total: rows.length,
           accessedBy: adminEmail,
@@ -90,7 +94,7 @@ app.http('getRegistrations', {
 
     } catch (err) {
       context.error('조회 오류:', err);
-      return { status: 500, headers: CORS_HEADERS, jsonBody: { error: '데이터 조회 중 오류가 발생했어요.' } };
+      return { status: 500, headers: getCorsHeaders(request.headers.get("origin") || ""), jsonBody: { error: '데이터 조회 중 오류가 발생했어요.' } };
     }
   },
 });
