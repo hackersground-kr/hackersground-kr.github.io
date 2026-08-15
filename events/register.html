@@ -332,15 +332,17 @@
     // Azure Functions API 엔드포인트
     const API_URL = 'https://hackersground-api.azurewebsites.net/api/register';
 
+    // 폼 제출 핸들러와 공유할 외부 스코프 변수
+    let eventId = '';
+    let event = null;
+
     // =============================================
     // events.json에서 행사 데이터 로드 후 초기화
-    // 새 행사 추가는 events/events.json 파일만 수정하세요
     // =============================================
     async function initPage() {
         const params = new URLSearchParams(window.location.search);
-        const eventId = params.get('event') || '';
+        eventId = params.get('event') || '';
 
-        let event = null;
         try {
             const res = await fetch('/events/events.json');
             if (res.ok) {
