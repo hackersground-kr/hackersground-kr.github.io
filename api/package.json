@@ -8,8 +8,9 @@
     "build": "echo 'No build step'"
   },
   "dependencies": {
+    "@azure/communication-email": "^1.0.0",
     "@azure/data-tables": "^13.2.2",
-    "@azure/communication-email": "^1.0.0"
+    "resend": "^6.20.0"
   },
   "devDependencies": {
     "@azure/functions": "^4.5.0"

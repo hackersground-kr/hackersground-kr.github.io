@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-MZT9L6Z5');</script>
+    <!-- End Google Tag Manager -->
+    <meta name="naver-site-verification" content="713b4f34ec9a62ae39ba8e83e99fbab81d3faf89" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>신청 완료 · 해커그라운드</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { padding-top: 70px; min-height: 100vh; display: flex; flex-direction: column; }
+        .thankyou-wrap {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 1.5rem;
+        }
+        .thankyou-card {
+            background: rgba(0,255,65,0.04);
+            border: 1px solid rgba(0,255,65,0.15);
+            border-radius: 20px;
+            padding: 3rem 2.5rem;
+            text-align: center;
+            max-width: 520px;
+            width: 100%;
+        }
+        .thankyou-emoji { font-size: 3.5rem; margin-bottom: 1.25rem; display: block; }
+        .thankyou-card h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #f0fff4;
+            margin-bottom: 1rem;
+        }
+        .thankyou-card .sub {
+            color: #9ca3af;
+            line-height: 1.8;
+            margin-bottom: 0.5rem;
+        }
+        .highlight { color: var(--primary-green); font-weight: 600; }
+        .email-notice {
+            background: rgba(0,255,65,0.06);
+            border: 1px solid rgba(0,255,65,0.12);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            margin: 1.75rem 0;
+            color: #d1d5db;
+            font-size: 0.92rem;
+            line-height: 1.7;
+        }
+        .email-notice strong { color: var(--primary-green); }
+        .action-btns {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MZT9L6Z5"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="/"><img src="../images/1920x480-1.png" alt="해커그라운드 로고" class="logo-image"></a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="/events/" class="nav-link" style="color: var(--primary-green);">Events</a></li>
+                <li class="nav-item"><a href="/posts/" class="nav-link">Posts</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="thankyou-wrap">
+        <div class="thankyou-card">
+            <span class="thankyou-emoji">🎉</span>
+            <h1>신청이 완료되었어요!</h1>
+            <p class="sub">
+                <span class="highlight" id="name-display"></span>님,<br>
+                <span id="event-display"></span> 신청을 받았습니다.
+            </p>
+
+            <div class="email-notice">
+                📧 <strong id="email-display"></strong>으로<br>
+                확인 이메일을 보내드렸어요.<br>
+                <span style="color:#6b7280; font-size:0.85rem;">
+                    메일이 안 보이면 스팸함도 확인해주세요.
+                </span>
+            </div>
+
+            <p class="sub" style="font-size:0.9rem; color:#6b7280;">
+                행사 관련 공지는 이메일로 안내드릴 예정이에요.<br>
+                문의: <a href="mailto:events@hackersground.kr" style="color: var(--primary-green);">events@hackersground.kr</a>
+            </p>
+
+            <div class="action-btns">
+                <a href="/events/" class="cta-button secondary">다른 행사 보기</a>
+                <a href="/" class="cta-button">홈으로 돌아가기</a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 해커그라운드(Hackers Ground). All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    const params = new URLSearchParams(window.location.search);
+    const name  = params.get('name')  || '신청자';
+    const email = params.get('email') || '';
+    const event = params.get('event') || '행사';
+
+    document.getElementById('name-display').textContent  = name;
+    document.getElementById('event-display').textContent = event;
+    document.getElementById('email-display').textContent = email;
+
+    // 파라미터 없이 직접 접근한 경우 이벤트 페이지로
+    if (!params.get('name')) {
+        setTimeout(() => window.location.href = '/events/', 3000);
+    }
+    </script>
+</body>
+</html>

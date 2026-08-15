@@ -1,47 +1,99 @@
 const { app } = require('@azure/functions');
 const { TableClient, AzureNamedKeyCredential } = require('@azure/data-tables');
+const { Resend } = require('resend');
 
 /**
  * POST /api/register
  *
- * Body (JSON):
- * {
- *   "eventId": "hackersground-2025",
- *   "eventName": "해커그라운드 2025 해커톤",
- *   "name": "홍길동",
- *   "email": "hong@example.com",
- *   "phone": "010-1234-5678",     // optional
- *   "affiliation": "XX대학교",    // optional - 소속
- *   "message": "..."              // optional - 한마디
- * }
- *
  * 환경 변수:
  *   AZURE_STORAGE_ACCOUNT_NAME  - Storage 계정 이름
  *   AZURE_STORAGE_ACCOUNT_KEY   - Storage 계정 키
- *   ALLOWED_ORIGIN              - CORS 허용 origin (기본: https://hackersground-kr.github.io)
+ *   ALLOWED_ORIGIN              - CORS 허용 origins (콤마 구분)
+ *   RESEND_API_KEY              - Resend API 키 (확인 이메일 발송)
+ *   SLACK_WEBHOOK_URL           - 슬랙 Incoming Webhook URL
  */
 
 const STORAGE_ACCOUNT = process.env.AZURE_STORAGE_ACCOUNT_NAME;
-const STORAGE_KEY = process.env.AZURE_STORAGE_ACCOUNT_KEY;
-const TABLE_NAME = 'EventRegistrations';
-const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || 'https://hackersground-kr.github.io';
+const STORAGE_KEY     = process.env.AZURE_STORAGE_ACCOUNT_KEY;
+const TABLE_NAME      = 'EventRegistrations';
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGIN || 'https://hackersground-kr.github.io')
+  .split(',').map(o => o.trim()).filter(Boolean);
+const RESEND_API_KEY   = process.env.RESEND_API_KEY || '';
+const SLACK_WEBHOOK    = process.env.SLACK_WEBHOOK_URL || '';
 
-const CORS_HEADERS = {
-  'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-  'Content-Type': 'application/json',
-};
+function getCorsHeaders(requestOrigin) {
+  const origin = ALLOWED_ORIGINS.includes(requestOrigin) ? requestOrigin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': origin,
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Content-Type': 'application/json',
+  };
+}
+
+// 신청자에게 확인 이메일 발송
+async function sendConfirmEmail({ name, email, eventName }) {
+  if (!RESEND_API_KEY) return;
+  try {
+    const resend = new Resend(RESEND_API_KEY);
+    await resend.emails.send({
+      from: 'Hackers Ground <events@hackersground.kr>',
+      to: email,
+      subject: `[Hackers Ground] ${eventName} 신청이 완료되었습니다 🎉`,
+      html: `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #00ff41;">안녕하세요, ${name}님! 👋</h2>
+          <p><strong>${eventName}</strong> 신청이 완료되었습니다.</p>
+          <p>행사 관련 상세 안내는 신청하신 이메일(<strong>${email}</strong>)로 발송해 드릴 예정입니다.</p>
+          <hr style="border-color: #333;" />
+          <p style="color: #888; font-size: 0.85em;">
+            문의: <a href="mailto:events@hackersground.kr">events@hackersground.kr</a><br>
+            Hackers Ground — 클라우드 개발자들을 위한 놀이터
+          </p>
+        </div>
+      `,
+    });
+  } catch (err) {
+    // 이메일 실패해도 신청 자체는 성공 처리
+    console.error('[Resend] 이메일 발송 실패:', err.message);
+  }
+}
+
+// 슬랙 알림
+async function notifySlack({ name, email, eventName, affiliation }) {
+  if (!SLACK_WEBHOOK) return;
+  try {
+    await fetch(SLACK_WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text: `🎉 새 행사 신청!`,
+        blocks: [
+          {
+            type: 'section',
+            text: {
+              type: 'mrkdwn',
+              text: `*🎉 새 행사 신청!*\n*행사:* ${eventName}\n*이름:* ${name}\n*이메일:* ${email}${affiliation ? `\n*소속:* ${affiliation}` : ''}`,
+            },
+          },
+        ],
+      }),
+    });
+  } catch (err) {
+    console.error('[Slack] 알림 실패:', err.message);
+  }
+}
 
 app.http('register', {
   methods: ['POST', 'OPTIONS'],
   authLevel: 'anonymous',
   route: 'register',
   handler: async (request, context) => {
+    const corsHeaders = getCorsHeaders(request.headers.get('origin') || '');
 
     // Preflight
     if (request.method === 'OPTIONS') {
-      return { status: 204, headers: CORS_HEADERS };
+      return { status: 204, headers: corsHeaders };
     }
 
     let body;
@@ -50,7 +102,7 @@ app.http('register', {
     } catch {
       return {
         status: 400,
-        headers: CORS_HEADERS,
+        headers: corsHeaders,
         jsonBody: { error: '요청 본문을 파싱할 수 없어요.' },
       };
     }
@@ -60,7 +112,7 @@ app.http('register', {
     if (!eventId || !eventName || !name || !email) {
       return {
         status: 400,
-        headers: CORS_HEADERS,
+        headers: corsHeaders,
         jsonBody: { error: 'eventId, eventName, name, email은 필수예요.' },
       };
     }
@@ -69,7 +121,7 @@ app.http('register', {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return {
         status: 400,
-        headers: CORS_HEADERS,
+        headers: corsHeaders,
         jsonBody: { error: '이메일 형식이 올바르지 않아요.' },
       };
     }
@@ -78,7 +130,7 @@ app.http('register', {
       context.error('Storage 환경 변수가 설정되지 않았습니다.');
       return {
         status: 500,
-        headers: CORS_HEADERS,
+        headers: corsHeaders,
         jsonBody: { error: '서버 설정 오류입니다. 관리자에게 문의하세요.' },
       };
     }
@@ -92,13 +144,12 @@ app.http('register', {
         credential
       );
 
-      // 테이블이 없으면 생성
       await tableClient.createTable().catch(() => {});
 
       const rowKey = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
       await tableClient.createEntity({
-        partitionKey: eventId,   // 행사별로 그룹화
+        partitionKey: eventId,
         rowKey,
         eventName,
         name,
@@ -111,12 +162,18 @@ app.http('register', {
 
       context.log(`[등록] ${eventId} | ${name} <${email}>`);
 
+      // 이메일 + 슬랙 알림 (실패해도 신청 성공 처리)
+      await Promise.all([
+        sendConfirmEmail({ name, email, eventName }),
+        notifySlack({ name, email, eventName, affiliation: body.affiliation }),
+      ]);
+
       return {
         status: 201,
-        headers: CORS_HEADERS,
+        headers: corsHeaders,
         jsonBody: {
           success: true,
-          message: `${name}님, 신청이 완료되었어요! 확인 이메일을 보내드릴게요.`,
+          message: `${name}님, 신청이 완료되었어요! ${email}로 확인 이메일을 보내드렸어요.`,
         },
       };
 
@@ -124,7 +181,7 @@ app.http('register', {
       context.error('Table Storage 오류:', err);
       return {
         status: 500,
-        headers: CORS_HEADERS,
+        headers: corsHeaders,
         jsonBody: { error: '신청 처리 중 오류가 발생했어요. 잠시 후 다시 시도해주세요.' },
       };
     }
