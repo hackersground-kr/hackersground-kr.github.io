@@ -1,12 +1,12 @@
-import os
+from pathlib import Path
 
-TEMPLATE = open("/tmp/cardnews/story_template.html", encoding="utf-8").read()
+BASE_DIR = Path(__file__).resolve().parent
+TEMPLATE = (BASE_DIR / "story_template.html").read_text(encoding="utf-8")
 
 def make(content_html, outname):
     html = TEMPLATE.replace("<!-- CONTENT -->", content_html)
-    path = f"/tmp/cardnews/{outname}.html"
-    with open(path, "w", encoding="utf-8") as f:
-        f.write(html)
+    path = BASE_DIR / f"{outname}.html"
+    path.write_text(html, encoding="utf-8")
     return path
 
 FOOTER = lambda meta: f'''
