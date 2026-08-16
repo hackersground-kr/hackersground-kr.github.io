@@ -1,5 +1,14 @@
 [
   {
+    "slug": "2026-08-16-ai-builder-meetup-intro",
+    "title": "AI가 다 하는 시대, 그래도 사람만 할 수 있는 건 뭘까",
+    "date": "2026-08-16",
+    "emoji": "🤖",
+    "tag": "ai",
+    "excerpt": "매달 둘째 주 목요일, AI를 직접 써서 만들어본 사람들이 모입니다. 첫 모임에서 나온 이야기를 공유합니다.",
+    "url": "/posts/2026-08-16-ai-builder-meetup-intro.html"
+  },
+  {
     "slug": "2025-07-15-azure-free-tier-guide",
     "title": "Azure 무료 크레딧으로 할 수 있는 것들 총정리",
     "date": "2025-07-15",
