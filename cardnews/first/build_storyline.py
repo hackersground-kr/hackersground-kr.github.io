@@ -66,7 +66,6 @@ mascots = {
 for i, (slogan, desc, accent_cls, footer_meta) in enumerate(beats, start=1):
     slogan_html = slogan
     if accent_cls:
-        # wrap the whole slogan text nodes with accent color by injecting span around last line
         parts = slogan.split("<br>")
         if len(parts) == 2:
             slogan_html = f'{parts[0]}<br><span class="accent {accent_cls}">{parts[1]}</span>'

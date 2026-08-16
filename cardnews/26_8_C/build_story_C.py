@@ -47,20 +47,21 @@ make(cover, "storyC_00_cover")
 
 # ---------- Beats ----------
 beats = [
-    ("개발은<br>이제 다 된다", "코드 짜는 건 더 이상 병목이 아니다"),
-    ("근데<br>자꾸 삐걱댔다", "자동화를 넣어도 현장에선 계속 삐걱댔다"),
-    ("코드 탓이<br>아니었다", "문제는 코드 밖에 있었다"),
-    ("잘못 들은 게<br>문제였다", "현장이 원하는 걸 잘못 알아들었다"),
-    ("한 단어가<br>다 뒤집었다", "용어 하나 오해로 전부 다시 만들었다"),
-    ("듣는 시간을<br>늘렸다", "개발보다 듣는 시간에 더 투자했다"),
-    ("다르게<br>들리기 시작했다", "같은 기능도 전혀 다르게 완성됐다"),
-    ("실력은<br>이해력이다", "AI 시대의 실력은 듣는 능력이다"),
-    ("여기는<br>대체 안 된다", "정확히 듣는 자리는 사람만의 몫이다"),
+    # (slogan, desc, footer_흐름)
+    ("개발은<br>이제 다 된다", "코드 짜는 건 더 이상 병목이 아니다", "起 · 현상"),
+    ("근데<br>자꾸 삐걱댔다", "자동화를 넣어도 현장에선 계속 삐걱댔다", "承 · 문제"),
+    ("코드 탓이<br>아니었다", "문제는 코드 밖에 있었다", "承 · 원인"),
+    ("잘못 들은 게<br>문제였다", "현장이 원하는 걸 잘못 알아들었다", "轉 · 반전"),
+    ("한 단어가<br>다 뒤집었다", "용어 하나 오해로 전부 다시 만들었다", "轉 · 실례"),
+    ("듣는 시간을<br>늘렸다", "개발보다 듣는 시간에 더 투자했다", "轉 · 전환"),
+    ("다르게<br>들리기 시작했다", "같은 기능도 전혀 다르게 완성됐다", "轉 · 변화"),
+    ("실력은<br>이해력이다", "AI 시대의 실력은 듣는 능력이다", "結 · 결론"),
+    ("여기는<br>대체 안 된다", "정확히 듣는 자리는 사람만의 몫이다", "NEXT · 2026.09"),
 ]
 
 topic_meta = "TOPIC · BUSINESS"
 
-for i, (slogan, desc) in enumerate(beats, start=1):
+for i, (slogan, desc, flow_meta) in enumerate(beats, start=1):
     mascots = {
         1: '<img class="mascot" src="images/char5.png" style="width:270px; right:-50px; bottom:-30px; opacity:0.25;">',
         4: '<img class="mascot" src="images/char3.png" style="width:250px; right:-40px; top:-20px; opacity:0.25;">',
@@ -73,7 +74,7 @@ for i, (slogan, desc) in enumerate(beats, start=1):
     <div class="slogan">{slogan}</div>
     <div class="desc">{desc}</div>
   </div>
-  ''' + progress(TOTAL, i) + FOOTER(topic_meta)
+  ''' + progress(TOTAL, i) + FOOTER(flow_meta)
     make(content, f"storyC_{i:02d}")
 
 print("done")
