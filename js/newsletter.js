@@ -41,13 +41,18 @@
           result.className = 'newsletter-result error';
           return;
         }
+        const buttonText = button.textContent;
         button.disabled = true;
-        result.textContent = '';
+        button.setAttribute('aria-busy', 'true');
+        button.textContent = '구독 정보를 저장 중...';
+        result.textContent = '잠시만요. 구독 정보를 저장하고 있어요.';
+        result.className = 'newsletter-result pending';
 
         try {
           const response = await fetch(`${API_BASE}/subscribe`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            // A safelisted content type avoids an extra CORS preflight request.
+            headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
             body: JSON.stringify({
               email,
               affiliation,
@@ -60,14 +65,13 @@
           if (!response.ok) {
             throw new Error(body.error || '구독 처리에 실패했습니다.');
           }
-          form.reset();
-          result.textContent = body.message;
-          result.className = 'newsletter-result success';
+          window.location.assign('/newsletter/thank-you.html');
         } catch (error) {
           result.textContent = error.message;
           result.className = 'newsletter-result error';
-        } finally {
           button.disabled = false;
+          button.removeAttribute('aria-busy');
+          button.textContent = buttonText;
         }
       });
     });

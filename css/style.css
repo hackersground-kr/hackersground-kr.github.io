@@ -932,6 +932,7 @@ body {
 
 .newsletter-result.success { color: var(--primary-green); }
 .newsletter-result.error { color: #fca5a5; }
+.newsletter-result.pending { color: #d1d5db; }
 
 .sr-only {
     position: absolute;

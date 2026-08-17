@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>구독 완료 · 해커그라운드</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { min-height: 100vh; padding-top: 70px; display: flex; flex-direction: column; }
+        .thankyou-wrap {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 1.5rem;
+        }
+        .thankyou-card {
+            width: 100%;
+            max-width: 520px;
+            padding: 3rem 2.5rem;
+            text-align: center;
+            background: rgba(0, 255, 65, 0.04);
+            border: 1px solid rgba(0, 255, 65, 0.15);
+            border-radius: 20px;
+        }
+        .thankyou-emoji { display: block; margin-bottom: 1.25rem; font-size: 3.5rem; }
+        .thankyou-card h1 {
+            margin-bottom: 1rem;
+            color: #f0fff4;
+            font-size: 1.75rem;
+        }
+        .thankyou-card p { color: #9ca3af; line-height: 1.8; }
+        .thankyou-card strong { color: var(--primary-green); }
+        .action-btns {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 1.75rem;
+        }
+    </style>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="512x512" href="/images/favicon.png">
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="/"><img src="../images/1920x480-1.png" alt="해커그라운드 로고" class="logo-image"></a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="/events/" class="nav-link">Events</a></li>
+                <li class="nav-item"><a href="/posts/" class="nav-link">Posts</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="thankyou-wrap">
+        <section class="thankyou-card" aria-labelledby="thank-you-title">
+            <span class="thankyou-emoji">🎉</span>
+            <h1 id="thank-you-title">뉴스레터 구독이 완료되었어요!</h1>
+            <p>
+                새로운 행사와 정보글을 <strong>월 1~2회</strong> 이메일로 보내드릴게요.<br>
+                언제든 수신 해지를 요청할 수 있습니다.
+            </p>
+            <div class="action-btns">
+                <a href="/posts/" class="cta-button secondary">정보글 보기</a>
+                <a href="/events/" class="cta-button">행사 보기</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 해커그라운드(Hackers Ground). All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
