@@ -77,20 +77,9 @@ app.http('subscribe', {
     }
 
     try {
-      const tableClient = getTableClient();
-      await tableClient.createTable().catch(() => {});
-
       const rowKey = createHash('sha256').update(email).digest('hex');
       const now = new Date().toISOString();
-      let existing;
-      try {
-        existing = await tableClient.getEntity('newsletter', rowKey);
-      } catch (error) {
-        if (error.statusCode !== 404) {
-          throw error;
-        }
-      }
-
+      const tableClient = getTableClient();
       await tableClient.upsertEntity({
         partitionKey: 'newsletter',
         rowKey,
@@ -101,9 +90,9 @@ app.http('subscribe', {
         source: typeof body.source === 'string' ? body.source.slice(0, 40) : 'website',
         consentText: '해커그라운드 소식 및 행사 안내 이메일 수신에 동의합니다.',
         consentedAt: now,
-        subscribedAt: existing?.subscribedAt || now,
+        subscribedAt: now,
         updatedAt: now,
-      }, 'Replace');
+      }, 'Merge');
 
       context.log(`[newsletter] subscribed ${rowKey}`);
       return {

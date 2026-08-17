@@ -63,6 +63,14 @@ az functionapp config appsettings set \
 
 ## 뉴스레터 구독자
 
-메인 페이지와 게시글 상세 CTA의 구독 폼은 `NewsletterSubscribers` 테이블에 구독자를 저장합니다. 이메일 주소의 SHA-256 해시를 RowKey로 사용하고, 이메일·소속(개발자/직장인/대표자/학생)·관심사(AI/Cloud/GitHub/Career/Open Source)·구독 상태·동의 시각·제출 경로를 함께 관리합니다.
+메인 페이지와 게시글 상세 CTA의 구독 폼은 `NewsletterSubscribers` 테이블에 구독자를 저장합니다. 이메일 주소의 SHA-256 해시를 RowKey로 사용하고, 이메일·소속(개발자/직장인/대표자/학생)·관심사(AI/Cloud/GitHub/Career/Open Source)·구독 상태·동의 시각·제출 경로를 함께 관리합니다. 구독 API는 한 번의 Table Storage upsert로 처리하므로, 이미 존재하는 구독자의 정보 갱신도 별도 조회 없이 완료합니다.
 
 안내 메일은 월 1~2회만 발송합니다. 발송 시에는 수신자가 쉽게 구독을 해지할 수 있는 안내를 포함해야 하며, 해지 요청이 들어오면 해당 엔터티의 `status`를 `unsubscribed`로 변경하세요.
+
+## 뉴스레터 예약 발송
+
+`/admin/`에서 Microsoft 계정으로 로그인한 뒤 **뉴스레터 구독자** 탭을 엽니다. 발행된 정보글 또는 행사를 고르고 이메일 제목과 예약 시각을 입력하면 `NewsletterCampaigns` 테이블에 예약이 저장됩니다.
+
+Azure Functions의 `sendNewsletterCampaigns` 타이머는 5분마다 예약된 캠페인을 확인합니다. 시각이 지난 캠페인은 활성 구독자(`status: active`)에게 Resend로 발송되며, 발송 건수·실패 건수·완료 시각을 캠페인에 기록합니다. 발송 도중 일부 실패하면 상태는 `partial`, 콘텐츠를 찾을 수 없거나 처리에 실패하면 `failed`가 됩니다.
+
+발송 주소는 기본으로 `Hackers Ground <events@hackersground.kr>`를 사용합니다. 별도 인증된 주소를 쓸 경우 Function App 설정의 `NEWSLETTER_FROM`에 설정하세요. `RESEND_API_KEY`는 기존 배포 워크플로우가 Function App 설정에 반영합니다.

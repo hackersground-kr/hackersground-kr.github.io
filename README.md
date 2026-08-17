@@ -17,12 +17,14 @@ Azure Functions (API 서버)
   ├─ POST /api/register    ← 행사 신청
   ├─ GET  /api/registrations ← 신청자 조회 (어드민 전용)
   ├─ GET/PUT /api/content  ← 정보글·행사 콘텐츠
-  └─ POST /api/subscribe   ← 뉴스레터 구독
+  ├─ POST /api/subscribe   ← 뉴스레터 구독
+  └─ /api/newsletter/*     ← 구독자·예약 발송 관리
 
 Azure Table Storage
   ├─ EventRegistrations 테이블 (신청 데이터)
   ├─ SiteContent 테이블 (정보글·행사, Markdown·조회수·시각)
-  └─ NewsletterSubscribers 테이블 (소식 구독 이메일·동의 시각)
+  ├─ NewsletterSubscribers 테이블 (소식 구독 이메일·동의 시각)
+  └─ NewsletterCampaigns 테이블 (예약 발송·발송 결과)
 ```
 
 ---
@@ -80,7 +82,7 @@ Azure Table Storage
 | 메인 행사 섹션 | 오늘 이전 행사 자동 숨김 |
 | 행사 신청 | HTML 폼 → Azure Functions → Table Storage 저장 |
 | 콘텐츠 | GitHub Issue Markdown → Azure Table Storage → DB 기반 목록·상세 페이지 |
-| 어드민 | `/admin/` — Microsoft 계정 로그인, 신청자 목록 조회·CSV 다운로드 |
+| 어드민 | `/admin/` — Microsoft 로그인, 행사·뉴스레터 구독자 조회·CSV 다운로드, 콘텐츠 예약 발송 |
 | SEO | `robots.txt` + `sitemap.xml` (배포 시 자동 최신화) |
 
 ---
@@ -103,7 +105,9 @@ Azure Portal → Entra ID → 엔터프라이즈 애플리케이션
 → hackersground-admin 검색 → 사용자 및 그룹 → + 추가
 ```
 
-**기능**: 행사별 신청자 목록 조회, CSV 다운로드
+**기능**: 행사별 신청자 목록 조회·CSV 다운로드, 뉴스레터 구독자·관심사 조회·CSV 다운로드, 발행된 정보글 또는 행사의 예약 발송
+
+예약한 뉴스레터는 Azure Functions 타이머가 5분 간격으로 확인해 발송합니다. `RESEND_API_KEY`가 Function App에 설정되어 있어야 합니다.
 
 ---
 

@@ -181,6 +181,98 @@
             background: rgba(0,255,65,0.08);
         }
 
+        .admin-tabs {
+            display: flex;
+            gap: 0.6rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(0,255,65,0.18);
+        }
+
+        .admin-tab {
+            padding: 0.7rem 1rem;
+            color: #9ca3af;
+            background: transparent;
+            border: 0;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font: inherit;
+            font-size: 0.9rem;
+        }
+
+        .admin-tab.active {
+            color: var(--primary-green);
+            border-bottom-color: var(--primary-green);
+        }
+
+        .newsletter-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(280px, 0.85fr);
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .admin-card {
+            padding: 1.25rem;
+            background: rgba(0,255,65,0.04);
+            border: 1px solid var(--border-green);
+            border-radius: 16px;
+        }
+
+        .admin-card h3 {
+            margin: 0 0 1rem;
+            color: var(--primary-green);
+            font-size: 1rem;
+        }
+
+        .campaign-form {
+            display: grid;
+            gap: 0.85rem;
+        }
+
+        .campaign-form label {
+            display: grid;
+            gap: 0.4rem;
+            color: #d1d5db;
+            font-size: 0.82rem;
+        }
+
+        .campaign-form input,
+        .campaign-form select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0.7rem 0.75rem;
+            color: var(--text-white);
+            background: rgba(0,0,0,0.28);
+            border: 1px solid #374151;
+            border-radius: 8px;
+            font: inherit;
+        }
+
+        .campaign-result {
+            min-height: 1.4em;
+            margin: 0;
+            color: #9ca3af;
+            font-size: 0.82rem;
+        }
+
+        .campaign-result.error { color: #fca5a5; }
+        .campaign-result.success { color: var(--primary-green); }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.2rem 0.55rem;
+            border: 1px solid #4b5563;
+            border-radius: 999px;
+            color: #d1d5db;
+            font-size: 0.72rem;
+            white-space: nowrap;
+        }
+
+        .status-badge.scheduled { color: #fbbf24; border-color: #a16207; }
+        .status-badge.sent { color: var(--primary-green); border-color: var(--border-green); }
+        .status-badge.partial,
+        .status-badge.failed { color: #fca5a5; border-color: #b91c1c; }
+
         /* 통계 카드 */
         .stats-row {
             display: grid;
@@ -315,6 +407,7 @@
 
         @media (max-width: 768px) {
             .admin-topbar { flex-direction: column; align-items: flex-start; }
+            .newsletter-grid { grid-template-columns: 1fr; }
         }
 
         #past-events-section .event-tab {
@@ -389,6 +482,12 @@
                 </div>
             </div>
 
+            <div class="admin-tabs" role="tablist" aria-label="관리 메뉴">
+                <button class="admin-tab active" data-admin-tab="registrations" onclick="selectAdminSection('registrations')">행사 신청자</button>
+                <button class="admin-tab" data-admin-tab="newsletter" onclick="selectAdminSection('newsletter')">뉴스레터 구독자</button>
+            </div>
+
+            <section id="registrations-panel">
             <!-- 행사 선택 탭 (events.json에서 동적 로드) -->
             <div id="event-tabs-container">
                 <!-- 진행 예정 / 진행 중 행사 -->
@@ -446,6 +545,89 @@
                     </tbody>
                 </table>
             </div>
+            </section>
+
+            <section id="newsletter-panel" hidden>
+                <div class="newsletter-grid">
+                    <div class="admin-card">
+                        <h3>구독자 현황</h3>
+                        <div class="stats-row" style="margin-bottom:0;">
+                            <div class="stat-card">
+                                <div class="stat-num" id="newsletter-stat-active">-</div>
+                                <div class="stat-label">활성 구독자</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-num" id="newsletter-stat-total">-</div>
+                                <div class="stat-label">전체 구독 이력</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="admin-card">
+                        <h3>콘텐츠 예약 발송</h3>
+                        <form class="campaign-form" onsubmit="scheduleCampaign(event)">
+                            <label>
+                                발송할 콘텐츠
+                                <select id="campaign-content" required onchange="fillCampaignSubject()">
+                                    <option value="">콘텐츠를 선택하세요</option>
+                                </select>
+                            </label>
+                            <label>
+                                이메일 제목
+                                <input id="campaign-subject" maxlength="140" required placeholder="받는 사람에게 보일 제목">
+                            </label>
+                            <label>
+                                예약 시각
+                                <input id="campaign-scheduled-at" type="datetime-local" required>
+                            </label>
+                            <button class="download-btn" id="campaign-submit" type="submit">예약 발송 등록</button>
+                            <p class="campaign-result" id="campaign-result" aria-live="polite"></p>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="table-header">
+                    <h3>예약 및 발송 이력</h3>
+                </div>
+                <div class="table-wrap" style="margin-bottom:2rem;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>콘텐츠</th>
+                                <th>이메일 제목</th>
+                                <th>예약 시각</th>
+                                <th>상태</th>
+                                <th>발송</th>
+                            </tr>
+                        </thead>
+                        <tbody id="campaigns-tbody">
+                            <tr class="loading-row"><td colspan="5">뉴스레터 탭을 열면 불러옵니다.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="table-header">
+                    <h3>뉴스레터 구독자</h3>
+                    <button class="download-btn" id="newsletter-csv-btn" onclick="downloadNewsletterCSV()" disabled>⬇️ CSV 다운로드</button>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>이메일</th>
+                                <th>소속</th>
+                                <th>관심사</th>
+                                <th>상태</th>
+                                <th>구독일시</th>
+                                <th>유입 경로</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subscribers-tbody">
+                            <tr class="loading-row"><td colspan="7">뉴스레터 탭을 열면 불러옵니다.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
         </div>
     </div>
 
@@ -478,6 +660,215 @@
     let currentData = [];
     let currentEvent = '';
     let eventsMap = {};  // events.json에서 로드
+    let newsletterData = [];
+    let newsletterCampaigns = [];
+    let newsletterContents = [];
+
+    function adminHeaders() {
+        const account = msalInstance.getAllAccounts()[0];
+        return { 'X-Admin-Email': account?.username || '' };
+    }
+
+    function escapeHtml(value) {
+        return String(value ?? '')
+            .replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#39;');
+    }
+
+    function selectAdminSection(section) {
+        document.querySelectorAll('.admin-tab').forEach((tab) => {
+            tab.classList.toggle('active', tab.dataset.adminTab === section);
+        });
+        document.getElementById('registrations-panel').hidden = section !== 'registrations';
+        document.getElementById('newsletter-panel').hidden = section !== 'newsletter';
+        if (section === 'newsletter') {
+            loadNewsletterAdmin();
+        }
+    }
+
+    async function loadNewsletterAdmin() {
+        const subscriberBody = document.getElementById('subscribers-tbody');
+        const campaignBody = document.getElementById('campaigns-tbody');
+        subscriberBody.innerHTML = '<tr class="loading-row"><td colspan="7">🔄 로딩 중...</td></tr>';
+        campaignBody.innerHTML = '<tr class="loading-row"><td colspan="5">🔄 로딩 중...</td></tr>';
+
+        try {
+            const [subscribersResponse, campaignsResponse, postsResponse, eventsResponse] = await Promise.all([
+                fetch(`${API_BASE}/newsletter/subscribers`, { headers: adminHeaders() }),
+                fetch(`${API_BASE}/newsletter/campaigns`, { headers: adminHeaders() }),
+                fetch(`${API_BASE}/content/post`),
+                fetch(`${API_BASE}/content/event`),
+            ]);
+            if (!subscribersResponse.ok || !campaignsResponse.ok) {
+                throw new Error('뉴스레터 데이터를 불러올 권한이 없어요.');
+            }
+
+            const subscribers = await subscribersResponse.json();
+            const campaigns = await campaignsResponse.json();
+            const posts = postsResponse.ok ? await postsResponse.json() : { items: [] };
+            const events = eventsResponse.ok ? await eventsResponse.json() : { items: [] };
+            newsletterData = subscribers.subscribers || [];
+            newsletterCampaigns = campaigns.campaigns || [];
+            newsletterContents = [...(posts.items || []), ...(events.items || [])];
+            renderSubscribers(subscribers);
+            renderCampaigns();
+            renderCampaignContentOptions();
+        } catch (error) {
+            subscriberBody.innerHTML = `<tr class="loading-row"><td colspan="7">❌ 오류: ${escapeHtml(error.message)}</td></tr>`;
+            campaignBody.innerHTML = `<tr class="loading-row"><td colspan="5">❌ 오류: ${escapeHtml(error.message)}</td></tr>`;
+        }
+    }
+
+    function renderSubscribers(data) {
+        document.getElementById('newsletter-stat-active').textContent = data.active ?? 0;
+        document.getElementById('newsletter-stat-total').textContent = data.total ?? 0;
+        document.getElementById('newsletter-csv-btn').disabled = newsletterData.length === 0;
+        const body = document.getElementById('subscribers-tbody');
+        if (newsletterData.length === 0) {
+            body.innerHTML = '<tr><td colspan="7" class="empty-state">구독자가 없어요.</td></tr>';
+            return;
+        }
+
+        const affiliationLabels = {
+            developer: '개발자',
+            worker: '직장인',
+            representative: '대표자',
+            student: '학생',
+        };
+        const interestLabels = {
+            ai: 'AI',
+            cloud: 'Cloud',
+            github: 'GitHub',
+            career: 'Career',
+            opensource: 'Open Source',
+        };
+        body.innerHTML = newsletterData.map((subscriber, index) => `
+            <tr>
+                <td style="color:#6b7280;">${index + 1}</td>
+                <td>${escapeHtml(subscriber.email)}</td>
+                <td>${escapeHtml(affiliationLabels[subscriber.affiliation] || subscriber.affiliation || '-')}</td>
+                <td>${(subscriber.interests || []).map((interest) => escapeHtml(interestLabels[interest] || interest)).join(', ') || '-'}</td>
+                <td><span class="status-badge ${escapeHtml(subscriber.status)}">${escapeHtml(subscriber.status)}</span></td>
+                <td class="date">${formatDate(subscriber.subscribedAt)}</td>
+                <td>${escapeHtml(subscriber.source || '-')}</td>
+            </tr>
+        `).join('');
+    }
+
+    function renderCampaignContentOptions() {
+        const select = document.getElementById('campaign-content');
+        const selected = select.value;
+        select.innerHTML = '<option value="">콘텐츠를 선택하세요</option>';
+        newsletterContents
+            .sort((left, right) => String(right.publishedAt).localeCompare(String(left.publishedAt)))
+            .forEach((content) => {
+                const option = document.createElement('option');
+                option.value = `${content.kind}:${content.slug}`;
+                option.textContent = `${content.kind === 'post' ? '정보글' : '행사'} · ${content.title}`;
+                select.appendChild(option);
+            });
+        select.value = selected;
+    }
+
+    function fillCampaignSubject() {
+        const [kind, slug] = document.getElementById('campaign-content').value.split(':');
+        const content = newsletterContents.find((item) => item.kind === kind && item.slug === slug);
+        if (content) {
+            document.getElementById('campaign-subject').value = `[Hackers Ground] ${content.title}`;
+        }
+    }
+
+    function renderCampaigns() {
+        const body = document.getElementById('campaigns-tbody');
+        if (newsletterCampaigns.length === 0) {
+            body.innerHTML = '<tr><td colspan="5" class="empty-state">예약하거나 발송한 뉴스레터가 없어요.</td></tr>';
+            return;
+        }
+        const statusLabels = {
+            scheduled: '예약됨',
+            sending: '발송 중',
+            sent: '발송 완료',
+            partial: '일부 실패',
+            failed: '발송 실패',
+        };
+        body.innerHTML = newsletterCampaigns.map((campaign) => `
+            <tr>
+                <td><span class="event-badge">${campaign.contentKind === 'post' ? '정보글' : '행사'}</span> ${escapeHtml(campaign.title)}</td>
+                <td>${escapeHtml(campaign.subject)}</td>
+                <td class="date">${formatDate(campaign.scheduledAt)}</td>
+                <td><span class="status-badge ${escapeHtml(campaign.status)}">${escapeHtml(statusLabels[campaign.status] || campaign.status)}</span></td>
+                <td>${campaign.status === 'sent' || campaign.status === 'partial' ? `${campaign.recipientCount}명${campaign.failureCount ? ` / 실패 ${campaign.failureCount}` : ''}` : '-'}</td>
+            </tr>
+        `).join('');
+    }
+
+    async function scheduleCampaign(event) {
+        event.preventDefault();
+        const result = document.getElementById('campaign-result');
+        const submit = document.getElementById('campaign-submit');
+        const [contentKind, contentSlug] = document.getElementById('campaign-content').value.split(':');
+        const subject = document.getElementById('campaign-subject').value.trim();
+        const scheduledAtValue = document.getElementById('campaign-scheduled-at').value;
+        if (!contentKind || !contentSlug || !scheduledAtValue) {
+            result.textContent = '콘텐츠와 예약 시각을 선택해주세요.';
+            result.className = 'campaign-result error';
+            return;
+        }
+
+        submit.disabled = true;
+        result.textContent = '예약 발송을 등록하는 중...';
+        result.className = 'campaign-result';
+        try {
+            const response = await fetch(`${API_BASE}/newsletter/campaigns`, {
+                method: 'POST',
+                headers: { ...adminHeaders(), 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contentKind,
+                    contentSlug,
+                    subject,
+                    scheduledAt: new Date(scheduledAtValue).toISOString(),
+                }),
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error || '예약 발송을 등록하지 못했습니다.');
+            }
+            result.textContent = '예약 발송을 등록했습니다. 5분 단위로 발송을 시작합니다.';
+            result.className = 'campaign-result success';
+            document.getElementById('campaign-scheduled-at').value = '';
+            newsletterCampaigns.unshift(data.campaign);
+            renderCampaigns();
+        } catch (error) {
+            result.textContent = error.message;
+            result.className = 'campaign-result error';
+        } finally {
+            submit.disabled = false;
+        }
+    }
+
+    function downloadNewsletterCSV() {
+        if (newsletterData.length === 0) return;
+        const headers = ['#', '이메일', '소속', '관심사', '상태', '구독일시', '유입 경로'];
+        const rows = newsletterData.map((subscriber, index) => [
+            index + 1,
+            subscriber.email,
+            subscriber.affiliation,
+            (subscriber.interests || []).join(', '),
+            subscriber.status,
+            subscriber.subscribedAt,
+            subscriber.source,
+        ]);
+        const csv = [headers, ...rows]
+            .map((row) => row.map((value) => `"${String(value ?? '').replace(/"/g, '""')}"`).join(','))
+            .join('\n');
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8;' }));
+        link.download = `뉴스레터_구독자_${new Date().toISOString().slice(0, 10)}.csv`;
+        link.click();
+    }
 
     // events.json 로드 후 탭 동적 생성
     async function loadEventTabs() {
@@ -607,6 +998,9 @@
         const name = account.name || account.username;
         document.getElementById('user-name').textContent = name;
         document.getElementById('user-avatar').textContent = name.charAt(0).toUpperCase();
+        const minScheduleTime = new Date(Date.now() + 60_000);
+        minScheduleTime.setSeconds(0, 0);
+        document.getElementById('campaign-scheduled-at').min = minScheduleTime.toISOString().slice(0, 16);
 
         // events.json에서 탭 동적 생성 후 전체 데이터 로드
         loadEventTabs().then(() => loadRegistrations(''));
