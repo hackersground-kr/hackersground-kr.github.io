@@ -1,5 +1,5 @@
 const { app } = require('@azure/functions');
-const { createHash, randomUUID } = require('node:crypto');
+const { randomUUID } = require('node:crypto');
 const { AzureNamedKeyCredential, TableClient } = require('@azure/data-tables');
 const { Resend } = require('resend');
 
@@ -20,6 +20,8 @@ const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGIN
   .map((origin) => origin.trim())
   .filter(Boolean);
 const CONTENT_KINDS = new Set(['post', 'event']);
+const AFFILIATIONS = new Set(['developer', 'worker', 'representative', 'student']);
+const INTERESTS = new Set(['ai', 'cloud', 'github', 'career', 'opensource']);
 
 function corsHeaders(requestOrigin) {
   const origin = ALLOWED_ORIGINS.includes(requestOrigin)
@@ -101,7 +103,25 @@ function asCampaign(entity) {
     sentAt: entity.sentAt || '',
     recipientCount: Number(entity.recipientCount || 0),
     failureCount: Number(entity.failureCount || 0),
+    targetAffiliations: parseSelection(entity.targetAffiliations),
+    targetInterests: parseSelection(entity.targetInterests),
   };
+}
+
+function parseSelection(value) {
+  try {
+    const parsed = JSON.parse(value || '[]');
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function validateSelection(value, allowedValues) {
+  if (!Array.isArray(value) || value.some((item) => !allowedValues.has(item))) {
+    return undefined;
+  }
+  return [...new Set(value)];
 }
 
 function isValidSlug(slug) {
@@ -117,6 +137,18 @@ async function listActiveSubscribers() {
     subscribers.push(entity);
   }
   return subscribers;
+}
+
+function subscriberMatchesCampaign(subscriber, campaign) {
+  const affiliations = parseSelection(campaign.targetAffiliations);
+  const interests = parseSelection(campaign.targetInterests);
+  if (affiliations.length > 0 && !affiliations.includes(subscriber.affiliation)) {
+    return false;
+  }
+  if (interests.length === 0) {
+    return true;
+  }
+  return parseSelection(subscriber.interests).some((interest) => interests.includes(interest));
 }
 
 function escapeHtml(value) {
@@ -159,7 +191,8 @@ async function deliverCampaign(campaign, context) {
     throw new Error('발송할 콘텐츠가 발행 상태가 아닙니다.');
   }
 
-  const recipients = await listActiveSubscribers();
+  const recipients = (await listActiveSubscribers())
+    .filter((subscriber) => subscriberMatchesCampaign(subscriber, campaign));
   const resend = new Resend(RESEND_API_KEY);
   let sent = 0;
   let failed = 0;
@@ -249,12 +282,17 @@ app.http('newsletterAdmin', {
         const contentSlug = body.contentSlug;
         const scheduledAt = new Date(body.scheduledAt);
         const subject = typeof body.subject === 'string' ? body.subject.trim() : '';
+        const targetAffiliations = validateSelection(body.targetAffiliations, AFFILIATIONS);
+        const targetInterests = validateSelection(body.targetInterests, INTERESTS);
 
         if (!CONTENT_KINDS.has(contentKind) || !isValidSlug(contentSlug)) {
           return { status: 400, headers, jsonBody: { error: '발송할 콘텐츠를 선택해주세요.' } };
         }
         if (!subject || subject.length > 140) {
           return { status: 400, headers, jsonBody: { error: '제목은 1~140자로 입력해주세요.' } };
+        }
+        if (!targetAffiliations || !targetInterests) {
+          return { status: 400, headers, jsonBody: { error: '수신 대상 선택값이 올바르지 않습니다.' } };
         }
         if (Number.isNaN(scheduledAt.getTime()) || scheduledAt.getTime() < Date.now() + 60_000) {
           return { status: 400, headers, jsonBody: { error: '예약 시각은 지금부터 1분 이후여야 합니다.' } };
@@ -281,6 +319,8 @@ app.http('newsletterAdmin', {
           updatedAt: now,
           recipientCount: 0,
           failureCount: 0,
+          targetAffiliations: JSON.stringify(targetAffiliations),
+          targetInterests: JSON.stringify(targetInterests),
         };
         await client.createEntity(campaign);
         return { status: 201, headers, jsonBody: { campaign: asCampaign(campaign) } };

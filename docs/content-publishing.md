@@ -69,8 +69,10 @@ az functionapp config appsettings set \
 
 ## 뉴스레터 예약 발송
 
-`/admin/`에서 Microsoft 계정으로 로그인한 뒤 **뉴스레터 구독자** 탭을 엽니다. 발행된 정보글 또는 행사를 고르고 이메일 제목과 예약 시각을 입력하면 `NewsletterCampaigns` 테이블에 예약이 저장됩니다.
+`/admin/`에서 Microsoft 계정으로 로그인한 뒤 **뉴스레터 구독자** 탭을 엽니다. 발행된 정보글 또는 아직 시작하지 않은 행사를 고르고 이메일 제목과 예약 시각을 입력하면 `NewsletterCampaigns` 테이블에 예약이 저장됩니다. 지난 행사는 발송 콘텐츠 목록에 표시되지 않습니다.
 
-Azure Functions의 `sendNewsletterCampaigns` 타이머는 5분마다 예약된 캠페인을 확인합니다. 시각이 지난 캠페인은 활성 구독자(`status: active`)에게 Resend로 발송되며, 발송 건수·실패 건수·완료 시각을 캠페인에 기록합니다. 발송 도중 일부 실패하면 상태는 `partial`, 콘텐츠를 찾을 수 없거나 처리에 실패하면 `failed`가 됩니다.
+소속과 관심사는 각각 여러 개를 선택할 수 있으며, 선택하지 않으면 전체 활성 구독자가 대상입니다. 두 조건을 함께 선택하면 선택한 소속 중 하나에 해당하면서 선택한 관심사 중 하나 이상이 일치하는 구독자에게 발송합니다.
+
+Azure Functions의 `sendNewsletterCampaigns` 타이머는 5분마다 예약된 캠페인을 확인합니다. 시각이 지난 캠페인은 세그먼트 조건에 맞는 활성 구독자(`status: active`)에게 Resend로 발송되며, 발송 건수·실패 건수·완료 시각을 캠페인에 기록합니다. 발송 도중 일부 실패하면 상태는 `partial`, 콘텐츠를 찾을 수 없거나 처리에 실패하면 `failed`가 됩니다.
 
 발송 주소는 기본으로 `Hackers Ground <events@hackersground.kr>`를 사용합니다. 별도 인증된 주소를 쓸 경우 Function App 설정의 `NEWSLETTER_FROM`에 설정하세요. `RESEND_API_KEY`는 기존 배포 워크플로우가 Function App 설정에 반영합니다.
