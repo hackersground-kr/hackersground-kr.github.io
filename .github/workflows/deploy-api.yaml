@@ -34,7 +34,7 @@ jobs:
       - name: Provision newsletter tables
         run: |
           STORAGE_KEY=$(az storage account keys list \
-            --name hackersgroundstorage \
+            --account-name hackersgroundstorage \
             --resource-group hackersground-community \
             --query '[0].value' \
             --output tsv)
