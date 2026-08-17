@@ -73,7 +73,7 @@
     "type": "오프라인",
     "price": "₩50,000",
     "capacity": "선착순 20명",
-    "deadline": "날짜 확정 후 공지",
+    "deadline": "",
     "url": "/events/content.html?slug=vibe-coding-workshop"
   },
   "workshop-azure-ai": {
