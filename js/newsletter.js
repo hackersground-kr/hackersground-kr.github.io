@@ -4,14 +4,38 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('[data-newsletter-form]').forEach((form) => {
+      const emailInput = form.elements.email;
+      const nextButton = form.querySelector('[data-newsletter-next]');
+      const preferences = form.querySelector('[data-newsletter-preferences]');
+      const result = form.querySelector('[data-newsletter-result]');
+
+      nextButton.addEventListener('click', () => {
+        if (!emailInput.reportValidity()) {
+          return;
+        }
+        preferences.hidden = false;
+        preferences.querySelector('input').focus();
+      });
+
+      form.querySelectorAll('.newsletter-options input').forEach((input) => {
+        input.addEventListener('change', () => {
+          if (input.type === 'radio') {
+            form.querySelectorAll(`input[name="${input.name}"]`).forEach((radio) => {
+              radio.closest('label').classList.toggle('is-selected', radio.checked);
+            });
+            return;
+          }
+          input.closest('label').classList.toggle('is-selected', input.checked);
+        });
+      });
+
       form.addEventListener('submit', async (event) => {
         event.preventDefault();
-        const email = form.elements.email.value.trim();
+        const email = emailInput.value.trim();
         const affiliation = form.querySelector('input[name="affiliation"]:checked')?.value;
         const interests = Array.from(form.querySelectorAll('input[name="interests"]:checked'))
           .map((input) => input.value);
         const button = form.querySelector('button[type="submit"]');
-        const result = form.querySelector('[data-newsletter-result]');
         if (!affiliation || interests.length === 0) {
           result.textContent = '소속과 관심사를 선택해주세요.';
           result.className = 'newsletter-result error';

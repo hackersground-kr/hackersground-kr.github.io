@@ -831,14 +831,16 @@ body {
 }
 
 .newsletter-form {
-    display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
     max-width: 520px;
     margin: 1.5rem auto 0;
 }
 
-.newsletter-form input {
+.newsletter-email-step {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.newsletter-email-step input {
     min-width: 0;
     flex: 1;
     padding: 0.85rem 1rem;
@@ -849,23 +851,33 @@ body {
     font: inherit;
 }
 
-.newsletter-form > input {
-    flex-basis: 280px;
+.newsletter-preferences {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border-green);
+    text-align: left;
+}
+
+.newsletter-step-title {
+    margin: 0 0 1rem;
+    color: var(--text-white);
+    font-size: 0.9rem;
+    font-weight: 700;
 }
 
 .newsletter-options {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(104px, 1fr));
     width: 100%;
-    gap: 0.5rem 0.9rem;
-    flex-wrap: wrap;
+    gap: 0.6rem;
     padding: 0;
-    margin: 0;
+    margin: 0 0 1.25rem;
     border: 0;
     text-align: left;
 }
 
 .newsletter-options legend {
-    width: 100%;
+    grid-column: 1 / -1;
     margin-bottom: 0.2rem;
     color: var(--text-white);
     font-size: 0.85rem;
@@ -878,19 +890,32 @@ body {
 }
 
 .newsletter-options label {
-    display: inline-flex;
-    gap: 0.35rem;
+    display: flex;
     align-items: center;
-    color: var(--text-gray);
+    justify-content: center;
+    min-height: 42px;
+    padding: 0.5rem 0.65rem;
+    color: #d1d5db;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 9px;
     font-size: 0.85rem;
     cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.newsletter-options label:hover,
+.newsletter-options label.is-selected {
+    color: var(--text-white);
+    background: rgba(0, 255, 65, 0.12);
+    border-color: var(--primary-green);
 }
 
 .newsletter-options input[type="checkbox"],
 .newsletter-options input[type="radio"] {
-    min-width: auto;
-    flex: none;
-    accent-color: var(--primary-green);
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
 }
 
 .newsletter-form button:disabled {
@@ -922,7 +947,7 @@ body {
 
 @media (max-width: 600px) {
     .newsletter-cta { padding: 1.75rem 1.25rem; }
-    .newsletter-form { flex-direction: column; }
+    .newsletter-email-step { flex-direction: column; }
 }
 
 /* Filter buttons */

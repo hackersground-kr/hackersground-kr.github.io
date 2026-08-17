@@ -334,24 +334,30 @@
                 <h2 id="home-newsletter-title">해커그라운드 소식을 받아보세요</h2>
                 <p>새 행사와 정보글을 월 1~2회 이메일로 안내해 드립니다.</p>
                 <form class="newsletter-form" data-newsletter-form data-newsletter-source="home">
-                    <label class="sr-only" for="home-newsletter-email">이메일 주소</label>
-                    <input id="home-newsletter-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
-                    <fieldset class="newsletter-options">
-                        <legend>소속</legend>
-                        <label><input type="radio" name="affiliation" value="developer"> 개발자</label>
-                        <label><input type="radio" name="affiliation" value="worker"> 직장인</label>
-                        <label><input type="radio" name="affiliation" value="representative"> 대표자</label>
-                        <label><input type="radio" name="affiliation" value="student"> 학생</label>
-                    </fieldset>
-                    <fieldset class="newsletter-options">
-                        <legend>관심사 <span>(복수 선택)</span></legend>
-                        <label><input type="checkbox" name="interests" value="ai"> AI</label>
-                        <label><input type="checkbox" name="interests" value="cloud"> Cloud</label>
-                        <label><input type="checkbox" name="interests" value="github"> GitHub</label>
-                        <label><input type="checkbox" name="interests" value="career"> Career</label>
-                        <label><input type="checkbox" name="interests" value="opensource"> Open Source</label>
-                    </fieldset>
-                    <button type="submit" class="cta-button primary">소식 받기</button>
+                    <div class="newsletter-email-step">
+                        <label class="sr-only" for="home-newsletter-email">이메일 주소</label>
+                        <input id="home-newsletter-email" name="email" type="email" autocomplete="email" placeholder="이메일 주소를 입력하세요" required>
+                        <button type="button" class="cta-button primary" data-newsletter-next>다음</button>
+                    </div>
+                    <div class="newsletter-preferences" data-newsletter-preferences hidden>
+                        <p class="newsletter-step-title">소식 추천을 위해 알려주세요</p>
+                        <fieldset class="newsletter-options">
+                            <legend>소속 <span>(하나 선택)</span></legend>
+                            <label><input type="radio" name="affiliation" value="developer"><span>개발자</span></label>
+                            <label><input type="radio" name="affiliation" value="worker"><span>직장인</span></label>
+                            <label><input type="radio" name="affiliation" value="representative"><span>대표자</span></label>
+                            <label><input type="radio" name="affiliation" value="student"><span>학생</span></label>
+                        </fieldset>
+                        <fieldset class="newsletter-options">
+                            <legend>관심사 <span>(복수 선택)</span></legend>
+                            <label><input type="checkbox" name="interests" value="ai"><span>AI</span></label>
+                            <label><input type="checkbox" name="interests" value="cloud"><span>Cloud</span></label>
+                            <label><input type="checkbox" name="interests" value="github"><span>GitHub</span></label>
+                            <label><input type="checkbox" name="interests" value="career"><span>Career</span></label>
+                            <label><input type="checkbox" name="interests" value="opensource"><span>Open Source</span></label>
+                        </fieldset>
+                        <button type="submit" class="cta-button primary">소식 받기</button>
+                    </div>
                 </form>
                 <p class="newsletter-notice">제출하면 해커그라운드 소식 및 행사 안내 이메일 수신에 동의하는 것으로 간주합니다. 언제든 구독 해지를 요청할 수 있습니다.</p>
                 <p class="newsletter-result" data-newsletter-result aria-live="polite"></p>
