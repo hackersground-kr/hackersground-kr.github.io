@@ -17,7 +17,7 @@ const kind = labels.has('event') ? 'event' : 'post';
 
 function section(body, heading) {
   const escapedHeading = heading.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const match = new RegExp(`^#{2,3} ${escapedHeading}\\s*\\n([\\s\\S]*?)(?=^#{2,3} |\\Z)`, 'm').exec(body);
+  const match = new RegExp(`^#{2,3} ${escapedHeading}\\s*\\n([\\s\\S]*?)(?=^#{2,3} |$(?![\\s\\S]))`, 'm').exec(body);
   return match?.[1]
     .replace(/<!--[\s\S]*?-->/g, '')
     .trim() || '';
@@ -36,13 +36,16 @@ function optionalIssueTitle(prefix) {
 }
 
 const body = issue.body || '';
-const slug = requiredSection(body, 'Slug').toLowerCase();
+const slug = (section(body, 'Slug') || `${kind}-${issue.number}`).toLowerCase();
 const title = section(body, '제목') || optionalIssueTitle(kind === 'post' ? '[정보글]' : '[행사]');
-const markdown = requiredSection(body, '본문 (Markdown)');
+const markdown = section(body, '본문 (Markdown)') || body.trim();
+if (!markdown) {
+  throw new Error('이슈 본문을 작성해야 합니다.');
+}
 const payload = {
   title,
   markdown,
-  excerpt: section(body, '한 줄 요약'),
+  excerpt: section(body, '한 줄 요약') || markdown.split(/\n\s*\n/)[0].replace(/^#+\s*/, '').slice(0, 140),
   emoji: section(body, '이모지') || (kind === 'event' ? '🗓️' : '📝'),
   tag: section(body, '태그') || 'other',
   status: 'published',
