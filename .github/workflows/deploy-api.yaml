@@ -31,6 +31,24 @@ jobs:
         with:
           creds: '{"clientId":"${{ secrets.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","tenantId":"${{ secrets.AZURE_TENANT_ID }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}"}'
 
+      - name: Provision newsletter tables
+        run: |
+          STORAGE_KEY=$(az storage account keys list \
+            --name hackersgroundstorage \
+            --resource-group hackersground-community \
+            --query '[0].value' \
+            --output tsv)
+          az storage table create \
+            --account-name hackersgroundstorage \
+            --account-key "$STORAGE_KEY" \
+            --name NewsletterSubscribers \
+            --output none
+          az storage table create \
+            --account-name hackersgroundstorage \
+            --account-key "$STORAGE_KEY" \
+            --name NewsletterCampaigns \
+            --output none
+
       - name: Set API app settings
         run: |
           az functionapp config appsettings set \

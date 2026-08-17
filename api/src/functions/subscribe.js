@@ -39,6 +39,16 @@ function getTableClient() {
   );
 }
 
+async function ensureSubscriberTable(tableClient) {
+  try {
+    await tableClient.createTable();
+  } catch (error) {
+    if (error.statusCode !== 409) {
+      throw error;
+    }
+  }
+}
+
 function normalizeEmail(email) {
   return typeof email === 'string' ? email.trim().toLowerCase() : '';
 }
@@ -80,7 +90,7 @@ app.http('subscribe', {
       const rowKey = createHash('sha256').update(email).digest('hex');
       const now = new Date().toISOString();
       const tableClient = getTableClient();
-      await tableClient.upsertEntity({
+      const entity = {
         partitionKey: 'newsletter',
         rowKey,
         email,
@@ -92,7 +102,17 @@ app.http('subscribe', {
         consentedAt: now,
         subscribedAt: now,
         updatedAt: now,
-      }, 'Merge');
+      };
+
+      try {
+        await tableClient.upsertEntity(entity, 'Merge');
+      } catch (error) {
+        if (error.statusCode !== 404) {
+          throw error;
+        }
+        await ensureSubscriberTable(tableClient);
+        await tableClient.upsertEntity(entity, 'Merge');
+      }
 
       context.log(`[newsletter] subscribed ${rowKey}`);
       return {
