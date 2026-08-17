@@ -14,7 +14,7 @@
 | 조회수 증가 | `POST /api/content/{kind}/{slug}` |
 | 발행/수정 | `PUT /api/content/{kind}/{slug}` |
 
-각 엔터티는 제목, 요약, Markdown 원문, 안전하게 렌더링한 HTML, 제작 시각(`createdAt`), 최종 수정 시각(`updatedAt`), 발행 시각(`publishedAt`), 조회수(`viewCount`)를 저장합니다. 행사에는 시작/종료 시각, 장소, 유형, 참가비, 정원, 신청 링크도 함께 저장합니다.
+각 엔터티는 제목, 요약, Markdown 원문, 안전하게 렌더링한 HTML, 본문 형식(`bodyFormat`), 제작 시각(`createdAt`), 최종 수정 시각(`updatedAt`), 발행 시각(`publishedAt`), 조회수(`viewCount`)를 저장합니다. 행사에는 시작/종료 시각, 장소, 유형, 참가비, 정원, 신청 링크도 함께 저장합니다.
 
 Azure Table Storage의 문자열 속성은 64 KiB 제한이 있으므로 본문 Markdown은 60 KiB 이하로 작성합니다. 이를 초과하는 대용량 첨부 파일은 Blob Storage에 두고 Markdown에서 링크하세요.
 
@@ -37,7 +37,11 @@ GitHub Flavored Markdown을 지원합니다.
 - 링크
 - YouTube: `@[youtube](https://www.youtube.com/watch?v=VIDEO_ID)`, 단독 YouTube URL, 또는 YouTube URL을 가리키는 Markdown 링크/썸네일 링크는 실행 가능한 iframe으로 변환됩니다.
 
-본문은 서버에서 허용 목록 기반으로 정제됩니다. 임의 HTML, 스크립트, 임의 iframe은 제거되고 YouTube iframe만 허용됩니다.
+본문은 서버에서 허용 목록 기반으로 정제됩니다. 임의 HTML, 스크립트, 임의 iframe은 제거되고 YouTube iframe만 허용됩니다. 이전 정적 행사 페이지처럼 완전한 HTML 문서를 이관할 때는 본문 영역만 별도 정제해 `legacy-html`로 저장하므로, Markdown 코드 블록으로 렌더링되지 않습니다.
+
+## 기존 정적 행사 복구
+
+정적 행사 페이지를 DB에 다시 이관해야 하면 **Repair legacy event content** 워크플로우를 수동 실행합니다. 워크플로우는 정적 페이지를 제거하기 전 커밋에서 8개 행사 페이지를 읽어와, 네비게이션·푸터·스크립트를 제외한 상세 콘텐츠와 기존 행사 메타데이터를 보존해 업서트합니다.
 
 ## 필요한 GitHub/Azure 설정
 

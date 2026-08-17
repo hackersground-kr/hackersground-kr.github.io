@@ -1,0 +1,1221 @@
+/* Restored from the legacy event detail pages at c6a377b0ad70384bed7c614e6543f0e7c47b1523. */
+
+/* ai-builder-meetup */
+body[data-content-slug="ai-builder-meetup"] .legacy-event-content .event-detail-hero{ padding: 8rem 0 4rem; background: linear-gradient(135deg, rgba(0,255,65,0.08), rgba(0,0,0,0.97)); min-height: 45vh; display: flex; align-items: center; }
+        body[data-content-slug="ai-builder-meetup"] .legacy-event-content .session-list{ display: flex; flex-direction: column; gap: 1rem; }
+        body[data-content-slug="ai-builder-meetup"] .legacy-event-content .session-item{ display: flex; align-items: flex-start; gap: 1.5rem; background: rgba(0,255,65,0.03); border: 1px solid var(--border-green); border-radius: 14px; padding: 1.25rem 1.5rem; transition: background 0.2s; }
+        body[data-content-slug="ai-builder-meetup"] .legacy-event-content .session-item.past{ border-color: rgba(255,255,255,0.1); opacity: 0.8; }
+        body[data-content-slug="ai-builder-meetup"] .legacy-event-content .session-item.next{ border-color: var(--primary-green); background: rgba(0,255,65,0.07); }
+        body[data-content-slug="ai-builder-meetup"] .legacy-event-content .session-date{ min-width: 130px; }
+        body[data-content-slug="ai-builder-meetup"] .legacy-event-content .session-date .date-num{ font-size: 1.4rem; font-weight: 900; color: var(--primary-green); line-height: 1; }
+        body[data-content-slug="ai-builder-meetup"] .legacy-event-content .session-date .date-sub{ font-size: 0.8rem; color: var(--text-gray); margin-top: 0.2rem; }
+        body[data-content-slug="ai-builder-meetup"] .legacy-event-content .session-body{ flex: 1; }
+        body[data-content-slug="ai-builder-meetup"] .legacy-event-content .session-badge{ display: inline-block; padding: 0.2rem 0.7rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; margin-bottom: 0.5rem; }
+        body[data-content-slug="ai-builder-meetup"] .legacy-event-content .badge-closed{ background: rgba(255,255,255,0.1); color: #9ca3af; }
+        body[data-content-slug="ai-builder-meetup"] .legacy-event-content .badge-next{ background: rgba(0,255,65,0.2); color: var(--primary-green); }
+        body[data-content-slug="ai-builder-meetup"] .legacy-event-content .badge-upcoming{ background: rgba(59,130,246,0.2); color: #60a5fa; }
+        body[data-content-slug="ai-builder-meetup"] .legacy-event-content .session-title{ font-size: 1rem; font-weight: 600; color: var(--text-white); margin-bottom: 0.4rem; }
+        body[data-content-slug="ai-builder-meetup"] .legacy-event-content .session-note{ font-size: 0.88rem; color: var(--text-gray); }
+        body[data-content-slug="ai-builder-meetup"] .legacy-event-content .session-post-link{ display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.5rem; font-size: 0.85rem; color: var(--primary-green); text-decoration: none; border: 1px solid var(--border-green); border-radius: 6px; padding: 0.2rem 0.6rem; transition: background 0.2s; }
+        body[data-content-slug="ai-builder-meetup"] .legacy-event-content .session-post-link:hover{ background: rgba(0,255,65,0.1); }
+        body[data-content-slug="ai-builder-meetup"] .legacy-event-content .session-post-placeholder{ display: inline-block; margin-top: 0.5rem; font-size: 0.82rem; color: #6b7280; font-style: italic; }
+        body[data-content-slug="ai-builder-meetup"] .legacy-event-content .info-box{ background: rgba(0,255,65,0.05); border: 1px solid var(--border-green); border-radius: 14px; padding: 1.5rem 2rem; margin-bottom: 2.5rem; }
+        body[data-content-slug="ai-builder-meetup"] .legacy-event-content .info-grid{ display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.2rem; }
+        body[data-content-slug="ai-builder-meetup"] .legacy-event-content .info-row{ display: flex; align-items: center; gap: 0.75rem; }
+        body[data-content-slug="ai-builder-meetup"] .legacy-event-content .info-row .info-icon{ font-size: 1.3rem; }
+        body[data-content-slug="ai-builder-meetup"] .legacy-event-content .info-row h4{ color: var(--primary-green); font-size: 0.8rem; font-weight: 600; margin-bottom: 0.2rem; text-transform: uppercase; }
+        body[data-content-slug="ai-builder-meetup"] .legacy-event-content .info-row p{ color: var(--text-white); font-size: 0.95rem; }
+
+/* chatgpt-workshop */
+body[data-content-slug="chatgpt-workshop"] .legacy-event-content .event-detail-hero{
+            padding: 8rem 0 4rem;
+            background: linear-gradient(135deg, rgba(0, 255, 65, 0.1), rgba(0, 0, 0, 0.9));
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .event-detail-content{
+            padding: 4rem 0;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .event-info-card{
+            background: rgba(0, 255, 65, 0.05);
+            border: 1px solid var(--border-green);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .event-meta-grid{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .meta-item{
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .meta-icon{
+            font-size: 1.5rem;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .meta-content h4{
+            color: var(--primary-green);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .meta-content p{
+            color: var(--text-white);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .content-section{
+            margin-bottom: 3rem;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .content-section h3{
+            color: var(--primary-green);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-green);
+            padding-bottom: 0.5rem;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .ai-highlight{
+            background: rgba(0, 255, 65, 0.1);
+            border-left: 4px solid var(--primary-green);
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .ai-highlight::before{
+            content: '🤖';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 2rem;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .project-showcase{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .project-card{
+            background: rgba(0, 255, 65, 0.05);
+            border: 1px solid var(--border-green);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .project-card:hover{
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 65, 0.1);
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .project-icon{
+            background: var(--gradient-primary);
+            color: var(--dark-bg);
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .timeline-item{
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-left: 2px solid var(--border-green);
+            padding-left: 2rem;
+            margin-left: 1rem;
+            position: relative;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .timeline-item::before{
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 1.5rem;
+            width: 10px;
+            height: 10px;
+            background: var(--primary-green);
+            border-radius: 50%;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .timeline-time{
+            color: var(--primary-green);
+            font-weight: 600;
+            min-width: 120px;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .timeline-content h4{
+            color: var(--text-white);
+            margin-bottom: 0.5rem;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .timeline-content p{
+            color: var(--text-gray);
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .instructor-card{
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            background: rgba(0, 255, 65, 0.03);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid var(--border-green);
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .instructor-avatar{
+            width: 100px;
+            height: 100px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--dark-bg);
+            flex-shrink: 0;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .instructor-info h4{
+            color: var(--text-white);
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .instructor-title{
+            color: var(--primary-green);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .instructor-bio{
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .requirements-grid{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .requirement-item{
+            background: rgba(0, 255, 65, 0.03);
+            border: 1px solid var(--border-green);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .requirement-emoji{
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .sticky-apply{
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-green);
+            padding: 1rem 0;
+            z-index: 1000;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .apply-content{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .apply-info{
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .apply-price{
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-green);
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .apply-deadline{
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .apply-button{
+            padding: 1rem 2rem;
+            background: var(--gradient-primary);
+            color: var(--dark-bg);
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        body[data-content-slug="chatgpt-workshop"] .legacy-event-content .apply-button:hover{
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px var(--shadow-green);
+        }
+
+        @media (max-width: 768px) {
+            body[data-content-slug="chatgpt-workshop"] .legacy-event-content .apply-content{
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            body[data-content-slug="chatgpt-workshop"] .legacy-event-content .apply-info{
+                gap: 1rem;
+            }
+
+            body[data-content-slug="chatgpt-workshop"] .legacy-event-content .instructor-card{
+                flex-direction: column;
+                text-align: center;
+            }
+
+            body[data-content-slug="chatgpt-workshop"] .legacy-event-content .project-showcase{
+                grid-template-columns: 1fr;
+            }
+        }
+
+/* docker-workshop */
+body[data-content-slug="docker-workshop"] .legacy-event-content .event-detail-hero{
+            padding: 8rem 0 4rem;
+            background: linear-gradient(135deg, rgba(0, 255, 65, 0.1), rgba(0, 0, 0, 0.9));
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+        }
+
+        body[data-content-slug="docker-workshop"] .legacy-event-content .event-detail-content{
+            padding: 4rem 0;
+        }
+
+        body[data-content-slug="docker-workshop"] .legacy-event-content .event-info-card{
+            background: rgba(0, 255, 65, 0.05);
+            border: 1px solid var(--border-green);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        body[data-content-slug="docker-workshop"] .legacy-event-content .event-meta-grid{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        body[data-content-slug="docker-workshop"] .legacy-event-content .meta-item{
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        body[data-content-slug="docker-workshop"] .legacy-event-content .meta-icon{
+            font-size: 1.5rem;
+        }
+
+        body[data-content-slug="docker-workshop"] .legacy-event-content .meta-content h4{
+            color: var(--primary-green);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        body[data-content-slug="docker-workshop"] .legacy-event-content .meta-content p{
+            color: var(--text-white);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        body[data-content-slug="docker-workshop"] .legacy-event-content .content-section{
+            margin-bottom: 3rem;
+        }
+
+        body[data-content-slug="docker-workshop"] .legacy-event-content .content-section h3{
+            color: var(--primary-green);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-green);
+            padding-bottom: 0.5rem;
+        }
+
+        body[data-content-slug="docker-workshop"] .legacy-event-content .timeline-item{
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-left: 2px solid var(--border-green);
+            padding-left: 2rem;
+            margin-left: 1rem;
+            position: relative;
+        }
+
+        body[data-content-slug="docker-workshop"] .legacy-event-content .timeline-item::before{
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 1.5rem;
+            width: 10px;
+            height: 10px;
+            background: var(--primary-green);
+            border-radius: 50%;
+        }
+
+        body[data-content-slug="docker-workshop"] .legacy-event-content .timeline-time{
+            color: var(--primary-green);
+            font-weight: 600;
+            min-width: 120px;
+        }
+
+        body[data-content-slug="docker-workshop"] .legacy-event-content .timeline-content h4{
+            color: var(--text-white);
+            margin-bottom: 0.5rem;
+        }
+
+        body[data-content-slug="docker-workshop"] .legacy-event-content .timeline-content p{
+            color: var(--text-gray);
+        }
+
+        body[data-content-slug="docker-workshop"] .legacy-event-content .instructor-card{
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            background: rgba(0, 255, 65, 0.03);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid var(--border-green);
+        }
+
+        body[data-content-slug="docker-workshop"] .legacy-event-content .instructor-avatar{
+            width: 100px;
+            height: 100px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--dark-bg);
+            flex-shrink: 0;
+        }
+
+        body[data-content-slug="docker-workshop"] .legacy-event-content .instructor-info h4{
+            color: var(--text-white);
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        body[data-content-slug="docker-workshop"] .legacy-event-content .instructor-title{
+            color: var(--primary-green);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        body[data-content-slug="docker-workshop"] .legacy-event-content .instructor-bio{
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
+        body[data-content-slug="docker-workshop"] .legacy-event-content .sticky-apply{
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border-green);
+            padding: 1rem 0;
+            z-index: 1000;
+        }
+
+        body[data-content-slug="docker-workshop"] .legacy-event-content .apply-content{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        body[data-content-slug="docker-workshop"] .legacy-event-content .apply-info{
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        body[data-content-slug="docker-workshop"] .legacy-event-content .apply-price{
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-green);
+        }
+
+        body[data-content-slug="docker-workshop"] .legacy-event-content .apply-deadline{
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        body[data-content-slug="docker-workshop"] .legacy-event-content .apply-button{
+            padding: 1rem 2rem;
+            background: var(--gradient-primary);
+            color: var(--dark-bg);
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        body[data-content-slug="docker-workshop"] .legacy-event-content .apply-button:hover{
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px var(--shadow-green);
+        }
+
+        @media (max-width: 768px) {
+            body[data-content-slug="docker-workshop"] .legacy-event-content .apply-content{
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            body[data-content-slug="docker-workshop"] .legacy-event-content .apply-info{
+                gap: 1rem;
+            }
+
+            body[data-content-slug="docker-workshop"] .legacy-event-content .instructor-card{
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+/* growth-story */
+body[data-content-slug="growth-story"] .legacy-event-content .event-detail-hero{
+            padding: 8rem 0 4rem;
+            background: linear-gradient(135deg, rgba(107, 70, 193, 0.1), rgba(0, 0, 0, 0.9));
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .event-detail-content{
+            padding: 4rem 0;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .event-info-card{
+            background: rgba(107, 70, 193, 0.05);
+            border: 1px solid rgba(107, 70, 193, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .event-meta-grid{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .meta-item{
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .meta-icon{
+            font-size: 1.5rem;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .meta-content h4{
+            color: var(--primary-purple);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .meta-content p{
+            color: var(--text-white);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .content-section{
+            margin-bottom: 3rem;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .content-section h3{
+            color: var(--primary-purple);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid rgba(107, 70, 193, 0.3);
+            padding-bottom: 0.5rem;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .timeline-item{
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-left: 2px solid rgba(107, 70, 193, 0.3);
+            padding-left: 2rem;
+            margin-left: 1rem;
+            position: relative;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .timeline-item::before{
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 1.5rem;
+            width: 10px;
+            height: 10px;
+            background: var(--primary-purple);
+            border-radius: 50%;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .timeline-time{
+            color: var(--primary-purple);
+            font-weight: 600;
+            min-width: 120px;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .timeline-content h4{
+            color: var(--text-white);
+            margin-bottom: 0.5rem;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .timeline-content p{
+            color: var(--text-gray);
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .instructor-card{
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            background: rgba(107, 70, 193, 0.03);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(107, 70, 193, 0.3);
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .instructor-avatar{
+            width: 100px;
+            height: 100px;
+            background: var(--gradient-purple);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--text-white);
+            flex-shrink: 0;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .instructor-info h4{
+            color: var(--text-white);
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .instructor-title{
+            color: var(--primary-purple);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .instructor-bio{
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .sticky-apply{
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(107, 70, 193, 0.3);
+            padding: 1rem 0;
+            z-index: 1000;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .apply-content{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .apply-info{
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .apply-price{
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-purple);
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .apply-deadline{
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .apply-button{
+            padding: 1rem 2rem;
+            background: var(--gradient-purple);
+            color: var(--text-white);
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .apply-button:hover{
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(107, 70, 193, 0.2);
+        }
+
+
+        body[data-content-slug="growth-story"] .legacy-event-content .story-highlight{
+            background: rgba(107, 70, 193, 0.1);
+            border-left: 4px solid var(--primary-purple);
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 10px;
+            font-style: italic;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .story-highlight h4{
+            color: var(--primary-purple);
+            margin-bottom: 1rem;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .lesson-card{
+            background: rgba(107, 70, 193, 0.05);
+            border: 1px solid rgba(107, 70, 193, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .lesson-card:hover{
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(107, 70, 193, 0.1);
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .lesson-number{
+            background: var(--gradient-purple);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .growth-timeline{
+            position: relative;
+            padding-left: 3rem;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .growth-timeline::before{
+            content: '';
+            position: absolute;
+            left: 1.5rem;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--gradient-purple);
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .growth-item{
+            position: relative;
+            background: rgba(107, 70, 193, 0.05);
+            border: 1px solid rgba(107, 70, 193, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            margin-left: 2rem;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .growth-item::before{
+            content: '';
+            position: absolute;
+            left: -2.5rem;
+            top: 2rem;
+            width: 15px;
+            height: 15px;
+            background: var(--primary-purple);
+            border-radius: 50%;
+            border: 3px solid var(--dark-bg);
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .growth-year{
+            color: var(--primary-purple);
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        body[data-content-slug="growth-story"] .legacy-event-content .takeaway-section{
+            background: rgba(0, 255, 65, 0.05);
+            border: 1px solid var(--border-green);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            body[data-content-slug="growth-story"] .legacy-event-content .apply-content{
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            body[data-content-slug="growth-story"] .legacy-event-content .apply-info{
+                gap: 1rem;
+            }
+
+            body[data-content-slug="growth-story"] .legacy-event-content .instructor-card{
+                flex-direction: column;
+                text-align: center;
+            }
+
+            body[data-content-slug="growth-story"] .legacy-event-content .growth-timeline{
+                padding-left: 2rem;
+            }
+
+            body[data-content-slug="growth-story"] .legacy-event-content .growth-timeline::before{
+                left: 1rem;
+            }
+
+            body[data-content-slug="growth-story"] .legacy-event-content .growth-item{
+                margin-left: 1rem;
+            }
+        }
+
+/* hackersground-2025 */
+body[data-content-slug="hackersground-2025"] .legacy-event-content .event-detail-hero{ padding: 8rem 0 4rem; background: linear-gradient(135deg, rgba(0,255,65,0.1), rgba(0,0,0,0.95)); min-height: 55vh; display: flex; align-items: center; }
+        body[data-content-slug="hackersground-2025"] .legacy-event-content .event-info-card{ background: rgba(0,255,65,0.05); border: 1px solid var(--border-green); border-radius: 20px; padding: 2rem; margin-bottom: 3rem; }
+        body[data-content-slug="hackersground-2025"] .legacy-event-content .event-meta-grid{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        body[data-content-slug="hackersground-2025"] .legacy-event-content .meta-item{ display: flex; align-items: center; gap: 1rem; }
+        body[data-content-slug="hackersground-2025"] .legacy-event-content .meta-icon{ font-size: 1.5rem; }
+        body[data-content-slug="hackersground-2025"] .legacy-event-content .meta-content h4{ color: var(--primary-green); margin-bottom: 0.3rem; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; }
+        body[data-content-slug="hackersground-2025"] .legacy-event-content .meta-content p{ color: var(--text-white); font-size: 1rem; font-weight: 500; }
+        body[data-content-slug="hackersground-2025"] .legacy-event-content .content-section{ margin-bottom: 3rem; }
+        body[data-content-slug="hackersground-2025"] .legacy-event-content .content-section h3{ color: var(--primary-green); font-size: 1.4rem; margin-bottom: 1.5rem; border-bottom: 2px solid var(--border-green); padding-bottom: 0.5rem; }
+        body[data-content-slug="hackersground-2025"] .legacy-event-content .content-section ul{ list-style: none; padding: 0; }
+        body[data-content-slug="hackersground-2025"] .legacy-event-content .content-section li{ padding: 0.75rem 0; border-bottom: 1px solid var(--border-green); color: var(--text-gray); display: flex; align-items: flex-start; gap: 0.75rem; }
+        body[data-content-slug="hackersground-2025"] .legacy-event-content .content-section li:last-child{ border-bottom: none; }
+        body[data-content-slug="hackersground-2025"] .legacy-event-content .timeline-item{ display: flex; gap: 1rem; padding: 1rem 0; border-left: 2px solid var(--border-green); margin-left: 1rem; padding-left: 1.5rem; }
+        body[data-content-slug="hackersground-2025"] .legacy-event-content .timeline-time{ color: var(--primary-green); font-weight: 600; white-space: nowrap; min-width: 160px; }
+
+/* networking-party */
+body[data-content-slug="networking-party"] .legacy-event-content .event-detail-hero{
+            padding: 8rem 0 4rem;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(0, 0, 0, 0.9));
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .event-detail-content{
+            padding: 4rem 0;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .event-info-card{
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .event-meta-grid{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .meta-item{
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .meta-icon{
+            font-size: 1.5rem;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .meta-content h4{
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .meta-content p{
+            color: var(--text-white);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .content-section{
+            margin-bottom: 3rem;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .content-section h3{
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+            padding-bottom: 0.5rem;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .timeline-item{
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-left: 2px solid rgba(59, 130, 246, 0.3);
+            padding-left: 2rem;
+            margin-left: 1rem;
+            position: relative;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .timeline-item::before{
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 1.5rem;
+            width: 10px;
+            height: 10px;
+            background: var(--primary-blue);
+            border-radius: 50%;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .timeline-time{
+            color: var(--primary-blue);
+            font-weight: 600;
+            min-width: 120px;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .timeline-content h4{
+            color: var(--text-white);
+            margin-bottom: 0.5rem;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .timeline-content p{
+            color: var(--text-gray);
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .instructor-card{
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            background: rgba(59, 130, 246, 0.03);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .instructor-avatar{
+            width: 100px;
+            height: 100px;
+            background: var(--gradient-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--text-white);
+            flex-shrink: 0;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .instructor-info h4{
+            color: var(--text-white);
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .instructor-title{
+            color: var(--primary-blue);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .instructor-bio{
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .sticky-apply{
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 1rem 0;
+            z-index: 1000;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .apply-content{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .apply-info{
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .apply-price{
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .apply-deadline{
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .apply-button{
+            padding: 1rem 2rem;
+            background: var(--gradient-blue);
+            color: var(--text-white);
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .apply-button:hover{
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+        }
+
+
+        body[data-content-slug="networking-party"] .legacy-event-content .party-highlight{
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid var(--primary-blue);
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .party-highlight::before{
+            content: '🍻';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 2rem;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .activity-card{
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .activity-card:hover{
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.1);
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .activity-icon{
+            background: var(--gradient-blue);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .review-flow{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .flow-step{
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .step-number{
+            background: var(--gradient-blue);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 auto 1rem;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .menu-grid{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .menu-item{
+            background: rgba(59, 130, 246, 0.03);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .menu-emoji{
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .fun-fact{
+            background: rgba(0, 255, 65, 0.05);
+            border: 1px solid var(--border-green);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .team-formation{
+            background: rgba(59, 130, 246, 0.05);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 3rem 0;
+        }
+
+        body[data-content-slug="networking-party"] .legacy-event-content .team-size{
+            display: inline-block;
+            background: var(--gradient-blue);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            margin: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            body[data-content-slug="networking-party"] .legacy-event-content .apply-content{
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            body[data-content-slug="networking-party"] .legacy-event-content .apply-info{
+                gap: 1rem;
+            }
+
+            body[data-content-slug="networking-party"] .legacy-event-content .instructor-card{
+                flex-direction: column;
+                text-align: center;
+            }
+
+            body[data-content-slug="networking-party"] .legacy-event-content .review-flow{
+                grid-template-columns: 1fr;
+            }
+
+            body[data-content-slug="networking-party"] .legacy-event-content .menu-grid{
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+
+/* vibe-coding-workshop */
+body[data-content-slug="vibe-coding-workshop"] .legacy-event-content .event-detail-hero{ padding: 8rem 0 4rem; background: linear-gradient(135deg, rgba(0,255,65,0.1), rgba(0,0,0,0.95)); min-height: 55vh; display: flex; align-items: center; }
+        body[data-content-slug="vibe-coding-workshop"] .legacy-event-content .event-info-card{ background: rgba(0,255,65,0.05); border: 1px solid var(--border-green); border-radius: 20px; padding: 2rem; margin-bottom: 3rem; }
+        body[data-content-slug="vibe-coding-workshop"] .legacy-event-content .event-meta-grid{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        body[data-content-slug="vibe-coding-workshop"] .legacy-event-content .meta-item{ display: flex; align-items: center; gap: 1rem; }
+        body[data-content-slug="vibe-coding-workshop"] .legacy-event-content .meta-icon{ font-size: 1.5rem; }
+        body[data-content-slug="vibe-coding-workshop"] .legacy-event-content .meta-content h4{ color: var(--primary-green); margin-bottom: 0.3rem; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; }
+        body[data-content-slug="vibe-coding-workshop"] .legacy-event-content .meta-content p{ color: var(--text-white); font-size: 1rem; font-weight: 500; }
+        body[data-content-slug="vibe-coding-workshop"] .legacy-event-content .content-section{ margin-bottom: 3rem; }
+        body[data-content-slug="vibe-coding-workshop"] .legacy-event-content .content-section h3{ color: var(--primary-green); font-size: 1.4rem; margin-bottom: 1.5rem; border-bottom: 2px solid var(--border-green); padding-bottom: 0.5rem; }
+        body[data-content-slug="vibe-coding-workshop"] .legacy-event-content .content-section ul{ list-style: none; padding: 0; }
+        body[data-content-slug="vibe-coding-workshop"] .legacy-event-content .content-section li{ padding: 0.75rem 0; border-bottom: 1px solid var(--border-green); color: var(--text-gray); display: flex; align-items: flex-start; gap: 0.75rem; }
+        body[data-content-slug="vibe-coding-workshop"] .legacy-event-content .content-section li:last-child{ border-bottom: none; }
+        body[data-content-slug="vibe-coding-workshop"] .legacy-event-content .notice-box{ background: rgba(255,180,0,0.1); border: 1px solid rgba(255,180,0,0.3); border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 2rem; color: #fbbf24; font-size: 0.95rem; }
+
+/* workshop-azure-ai */
+body[data-content-slug="workshop-azure-ai"] .legacy-event-content .event-detail-hero{ padding: 8rem 0 4rem; background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(0,0,0,0.95)); min-height: 55vh; display: flex; align-items: center; }
+        body[data-content-slug="workshop-azure-ai"] .legacy-event-content .event-info-card{ background: rgba(0,255,65,0.05); border: 1px solid var(--border-green); border-radius: 20px; padding: 2rem; margin-bottom: 3rem; }
+        body[data-content-slug="workshop-azure-ai"] .legacy-event-content .event-meta-grid{ display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        body[data-content-slug="workshop-azure-ai"] .legacy-event-content .meta-item{ display: flex; align-items: center; gap: 1rem; }
+        body[data-content-slug="workshop-azure-ai"] .legacy-event-content .meta-icon{ font-size: 1.5rem; }
+        body[data-content-slug="workshop-azure-ai"] .legacy-event-content .meta-content h4{ color: var(--primary-green); margin-bottom: 0.3rem; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; }
+        body[data-content-slug="workshop-azure-ai"] .legacy-event-content .meta-content p{ color: var(--text-white); font-size: 1rem; font-weight: 500; }
+        body[data-content-slug="workshop-azure-ai"] .legacy-event-content .content-section{ margin-bottom: 3rem; }
+        body[data-content-slug="workshop-azure-ai"] .legacy-event-content .content-section h3{ color: var(--primary-green); font-size: 1.4rem; margin-bottom: 1.5rem; border-bottom: 2px solid var(--border-green); padding-bottom: 0.5rem; }
+        body[data-content-slug="workshop-azure-ai"] .legacy-event-content .content-section ul{ list-style: none; padding: 0; }
+        body[data-content-slug="workshop-azure-ai"] .legacy-event-content .content-section li{ padding: 0.75rem 0; border-bottom: 1px solid var(--border-green); color: var(--text-gray); display: flex; align-items: flex-start; gap: 0.75rem; }
+        body[data-content-slug="workshop-azure-ai"] .legacy-event-content .content-section li:last-child{ border-bottom: none; }

@@ -156,6 +156,130 @@ function renderMarkdown(markdown) {
   });
 }
 
+function isLegacyHtmlDocument(content) {
+  return /<!doctype\s+html\b|<html(?:\s|>)/i.test(content);
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function renderLegacySessions(document) {
+  const source = /const\s+sessions\s*=\s*\[([\s\S]*?)\];/.exec(document)?.[1];
+  if (!source) {
+    return document;
+  }
+
+  const sessions = [...source.matchAll(/\{([\s\S]*?)\}/g)].map((match) => {
+    const values = {};
+    for (const field of ['date', 'label', 'status', 'note', 'postUrl']) {
+      const value = new RegExp(`${field}\\s*:\\s*(?:'([^']*)'|null)`).exec(match[1]);
+      values[field] = value?.[1] || '';
+    }
+    return values;
+  }).filter((session) => session.date && session.label && session.status && session.note);
+
+  if (!sessions.length) {
+    return document;
+  }
+
+  const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
+  const sessionHtml = sessions.map((session) => {
+    const date = new Date(`${session.date}T00:00:00`);
+    const formattedDate = `${date.getFullYear()}. ${String(date.getMonth() + 1).padStart(2, '0')}. ${String(date.getDate()).padStart(2, '0')} (${dayNames[date.getDay()]})`;
+    const badge = session.status === 'past'
+      ? '<span class="session-badge badge-closed">종료</span>'
+      : session.status === 'next'
+        ? '<span class="session-badge badge-next">▶ 다음 회차 · 마감</span>'
+        : '<span class="session-badge badge-upcoming">예정</span>';
+    const post = session.postUrl
+      ? `<a href="${escapeHtml(session.postUrl)}" class="session-post-link">📝 정보글 보기</a>`
+      : session.status === 'past'
+        ? '<span class="session-post-placeholder">📝 정보글 준비 중...</span>'
+        : '';
+
+    return `<div class="session-item ${escapeHtml(session.status)}"><div class="session-date"><div class="date-num">${escapeHtml(session.label)}</div><div class="date-sub">오전 7:00</div></div><div class="session-body">${badge}<div class="session-title">${formattedDate}</div><div class="session-note">${escapeHtml(session.note)}</div>${post}</div></div>`;
+  }).join('');
+
+  return document.replace(
+    /(<div\b[^>]*\bid=(["'])session-list\2[^>]*>)[\s\S]*?<\/div>/i,
+    `$1${sessionHtml}</div>`,
+  );
+}
+
+function extractLegacyHtmlDocument(document) {
+  const body = /<body\b[^>]*>([\s\S]*?)<\/body>/i.exec(document)?.[1] || document;
+  return renderLegacySessions(body)
+    .replace(/<noscript\b[^>]*>[\s\S]*?<\/noscript>/gi, '')
+    .replace(/<nav\b[^>]*>[\s\S]*?<\/nav>/gi, '')
+    .replace(/<footer\b[^>]*>[\s\S]*?<\/footer>/gi, '')
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '')
+    .trim();
+}
+
+function renderLegacyHtml(document) {
+  return sanitizeHtml(extractLegacyHtmlDocument(document), {
+    allowedTags: [
+      'a', 'article', 'blockquote', 'br', 'button', 'code', 'del', 'details', 'div', 'em',
+      'figcaption', 'figure', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'iframe',
+      'img', 'li', 'ol', 'p', 'pre', 'section', 'span', 'strong', 'summary', 'table', 'tbody',
+      'td', 'th', 'thead', 'tr', 'ul',
+    ],
+    allowedAttributes: {
+      '*': ['class', 'id', 'style'],
+      a: ['href', 'name', 'rel', 'target', 'title'],
+      button: ['type'],
+      iframe: ['allow', 'allowfullscreen', 'class', 'frameborder', 'height', 'loading', 'src', 'title', 'width'],
+      img: ['alt', 'height', 'loading', 'src', 'title', 'width'],
+      ol: ['start'],
+      td: ['align', 'colspan', 'rowspan'],
+      th: ['align', 'colspan', 'rowspan'],
+    },
+    allowedStyles: {
+      '*': {
+        background: [/^(?!.*(?:expression|javascript:|url\s*\()).+$/i],
+        border: [/^(?!.*(?:expression|javascript:|url\s*\()).+$/i],
+        'border-bottom': [/^(?!.*(?:expression|javascript:|url\s*\()).+$/i],
+        'border-radius': [/^[\w.%(),+\-\s]+$/i],
+        'border-top': [/^(?!.*(?:expression|javascript:|url\s*\()).+$/i],
+        color: [/^(?!.*(?:expression|javascript:|url\s*\()).+$/i],
+        display: [/^[a-z-]+$/i],
+        'font-size': [/^[\w.%(),+\-\s]+$/i],
+        'font-weight': [/^[\w-]+$/i],
+        gap: [/^[\w.%(),+\-\s]+$/i],
+        'grid-template-columns': [/^[\w.%(),+\-\s]+$/i],
+        'line-height': [/^[\w.%(),+\-\s]+$/i],
+        margin: [/^[\w.%(),+\-\s]+$/i],
+        'margin-bottom': [/^[\w.%(),+\-\s]+$/i],
+        'margin-left': [/^[\w.%(),+\-\s]+$/i],
+        'margin-right': [/^[\w.%(),+\-\s]+$/i],
+        'margin-top': [/^[\w.%(),+\-\s]+$/i],
+        'max-width': [/^[\w.%(),+\-\s]+$/i],
+        padding: [/^[\w.%(),+\-\s]+$/i],
+        'padding-bottom': [/^[\w.%(),+\-\s]+$/i],
+        'padding-top': [/^[\w.%(),+\-\s]+$/i],
+        'text-align': [/^(?:left|right|center|justify)$/i],
+      },
+    },
+    allowedSchemes: ['http', 'https', 'mailto'],
+    allowedIframeHostnames: ['www.youtube-nocookie.com'],
+    transformTags: {
+      img: sanitizeHtml.simpleTransform('img', { loading: 'lazy' }),
+    },
+  });
+}
+
+function renderContent(content) {
+  return isLegacyHtmlDocument(content)
+    ? { bodyFormat: 'legacy-html', renderedHtml: renderLegacyHtml(content) }
+    : { bodyFormat: 'markdown', renderedHtml: renderMarkdown(content) };
+}
+
 function asPublicContent(entity, includeBody = false) {
   const content = {
     kind: entity.partitionKey,
@@ -168,6 +292,7 @@ function asPublicContent(entity, includeBody = false) {
     updatedAt: entity.updatedAt,
     publishedAt: entity.publishedAt,
     viewCount: Number(entity.viewCount || 0),
+    bodyFormat: entity.bodyFormat || 'markdown',
     event: entity.partitionKey === 'event' ? {
       startAt: entity.eventStartAt || '',
       endAt: entity.eventEndAt || '',
@@ -301,6 +426,7 @@ app.http('content', {
       }
 
       const now = new Date().toISOString();
+      const rendered = renderContent(markdown);
       const entity = {
         partitionKey: kind,
         rowKey: slug,
@@ -310,13 +436,18 @@ app.http('content', {
         emoji: typeof body.emoji === 'string' ? body.emoji.trim() : '',
         tag: typeof body.tag === 'string' ? body.tag.trim().toLowerCase() : 'other',
         markdown,
-        renderedHtml: renderMarkdown(markdown),
+        bodyFormat: rendered.bodyFormat,
+        renderedHtml: rendered.renderedHtml,
         createdAt: existing?.createdAt || now,
         updatedAt: now,
         publishedAt: status === 'published' ? existing?.publishedAt || now : '',
         viewCount: Number(existing?.viewCount || 0),
-        sourceIssueNumber: Number.isInteger(body.sourceIssueNumber) ? body.sourceIssueNumber : 0,
-        sourceIssueUrl: typeof body.sourceIssueUrl === 'string' ? body.sourceIssueUrl : '',
+        sourceIssueNumber: Number.isInteger(body.sourceIssueNumber)
+          ? body.sourceIssueNumber
+          : Number(existing?.sourceIssueNumber || 0),
+        sourceIssueUrl: typeof body.sourceIssueUrl === 'string'
+          ? body.sourceIssueUrl
+          : existing?.sourceIssueUrl || '',
         eventStartAt: typeof body.event?.startAt === 'string' ? body.event.startAt : '',
         eventEndAt: typeof body.event?.endAt === 'string' ? body.event.endAt : '',
         location: typeof body.event?.location === 'string' ? body.event.location : '',

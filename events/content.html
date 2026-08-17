@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>행사 · 해커그라운드</title>
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="legacy-event-content.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
@@ -13,6 +14,8 @@
         .post-content-section { padding: 4rem 0; background: var(--dark-bg); }
         .video-embed { position: relative; width: 100%; padding-top: 56.25%; margin: 1.5rem 0; }
         .video-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+        body[data-content-format="legacy-html"] .post-content-section { padding: 0; }
+        body[data-content-format="legacy-html"] [data-content-wrapper] { display: contents; }
     </style>
 </head>
 <body>
@@ -28,7 +31,7 @@
             <div class="nav-toggle" id="mobile-menu"><span class="bar"></span><span class="bar"></span><span class="bar"></span></div>
         </div>
     </nav>
-    <section class="post-hero">
+    <section class="post-hero" data-content-hero>
         <div class="container" style="max-width: 860px;">
             <div class="breadcrumb"><a href="/">Home</a><span class="sep">›</span><a href="/events/">Events</a></div>
             <span class="badge" data-content-tag style="margin-bottom: 1.5rem; display: inline-block;">행사</span>
@@ -38,10 +41,10 @@
             <p class="hero-subtitle" data-content-views style="font-size: 0.9rem;"></p>
         </div>
     </section>
-    <section class="post-content-section">
-        <div class="container" style="max-width: 860px;">
+    <section class="post-content-section" data-content-shell>
+        <div class="container" data-content-wrapper style="max-width: 860px;">
             <article class="prose" data-content-detail="event"></article>
-            <div class="community-cta" style="margin-top: 4rem;">
+            <div class="community-cta" data-content-cta style="margin-top: 4rem;">
                 <h3>새 행사를 제안하고 싶다면?</h3>
                 <p>GitHub 이슈로 제안해주세요. 커뮤니티와 함께 만들어가요!</p>
                 <div class="btn-group"><a href="/events/" class="btn-primary">← 행사 목록으로</a></div>

@@ -1,0 +1,27 @@
+name: Repair legacy event content
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout complete history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Restore legacy event detail content
+        env:
+          CONTENT_SYNC_URL: ${{ vars.CONTENT_SYNC_URL }}
+          CONTENT_SYNC_TOKEN: ${{ secrets.CONTENT_SYNC_TOKEN }}
+        run: node _scripts/repair_legacy_event_content.mjs

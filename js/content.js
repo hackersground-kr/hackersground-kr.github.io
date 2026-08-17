@@ -115,6 +115,14 @@
     }
 
     const { content } = await request(`/content/${kind}/${encodeURIComponent(slug)}`);
+    const isLegacyEvent = kind === 'event' && content.bodyFormat === 'legacy-html';
+    const legacyHero = document.querySelector('[data-content-hero]');
+    const legacyCta = document.querySelector('[data-content-cta]');
+    if (legacyHero) legacyHero.hidden = isLegacyEvent;
+    if (legacyCta) legacyCta.hidden = isLegacyEvent;
+    document.body.dataset.contentSlug = content.slug;
+    document.body.dataset.contentFormat = content.bodyFormat || 'markdown';
+
     document.title = `${content.title} · 해커그라운드`;
     document.querySelector('[data-content-title]').textContent = `${content.emoji || ''} ${content.title}`;
     document.querySelector('[data-content-excerpt]').textContent = content.excerpt || '';
@@ -126,7 +134,7 @@
 
     const eventMeta = document.querySelector('[data-content-event-meta]');
     if (kind === 'event' && eventMeta) {
-      eventMeta.hidden = false;
+      eventMeta.hidden = isLegacyEvent;
       eventMeta.textContent = [
         content.event.startAt && `📅 ${formatDate(content.event.startAt)}`,
         content.event.location && `📍 ${content.event.location}`,
@@ -134,6 +142,7 @@
       ].filter(Boolean).join(' · ');
     }
 
+    container.classList.toggle('legacy-event-content', isLegacyEvent);
     container.innerHTML = content.renderedHtml;
     request(`/content/${kind}/${encodeURIComponent(slug)}`, { method: 'POST' })
       .then(({ viewCount: nextViewCount }) => {
