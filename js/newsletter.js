@@ -7,7 +7,7 @@
       const emailInput = form.elements.email;
       const nextButton = form.querySelector('[data-newsletter-next]');
       const preferences = form.querySelector('[data-newsletter-preferences]');
-      const result = form.querySelector('[data-newsletter-result]');
+      const result = form.parentElement.querySelector('[data-newsletter-result]');
 
       nextButton.addEventListener('click', () => {
         if (!emailInput.reportValidity()) {
