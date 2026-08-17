@@ -35,7 +35,7 @@ GitHub Flavored Markdown을 지원합니다.
 - 이미지: `![대체 텍스트](https://...)`
 - 테이블
 - 링크
-- YouTube: 한 줄에 `@[youtube](https://www.youtube.com/watch?v=VIDEO_ID)` 또는 `https://youtu.be/VIDEO_ID`
+- YouTube: `@[youtube](https://www.youtube.com/watch?v=VIDEO_ID)`, 단독 YouTube URL, 또는 YouTube URL을 가리키는 Markdown 링크/썸네일 링크는 실행 가능한 iframe으로 변환됩니다.
 
 본문은 서버에서 허용 목록 기반으로 정제됩니다. 임의 HTML, 스크립트, 임의 iframe은 제거되고 YouTube iframe만 허용됩니다.
 

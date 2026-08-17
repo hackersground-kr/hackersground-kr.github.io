@@ -100,8 +100,30 @@ marked.use({
   }],
 });
 
+function normalizeYouTubeMarkdown(markdown) {
+  const embed = (url) => getYouTubeId(url) ? `@[youtube](${url})` : undefined;
+
+  return markdown
+    .replace(
+      /\[!\[[^\]]*]\([^)\n]+\)\]\((https?:\/\/[^\s)]+)\)/gi,
+      (match, url) => embed(url) || match,
+    )
+    .replace(
+      /(^|[^!@])\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/gim,
+      (match, prefix, label, url) => embed(url) ? `${prefix}${embed(url)}` : match,
+    )
+    .replace(
+      /^\s*<?(https?:\/\/[^\s<>]+)>?\s*$/gim,
+      (match, url) => embed(url) || match,
+    );
+}
+
 function renderMarkdown(markdown) {
-  const rendered = marked.parse(markdown, { async: false, gfm: true, breaks: false });
+  const rendered = marked.parse(normalizeYouTubeMarkdown(markdown), {
+    async: false,
+    gfm: true,
+    breaks: false,
+  });
   return sanitizeHtml(rendered, {
     allowedTags: [
       'a', 'article', 'blockquote', 'br', 'code', 'del', 'details', 'div', 'em',
