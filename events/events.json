@@ -1,53 +1,14 @@
 {
-  "hackersground-2025": {
-    "name": "해커그라운드 2025 해커톤",
-    "emoji": "🏕️",
-    "date": "2025. 08. 23–24 (토·일)",
-    "location": "대구 엑스코 (EXCO)",
-    "type": "오프라인",
-    "price": "무료",
-    "capacity": "팀당 2–5인",
-    "deadline": "2025.08.10 (일)"
-  },
-  "workshop-azure-ai": {
-    "name": "Azure AI 입문 워크샵",
+  "ai-builder-meetup": {
+    "name": "AI 빌더 모임",
     "emoji": "🤖",
-    "date": "2025. 09. 06 (토)",
-    "location": "Teams 온라인",
-    "type": "온라인",
+    "date": "2026-09-10T07:00:00+09:00",
+    "location": "오프라인 (회차별 상이)",
+    "type": "offline",
     "price": "무료",
-    "capacity": "선착순 50명",
-    "deadline": "2025.09.04 (목)"
-  },
-  "docker-workshop": {
-    "name": "Docker로 나만의 개발 환경 구축하기",
-    "emoji": "🐳",
-    "date": "2025. 09. 14 (일)",
-    "location": "해커그라운드 (중앙로)",
-    "type": "오프라인",
-    "price": "₩30,000",
-    "capacity": "선착순 20명",
-    "deadline": "2025.09.10 (수)"
-  },
-  "growth-story": {
-    "name": "현업 멘토의 주니어 시절 성장 스토리",
-    "emoji": "📚",
-    "date": "2025. 09. 21 (일)",
-    "location": "해커그라운드 (중앙로)",
-    "type": "오프라인",
-    "price": "무료",
-    "capacity": "선착순 30명",
-    "deadline": "2025.09.17 (수)"
-  },
-  "networking-party": {
-    "name": "치맥과 함께하는 코드 리뷰 파티",
-    "emoji": "🍺",
-    "date": "2025. 10. 05 (일)",
-    "location": "해커그라운드 (중앙로)",
-    "type": "오프라인",
-    "price": "₩15,000",
-    "capacity": "선착순 20명",
-    "deadline": "2025.10.01 (수)"
+    "capacity": "",
+    "deadline": "",
+    "url": "/events/content.html?slug=ai-builder-meetup"
   },
   "chatgpt-workshop": {
     "name": "ChatGPT API로 만드는 토이 프로젝트",
@@ -57,7 +18,52 @@
     "type": "오프라인",
     "price": "₩25,000",
     "capacity": "선착순 20명",
-    "deadline": "2025.10.15 (수)"
+    "deadline": "2025.10.15 (수)",
+    "url": "/events/content.html?slug=chatgpt-workshop"
+  },
+  "docker-workshop": {
+    "name": "Docker로 나만의 개발 환경 구축하기",
+    "emoji": "🐳",
+    "date": "2025. 09. 14 (일)",
+    "location": "해커그라운드 (중앙로)",
+    "type": "오프라인",
+    "price": "₩30,000",
+    "capacity": "선착순 20명",
+    "deadline": "2025.09.10 (수)",
+    "url": "/events/content.html?slug=docker-workshop"
+  },
+  "growth-story": {
+    "name": "현업 멘토의 주니어 시절 성장 스토리",
+    "emoji": "📚",
+    "date": "2025. 09. 21 (일)",
+    "location": "해커그라운드 (중앙로)",
+    "type": "오프라인",
+    "price": "무료",
+    "capacity": "선착순 30명",
+    "deadline": "2025.09.17 (수)",
+    "url": "/events/content.html?slug=growth-story"
+  },
+  "hackersground-2025": {
+    "name": "해커그라운드 2025 해커톤",
+    "emoji": "🏕️",
+    "date": "2025. 08. 23–24 (토·일)",
+    "location": "대구 엑스코 (EXCO)",
+    "type": "오프라인",
+    "price": "무료",
+    "capacity": "팀당 2–5인",
+    "deadline": "2025.08.10 (일)",
+    "url": "/events/content.html?slug=hackersground-2025"
+  },
+  "networking-party": {
+    "name": "치맥과 함께하는 코드 리뷰 파티",
+    "emoji": "🍺",
+    "date": "2025. 10. 05 (일)",
+    "location": "해커그라운드 (중앙로)",
+    "type": "오프라인",
+    "price": "₩15,000",
+    "capacity": "선착순 20명",
+    "deadline": "2025.10.01 (수)",
+    "url": "/events/content.html?slug=networking-party"
   },
   "vibe-coding-workshop": {
     "name": "바이브코딩으로 홈페이지 만들자!",
@@ -67,6 +73,18 @@
     "type": "오프라인",
     "price": "₩50,000",
     "capacity": "선착순 20명",
-    "deadline": "날짜 확정 후 공지"
+    "deadline": "날짜 확정 후 공지",
+    "url": "/events/content.html?slug=vibe-coding-workshop"
+  },
+  "workshop-azure-ai": {
+    "name": "Azure AI 입문 워크샵",
+    "emoji": "🤖",
+    "date": "2025. 09. 06 (토)",
+    "location": "Teams 온라인",
+    "type": "온라인",
+    "price": "무료",
+    "capacity": "선착순 50명",
+    "deadline": "2025.09.04 (목)",
+    "url": "/events/content.html?slug=workshop-azure-ai"
   }
 }
