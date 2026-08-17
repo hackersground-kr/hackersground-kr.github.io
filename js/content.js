@@ -119,7 +119,8 @@
     document.querySelector('[data-content-title]').textContent = `${content.emoji || ''} ${content.title}`;
     document.querySelector('[data-content-excerpt]').textContent = content.excerpt || '';
     document.querySelector('[data-content-tag]').textContent = content.tag || kind;
-    document.querySelector('[data-content-date]').textContent = formatDate(content.publishedAt || content.createdAt);
+    const date = document.querySelector('[data-content-date]');
+    if (date) date.textContent = formatDate(content.publishedAt || content.createdAt);
     const viewCount = document.querySelector('[data-content-views]');
     if (viewCount) viewCount.textContent = `조회 ${content.viewCount}`;
 
