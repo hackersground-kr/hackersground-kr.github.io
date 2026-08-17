@@ -60,3 +60,9 @@ az functionapp config appsettings set \
 ```
 
 콘텐츠 상세 페이지는 `/posts/content.html?slug=<slug>` 또는 `/events/content.html?slug=<slug>`입니다. 개별 정적 콘텐츠 파일은 DB 이관 뒤 유지하지 않으므로, 새 링크 형식을 사용하세요.
+
+## 뉴스레터 구독자
+
+메인 페이지와 게시글 상세 CTA의 이메일 폼은 `NewsletterSubscribers` 테이블에 구독자를 저장합니다. 이메일 주소의 SHA-256 해시를 RowKey로 사용하고, 이메일·구독 상태·동의 시각·제출 경로를 함께 관리합니다.
+
+안내 메일은 월 1~2회만 발송합니다. 발송 시에는 수신자가 쉽게 구독을 해지할 수 있는 안내를 포함해야 하며, 해지 요청이 들어오면 해당 엔터티의 `status`를 `unsubscribed`로 변경하세요.

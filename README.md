@@ -15,12 +15,14 @@ GitHub Pages (정적 호스팅)
 
 Azure Functions (API 서버)
   ├─ POST /api/register    ← 행사 신청
-  └─ GET  /api/registrations ← 신청자 조회 (어드민 전용)
-  └─ GET/PUT /api/content  ← 정보글·행사 콘텐츠
+  ├─ GET  /api/registrations ← 신청자 조회 (어드민 전용)
+  ├─ GET/PUT /api/content  ← 정보글·행사 콘텐츠
+  └─ POST /api/subscribe   ← 뉴스레터 구독
 
 Azure Table Storage
-  └─ EventRegistrations 테이블 (신청 데이터)
-  └─ SiteContent 테이블 (정보글·행사, Markdown·조회수·시각)
+  ├─ EventRegistrations 테이블 (신청 데이터)
+  ├─ SiteContent 테이블 (정보글·행사, Markdown·조회수·시각)
+  └─ NewsletterSubscribers 테이블 (소식 구독 이메일·동의 시각)
 ```
 
 ---
@@ -34,17 +36,16 @@ Azure Table Storage
 ├── sitemap.xml                 # 검색엔진 사이트맵 (배포 시 자동 갱신)
 │
 ├── events/
-│   ├── index.html              # 행사 목록 (날짜순 자동 정렬)
-│   ├── events.json             # ✏️ 행사 메타데이터 (신청폼 연동용)
+│   ├── index.html              # DB 기반 행사 목록
+│   ├── content.html            # DB 기반 행사 상세 템플릿
+│   ├── events.json             # 행사 메타데이터 동기화 파일
 │   ├── register.html           # 행사 신청 폼 (?event=ID)
-│   ├── ai-builder-meetup.html  # AI 빌더 정기모임 시리즈
-│   ├── vibe-coding-workshop.html
-│   └── *.html                  # 개별 행사 페이지
+│   └── thank-you.html          # 행사 신청 완료 페이지
 │
 ├── posts/
-│   ├── index.html              # 정보글 목록
-│   ├── posts.json              # 정보글 메타데이터 (자동 갱신)
-│   └── *.html                  # 개별 정보글 (자동 생성)
+│   ├── index.html              # DB 기반 정보글 목록
+│   ├── content.html            # DB 기반 정보글 상세 템플릿
+│   └── posts.json              # 정보글 메타데이터 동기화 파일
 │
 ├── admin/
 │   └── index.html              # 어드민 대시보드 (Microsoft 로그인 필요)
