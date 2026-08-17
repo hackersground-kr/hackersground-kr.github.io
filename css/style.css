@@ -833,6 +833,7 @@ body {
 .newsletter-form {
     display: flex;
     gap: 0.75rem;
+    flex-wrap: wrap;
     max-width: 520px;
     margin: 1.5rem auto 0;
 }
@@ -846,6 +847,50 @@ body {
     border: 1px solid var(--border-green);
     border-radius: 8px;
     font: inherit;
+}
+
+.newsletter-form > input {
+    flex-basis: 280px;
+}
+
+.newsletter-options {
+    display: flex;
+    width: 100%;
+    gap: 0.5rem 0.9rem;
+    flex-wrap: wrap;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    text-align: left;
+}
+
+.newsletter-options legend {
+    width: 100%;
+    margin-bottom: 0.2rem;
+    color: var(--text-white);
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.newsletter-options legend span {
+    color: var(--text-gray);
+    font-weight: 400;
+}
+
+.newsletter-options label {
+    display: inline-flex;
+    gap: 0.35rem;
+    align-items: center;
+    color: var(--text-gray);
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.newsletter-options input[type="checkbox"],
+.newsletter-options input[type="radio"] {
+    min-width: auto;
+    flex: none;
+    accent-color: var(--primary-green);
 }
 
 .newsletter-form button:disabled {

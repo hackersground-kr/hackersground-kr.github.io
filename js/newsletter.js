@@ -7,8 +7,16 @@
       form.addEventListener('submit', async (event) => {
         event.preventDefault();
         const email = form.elements.email.value.trim();
+        const affiliation = form.querySelector('input[name="affiliation"]:checked')?.value;
+        const interests = Array.from(form.querySelectorAll('input[name="interests"]:checked'))
+          .map((input) => input.value);
         const button = form.querySelector('button[type="submit"]');
         const result = form.querySelector('[data-newsletter-result]');
+        if (!affiliation || interests.length === 0) {
+          result.textContent = '소속과 관심사를 선택해주세요.';
+          result.className = 'newsletter-result error';
+          return;
+        }
         button.disabled = true;
         result.textContent = '';
 
@@ -18,6 +26,8 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               email,
+              affiliation,
+              interests,
               consent: true,
               source: form.dataset.newsletterSource || 'website',
             }),

@@ -5,6 +5,8 @@ const { AzureNamedKeyCredential, TableClient } = require('@azure/data-tables');
 const STORAGE_ACCOUNT = process.env.AZURE_STORAGE_ACCOUNT_NAME;
 const STORAGE_KEY = process.env.AZURE_STORAGE_ACCOUNT_KEY;
 const TABLE_NAME = 'NewsletterSubscribers';
+const AFFILIATIONS = new Set(['developer', 'worker', 'representative', 'student']);
+const INTERESTS = new Set(['ai', 'cloud', 'github', 'career', 'opensource']);
 const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGIN
   || 'https://hackersground.kr,https://hackersground-kr.github.io')
   .split(',')
@@ -59,8 +61,16 @@ app.http('subscribe', {
     }
 
     const email = normalizeEmail(body.email);
+    const affiliation = typeof body.affiliation === 'string' ? body.affiliation : '';
+    const interests = Array.isArray(body.interests) ? body.interests : [];
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return { status: 400, headers, jsonBody: { error: '올바른 이메일 주소를 입력해주세요.' } };
+    }
+    if (!AFFILIATIONS.has(affiliation)) {
+      return { status: 400, headers, jsonBody: { error: '소속을 선택해주세요.' } };
+    }
+    if (interests.length === 0 || interests.some((interest) => !INTERESTS.has(interest))) {
+      return { status: 400, headers, jsonBody: { error: '관심사를 하나 이상 선택해주세요.' } };
     }
     if (body.consent !== true) {
       return { status: 400, headers, jsonBody: { error: '뉴스레터 수신 동의가 필요합니다.' } };
@@ -86,6 +96,8 @@ app.http('subscribe', {
         rowKey,
         email,
         status: 'active',
+        affiliation,
+        interests: JSON.stringify([...new Set(interests)]),
         source: typeof body.source === 'string' ? body.source.slice(0, 40) : 'website',
         consentText: '해커그라운드 소식 및 행사 안내 이메일 수신에 동의합니다.',
         consentedAt: now,
