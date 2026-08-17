@@ -16,9 +16,11 @@ GitHub Pages (정적 호스팅)
 Azure Functions (API 서버)
   ├─ POST /api/register    ← 행사 신청
   └─ GET  /api/registrations ← 신청자 조회 (어드민 전용)
+  └─ GET/PUT /api/content  ← 정보글·행사 콘텐츠
 
 Azure Table Storage
   └─ EventRegistrations 테이블 (신청 데이터)
+  └─ SiteContent 테이블 (정보글·행사, Markdown·조회수·시각)
 ```
 
 ---

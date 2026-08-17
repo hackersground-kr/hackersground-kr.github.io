@@ -1,0 +1,31 @@
+name: Publish content issue
+
+on:
+  issues:
+    types: [closed]
+
+permissions:
+  contents: write
+  issues: read
+
+jobs:
+  publish:
+    if: contains(github.event.issue.labels.*.name, 'content-publish') && (contains(github.event.issue.labels.*.name, 'post') || contains(github.event.issue.labels.*.name, 'event'))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Sync the closed issue to Azure Table Storage
+        env:
+          CONTENT_SYNC_URL: ${{ vars.CONTENT_SYNC_URL }}
+          CONTENT_SYNC_TOKEN: ${{ secrets.CONTENT_SYNC_TOKEN }}
+        run: node _scripts/sync_issue_content.mjs
+
+      - name: Commit synchronized metadata
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add posts/posts.json events/events.json
+          git diff --staged --quiet || git commit -m "chore: issue #${{ github.event.issue.number }} 콘텐츠 메타데이터 동기화 [skip ci]"
+          git push

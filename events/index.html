@@ -68,7 +68,7 @@
                 <button onclick="filterEvents('upcoming')" id="filter-upcoming" class="filter-btn">모집중</button>
             </div>
 
-            <div class="events-grid">
+            <div class="events-grid" data-content-list="event">
                 <!-- #1 바이브코딩 워크샵 -->
                 <div class="event-card" data-date="2026-09-01" data-type="offline" data-status="upcoming">
                     <div class="event-category handson">핸즈온</div>
@@ -188,7 +188,7 @@
                 <h3>새 행사를 제안하고 싶다면?</h3>
                 <p>GitHub 이슈로 제안해주세요. 커뮤니티와 함께 만들어가요!</p>
                 <div class="btn-group">
-                    <a href="https://github.com/hackersground-kr/hackersground-kr.github.io/issues/new?template=event.md" target="_blank" class="btn-primary">➕ 행사 제안하기</a>
+                    <a href="https://github.com/hackersground-kr/hackersground-kr.github.io/issues/new?template=publish-event.yml" target="_blank" class="btn-primary">➕ 행사 작성하기</a>
                 </div>
             </div>
         </div>
@@ -216,6 +216,7 @@
     </footer>
 
     <script src="../js/main.js"></script>
+    <script src="../js/content.js"></script>
     <script>
 
         // 날짜 기준 정렬: 미래 행사를 날짜 오름차순, 과거 행사를 날짜 내림차순(최신→오래된)으로 정렬

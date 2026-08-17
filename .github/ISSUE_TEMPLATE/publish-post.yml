@@ -1,0 +1,46 @@
+name: "📚 정보글 발행"
+description: "Markdown으로 정보글을 작성하고, 이슈를 닫아 발행합니다."
+title: "[정보글] "
+labels: ["post", "content-publish"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        이슈를 닫으면 Azure Table Storage에 발행됩니다.
+        본문은 GitHub Flavored Markdown을 지원합니다. YouTube는 `@[youtube](URL)` 형식으로 넣어주세요.
+  - type: input
+    id: slug
+    attributes:
+      label: Slug
+      description: "영문 소문자, 숫자, 하이픈만 사용합니다. 예: ai-builder-meetup-intro"
+    validations:
+      required: true
+  - type: input
+    id: content-title
+    attributes:
+      label: 제목
+    validations:
+      required: true
+  - type: input
+    id: excerpt
+    attributes:
+      label: 한 줄 요약
+    validations:
+      required: true
+  - type: input
+    id: emoji
+    attributes:
+      label: 이모지
+      value: "📝"
+  - type: input
+    id: tag
+    attributes:
+      label: 태그
+      description: "예: ai, azure, github, career, opensource"
+      value: "other"
+  - type: textarea
+    id: markdown
+    attributes:
+      label: 본문 (Markdown)
+    validations:
+      required: true

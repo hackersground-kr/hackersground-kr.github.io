@@ -31,12 +31,15 @@ jobs:
         with:
           creds: '{"clientId":"${{ secrets.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","tenantId":"${{ secrets.AZURE_TENANT_ID }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}"}'
 
-      - name: Set RESEND_API_KEY in Function App
+      - name: Set API app settings
         run: |
           az functionapp config appsettings set \
             --name hackersground-api \
             --resource-group hackersground-community \
-            --settings "RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}"
+            --settings \
+              "RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}" \
+              "CONTENT_SYNC_TOKEN=${{ secrets.CONTENT_SYNC_TOKEN }}" \
+              "ALLOWED_ORIGIN=https://hackersground.kr,https://hackersground-kr.github.io"
 
       - name: Deploy to Azure Functions
         uses: Azure/functions-action@v1

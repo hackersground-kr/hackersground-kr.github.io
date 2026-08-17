@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>행사 · 해커그라운드</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        .post-hero { padding: 8rem 0 4rem; background: linear-gradient(135deg, rgba(0,255,65,0.08), rgba(0,0,0,0.95)); min-height: 45vh; display: flex; align-items: center; }
+        .post-content-section { padding: 4rem 0; background: var(--dark-bg); }
+        .video-embed { position: relative; width: 100%; padding-top: 56.25%; margin: 1.5rem 0; }
+        .video-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo"><a href="/"><img src="../images/1920x480-1.png" alt="해커그라운드 로고" class="logo-image"></a></div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="/events/" class="nav-link" style="color: var(--primary-green);">Events</a></li>
+                <li class="nav-item"><a href="/posts/" class="nav-link">Posts</a></li>
+                <li class="nav-item"><a href="/#about" class="nav-link">About</a></li>
+            </ul>
+            <div class="nav-toggle" id="mobile-menu"><span class="bar"></span><span class="bar"></span><span class="bar"></span></div>
+        </div>
+    </nav>
+    <section class="post-hero">
+        <div class="container" style="max-width: 860px;">
+            <div class="breadcrumb"><a href="/">Home</a><span class="sep">›</span><a href="/events/">Events</a></div>
+            <span class="badge" data-content-tag style="margin-bottom: 1.5rem; display: inline-block;">행사</span>
+            <h1 class="hero-title" data-content-title style="font-size: clamp(1.8rem, 4vw, 3rem);">행사를 불러오는 중입니다</h1>
+            <p class="hero-subtitle" data-content-excerpt style="font-size: 1rem;"></p>
+            <p class="hero-subtitle" data-content-event-meta hidden style="font-size: 1rem;"></p>
+            <p class="hero-subtitle" data-content-views style="font-size: 0.9rem;"></p>
+        </div>
+    </section>
+    <section class="post-content-section">
+        <div class="container" style="max-width: 860px;">
+            <article class="prose" data-content-detail="event"></article>
+            <div class="community-cta" style="margin-top: 4rem;">
+                <h3>새 행사를 제안하고 싶다면?</h3>
+                <p>GitHub 이슈로 제안해주세요. 커뮤니티와 함께 만들어가요!</p>
+                <div class="btn-group"><a href="/events/" class="btn-primary">← 행사 목록으로</a></div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+        <div class="container"><div class="footer-bottom"><p>&copy; 2026 해커그라운드(Hackers Ground). All rights reserved.</p></div></div>
+    </footer>
+    <script src="../js/main.js"></script>
+    <script src="../js/content.js"></script>
+</body>
+</html>

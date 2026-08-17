@@ -10,7 +10,9 @@
   "dependencies": {
     "@azure/communication-email": "^1.0.0",
     "@azure/data-tables": "^13.2.2",
-    "resend": "^6.20.0"
+    "marked": "^15.0.12",
+    "resend": "^6.20.0",
+    "sanitize-html": "^2.17.7"
   },
   "devDependencies": {
     "@azure/functions": "^4.5.0"
