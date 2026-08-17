@@ -59,4 +59,4 @@ az functionapp config appsettings set \
   --settings "CONTENT_SYNC_TOKEN=<동일한-무작위-문자열>"
 ```
 
-기존 정적 글과 행사는 그대로 남아 있어 장애 시 목록 fallback 및 기존 URL 호환성을 유지합니다. 새로 발행하는 콘텐츠의 상세 URL은 `/posts/content.html?slug=<slug>` 또는 `/events/content.html?slug=<slug>`입니다.
+콘텐츠 상세 페이지는 `/posts/content.html?slug=<slug>` 또는 `/events/content.html?slug=<slug>`입니다. 개별 정적 콘텐츠 파일은 DB 이관 뒤 유지하지 않으므로, 새 링크 형식을 사용하세요.

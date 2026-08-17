@@ -12,7 +12,10 @@
 
   function formatDate(date) {
     if (!date) return '';
-    return new Intl.DateTimeFormat('ko-KR', { dateStyle: 'medium' }).format(new Date(date));
+    const parsed = new Date(date);
+    return Number.isNaN(parsed.getTime())
+      ? date
+      : new Intl.DateTimeFormat('ko-KR', { dateStyle: 'medium' }).format(parsed);
   }
 
   function createPostItem(post) {
@@ -96,7 +99,7 @@
     items.forEach((item) => fragment.append(
       kind === 'post' ? createPostItem(item) : createEventCard(item),
     ));
-    container.prepend(fragment);
+    container.replaceChildren(fragment);
 
     if (kind === 'event' && typeof window.sortEvents === 'function') {
       window.sortEvents();

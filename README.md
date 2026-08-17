@@ -49,24 +49,21 @@ Azure Table Storage
 ├── admin/
 │   └── index.html              # 어드민 대시보드 (Microsoft 로그인 필요)
 │
-├── _posts/                     # ✏️ Markdown 정보글 원본
-│   └── YYYY-MM-DD-slug.md
-│
 ├── _scripts/
-│   ├── build_posts.py          # MD → HTML 변환 + posts.json 갱신
 │   └── build_sitemap.py        # sitemap.xml 자동 생성
 │
 ├── api/                        # Azure Functions 백엔드
 │   └── src/functions/
 │       ├── register.js         # POST /api/register
-│       └── getRegistrations.js # GET  /api/registrations
+│       ├── getRegistrations.js # GET  /api/registrations
+│       └── content.js          # 게시글·행사 DB API
 │
 ├── css/style.css               # 공통 스타일
 ├── js/main.js                  # 공통 스크립트
 └── .github/
     ├── workflows/
     │   ├── main.yaml           # 배포 (push → sitemap 생성 → Pages 배포)
-    │   └── build-posts.yaml    # MD 변경 시 HTML + posts.json 자동 빌드
+    │   └── sync-content-issue.yaml # 이슈 → DB·JSON 동기화
     └── ISSUE_TEMPLATE/
         ├── event.md
         └── post.md
@@ -81,90 +78,17 @@ Azure Table Storage
 | 행사 목록 | 날짜 기준 자동 정렬, 지난 행사 "종료" 배지 표시 |
 | 메인 행사 섹션 | 오늘 이전 행사 자동 숨김 |
 | 행사 신청 | HTML 폼 → Azure Functions → Table Storage 저장 |
-| 정보글 | `_posts/*.md` 작성 → 자동으로 HTML 변환 및 배포 |
+| 콘텐츠 | GitHub Issue Markdown → Azure Table Storage → DB 기반 목록·상세 페이지 |
 | 어드민 | `/admin/` — Microsoft 계정 로그인, 신청자 목록 조회·CSV 다운로드 |
 | SEO | `robots.txt` + `sitemap.xml` (배포 시 자동 최신화) |
 
 ---
 
-## 새 행사 추가하기
+## 새 정보글·행사 작성하기
 
-### 1. 행사 페이지 생성
+GitHub Issue의 **정보글 발행** 또는 **행사 발행** 양식으로 Markdown을 작성한 뒤, 검토가 끝나면 이슈를 닫으세요. GitHub Actions가 Azure Table Storage에 저장하고 `posts.json` 또는 `events.json`을 자동 갱신합니다.
 
-`events/` 폴더에 HTML 파일을 추가하세요. 기존 파일을 템플릿으로 복사하면 편해요.
-
-```
-events/my-new-event.html
-```
-
-### 2. 행사 신청 폼 연동
-
-`events/events.json`에 항목을 추가하면 신청 폼에서 행사 정보가 자동으로 표시됩니다.
-
-```json
-{
-  "my-new-event": {
-    "name": "행사명",
-    "emoji": "🎯",
-    "date": "2026. 10. 00",
-    "location": "장소",
-    "type": "오프라인",
-    "price": "무료",
-    "capacity": "선착순 30명",
-    "deadline": "2026.09.28"
-  }
-}
-```
-
-신청 버튼 URL: `/events/register.html?event=my-new-event`
-
-### 3. 행사 목록 카드 추가
-
-`events/index.html`의 `.events-grid` 안에 카드를 추가하세요. `data-date` 속성이 있어야 날짜순 정렬이 적용됩니다.
-
-```html
-<div class="event-card" data-date="2026-10-00" data-type="offline" data-status="upcoming">
-  ...
-</div>
-```
-
----
-
-## 새 정보글 작성하기
-
-`_posts/` 폴더에 Markdown 파일을 추가하면 GitHub Actions가 자동으로 HTML을 생성하고 `posts.json`을 갱신합니다.
-
-**파일명**: `YYYY-MM-DD-slug.md`
-
-**Front matter**:
-
-```yaml
----
-title: "글 제목"
-date: "2026-08-15"
-emoji: "🚀"
-tag: "azure"          # azure | github | career | opensource
-excerpt: "한 줄 요약 (목록에 표시됩니다)"
-author: "작성자 이름"
----
-
-본문 내용 (Markdown)
-```
-
-파일을 push하면 자동으로:
-- `posts/YYYY-MM-DD-slug.html` 생성
-- `posts/posts.json` 갱신
-- GitHub Pages 재배포
-
----
-
-## AI 빌더 정기모임 정보글 연결
-
-회차가 끝난 후 정보글을 작성하면 `events/ai-builder-meetup.html`의 `sessions` 배열에 `postUrl`을 추가하세요.
-
-```js
-{ date: '2026-08-13', postUrl: '/posts/2026-08-13-ai-builder-1.html' }
-```
+상세 형식과 Azure 설정은 [`docs/content-publishing.md`](docs/content-publishing.md)를 참고하세요.
 
 ---
 
