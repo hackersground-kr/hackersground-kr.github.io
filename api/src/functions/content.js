@@ -23,7 +23,7 @@ function corsHeaders(requestOrigin) {
 
   return {
     'Access-Control-Allow-Origin': origin,
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, OPTIONS',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     'Content-Type': 'application/json; charset=utf-8',
     Vary: 'Origin',
@@ -195,7 +195,7 @@ async function incrementViewCount(tableClient, kind, slug) {
 }
 
 app.http('content', {
-  methods: ['GET', 'POST', 'PUT', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   authLevel: 'anonymous',
   route: 'content/{kind}/{slug?}',
   handler: async (request, context) => {
@@ -247,6 +247,11 @@ app.http('content', {
 
       if (!isAuthorized(request)) {
         return { status: 401, headers, jsonBody: { error: '콘텐츠 동기화 권한이 없습니다.' } };
+      }
+
+      if (request.method === 'DELETE') {
+        await tableClient.deleteEntity(kind, slug);
+        return { status: 204, headers };
       }
 
       const body = await request.json();
