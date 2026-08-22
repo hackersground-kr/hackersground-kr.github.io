@@ -18,6 +18,37 @@
       : new Intl.DateTimeFormat('ko-KR', { dateStyle: 'medium' }).format(parsed);
   }
 
+  function shortUrl(kind, shortId) {
+    const section = kind === 'post' ? 'posts' : 'events';
+    return new URL(`/${section}/${shortId}`, window.location.origin).href;
+  }
+
+  function configureShareButton(kind, content) {
+    const button = document.querySelector('[data-content-share]');
+    const result = document.querySelector('[data-content-share-result]');
+    if (!button || !result || !Number.isSafeInteger(content.shortId)) {
+      return;
+    }
+
+    const url = shortUrl(kind, content.shortId);
+    button.hidden = false;
+    button.addEventListener('click', async () => {
+      try {
+        if (navigator.share) {
+          await navigator.share({ title: content.title, text: content.excerpt, url });
+          return;
+        }
+
+        await navigator.clipboard.writeText(url);
+        result.textContent = '단축 URL을 복사했습니다.';
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          result.textContent = '공유하지 못했습니다. 잠시 후 다시 시도해주세요.';
+        }
+      }
+    });
+  }
+
   function createPostItem(post) {
     const link = document.createElement('a');
     link.className = 'post-item';
@@ -131,6 +162,7 @@
     if (date) date.textContent = formatDate(content.publishedAt || content.createdAt);
     const viewCount = document.querySelector('[data-content-views]');
     if (viewCount) viewCount.textContent = `조회 ${content.viewCount}`;
+    configureShareButton(kind, content);
 
     const eventMeta = document.querySelector('[data-content-event-meta]');
     if (kind === 'event' && eventMeta) {

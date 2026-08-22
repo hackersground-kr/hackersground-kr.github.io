@@ -11,10 +11,11 @@
 | RowKey | 영문 소문자·숫자·하이픈으로 만든 slug |
 | 공개 목록 | `GET /api/content/post`, `GET /api/content/event` |
 | 공개 상세 | `GET /api/content/{kind}/{slug}` |
+| 단축 URL 조회 | `GET /api/content/{kind}/short/{shortId}` |
 | 조회수 증가 | `POST /api/content/{kind}/{slug}` |
 | 발행/수정 | `PUT /api/content/{kind}/{slug}` |
 
-각 엔터티는 제목, 요약, Markdown 원문, 안전하게 렌더링한 HTML, 본문 형식(`bodyFormat`), 제작 시각(`createdAt`), 최종 수정 시각(`updatedAt`), 발행 시각(`publishedAt`), 조회수(`viewCount`)를 저장합니다. 행사에는 시작/종료 시각, 장소, 유형, 참가비, 정원, 신청 링크도 함께 저장합니다.
+각 엔터티는 제목, 요약, Markdown 원문, 안전하게 렌더링한 HTML, 본문 형식(`bodyFormat`), 제작 시각(`createdAt`), 최종 수정 시각(`updatedAt`), 발행 시각(`publishedAt`), 조회수(`viewCount`), 영구 단축 URL 번호(`shortId`)를 저장합니다. 행사에는 시작/종료 시각, 장소, 유형, 참가비, 정원, 신청 링크도 함께 저장합니다.
 
 Azure Table Storage의 문자열 속성은 64 KiB 제한이 있으므로 본문 Markdown은 60 KiB 이하로 작성합니다. 이를 초과하는 대용량 첨부 파일은 Blob Storage에 두고 Markdown에서 링크하세요.
 
@@ -26,6 +27,14 @@ Azure Table Storage의 문자열 속성은 64 KiB 제한이 있으므로 본문 
 4. 검토가 끝나면 이슈를 닫습니다.
 
 이슈에는 `content-publish`와 `post` 또는 `event` 레이블이 자동으로 붙습니다. 닫힌 이슈를 `.github/workflows/sync-content-issue.yaml`이 처리하여 DB에 upsert하고, `posts/posts.json` 또는 `events/events.json`도 함께 갱신합니다. 같은 slug로 다시 발행하면 제작 시각과 조회수는 보존하고 본문 및 최종 수정 시각만 갱신합니다.
+
+## 단축 URL과 공유
+
+발행된 콘텐츠는 종류별로 증가하는 영구 숫자 `shortId`를 받습니다. 정보글은 `/posts/{shortId}`, 행사는 `/events/{shortId}`로 공유합니다. 예를 들어 정보글 ID가 `12`면 `https://hackersground.kr/posts/12`입니다.
+
+발행 워크플로우는 해당 경로의 정적 리다이렉트 페이지를 함께 만들고, 이 페이지는 추적 스크립트를 포함하지 않습니다. 따라서 단축 URL 접속은 최종 상세 페이지에서만 Google Analytics 페이지뷰로 집계됩니다. 상세 상단의 **공유하기** 버튼은 이 단축 URL을 Web Share API 또는 클립보드로 전달합니다.
+
+기존 콘텐츠에는 **Migrate short links** 워크플로우를 수동 실행해 번호와 정적 단축 경로를 생성합니다. 콘텐츠 삭제 워크플로우는 DB 레코드, 목록 메타데이터, 단축 경로를 함께 제거합니다.
 
 ## Markdown 지원 범위
 
@@ -63,7 +72,7 @@ az functionapp config appsettings set \
   --settings "CONTENT_SYNC_TOKEN=<동일한-무작위-문자열>"
 ```
 
-콘텐츠 상세 페이지는 `/posts/content.html?slug=<slug>` 또는 `/events/content.html?slug=<slug>`입니다. 개별 정적 콘텐츠 파일은 DB 이관 뒤 유지하지 않으므로, 새 링크 형식을 사용하세요.
+콘텐츠 상세 페이지의 내부 정식 경로는 `/posts/content.html?slug=<slug>` 또는 `/events/content.html?slug=<slug>`입니다. 외부 공유에는 `/posts/{shortId}` 또는 `/events/{shortId}` 단축 URL을 사용하세요.
 
 ## 뉴스레터 구독자
 

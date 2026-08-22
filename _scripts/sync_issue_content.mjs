@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 
 const eventPath = process.env.GITHUB_EVENT_PATH;
 const endpoint = process.env.CONTENT_SYNC_URL;
@@ -33,6 +33,32 @@ function requiredSection(body, heading) {
 
 function optionalIssueTitle(prefix) {
   return issue.title.replace(prefix, '').trim();
+}
+
+async function writeShortLink(kind, shortId, slug) {
+  if (!Number.isSafeInteger(shortId) || shortId < 1) {
+    throw new Error('콘텐츠 API가 올바른 단축 URL 번호를 반환하지 않았습니다.');
+  }
+
+  const directory = `${kind === 'post' ? 'posts' : 'events'}/${shortId}`;
+  const destination = `/${kind === 'post' ? 'posts' : 'events'}/content.html?slug=${encodeURIComponent(slug)}`;
+  const page = `<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="refresh" content="0; url=${destination}">
+  <title>해커그라운드 콘텐츠로 이동합니다</title>
+</head>
+<body>
+  <p><a href="${destination}">콘텐츠로 이동합니다.</a></p>
+  <script>location.replace(${JSON.stringify(destination)});</script>
+</body>
+</html>
+`;
+
+  await mkdir(directory, { recursive: true });
+  await writeFile(`${directory}/index.html`, page, 'utf8');
 }
 
 const body = issue.body || '';
@@ -79,11 +105,13 @@ if (!response.ok) {
 }
 
 const content = responseBody.content;
+await writeShortLink(kind, content.shortId, content.slug);
 if (kind === 'post') {
   const postsPath = 'posts/posts.json';
   const posts = JSON.parse(await readFile(postsPath, 'utf8'));
   const nextPost = {
     slug: content.slug,
+    shortId: content.shortId,
     title: content.title,
     date: content.publishedAt.slice(0, 10),
     emoji: content.emoji,
@@ -98,6 +126,7 @@ if (kind === 'post') {
   const eventsPath = 'events/events.json';
   const events = JSON.parse(await readFile(eventsPath, 'utf8'));
   events[content.slug] = {
+    shortId: content.shortId,
     name: content.title,
     emoji: content.emoji,
     date: content.event.startAt,

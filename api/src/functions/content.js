@@ -15,6 +15,7 @@ const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGIN
 const CONTENT_KINDS = new Set(['post', 'event']);
 const CONTENT_STATUSES = new Set(['draft', 'published']);
 const MAX_MARKDOWN_LENGTH = 60 * 1024;
+const SHORT_ID_COUNTER_PARTITION = 'content-short-id';
 
 function corsHeaders(requestOrigin) {
   const origin = ALLOWED_ORIGINS.includes(requestOrigin)
@@ -45,6 +46,10 @@ function getTableClient() {
 
 function isValidSlug(slug) {
   return typeof slug === 'string' && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug);
+}
+
+function isValidShortId(shortId) {
+  return Number.isSafeInteger(shortId) && shortId > 0;
 }
 
 function getYouTubeId(url) {
@@ -284,6 +289,7 @@ function asPublicContent(entity, includeBody = false) {
   const content = {
     kind: entity.partitionKey,
     slug: entity.rowKey,
+    shortId: isValidShortId(Number(entity.shortId)) ? Number(entity.shortId) : undefined,
     title: entity.title,
     excerpt: entity.excerpt || '',
     emoji: entity.emoji || '📝',
@@ -340,6 +346,148 @@ async function incrementViewCount(tableClient, kind, slug) {
 
   throw new Error('조회수를 갱신할 수 없습니다.');
 }
+
+async function allocateShortId(tableClient, kind) {
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    try {
+      const counter = await tableClient.getEntity(SHORT_ID_COUNTER_PARTITION, kind);
+      const shortId = Number(counter.lastShortId || 0) + 1;
+      await tableClient.updateEntity(
+        {
+          partitionKey: SHORT_ID_COUNTER_PARTITION,
+          rowKey: kind,
+          lastShortId: shortId,
+        },
+        'Merge',
+        { etag: counter.etag },
+      );
+      return shortId;
+    } catch (error) {
+      if (error.statusCode === 404) {
+        let lastShortId = 0;
+        for await (const entity of tableClient.listEntities({
+          queryOptions: { filter: `PartitionKey eq '${kind}'` },
+        })) {
+          lastShortId = Math.max(lastShortId, Number(entity.shortId || 0));
+        }
+
+        const shortId = lastShortId + 1;
+        try {
+          await tableClient.createEntity({
+            partitionKey: SHORT_ID_COUNTER_PARTITION,
+            rowKey: kind,
+            lastShortId: shortId,
+          });
+          return shortId;
+        } catch (createError) {
+          if (createError.statusCode !== 409 || attempt === 2) {
+            throw createError;
+          }
+        }
+      } else if (error.statusCode !== 412 || attempt === 2) {
+        throw error;
+      }
+    }
+  }
+
+  throw new Error('단축 URL 번호를 할당할 수 없습니다.');
+}
+
+async function migrateShortIds(tableClient, kind) {
+  const entities = [];
+  for await (const entity of tableClient.listEntities({
+    queryOptions: { filter: `PartitionKey eq '${kind}'` },
+  })) {
+    entities.push(entity);
+  }
+
+  entities.sort((left, right) => String(left.publishedAt || left.createdAt)
+    .localeCompare(String(right.publishedAt || right.createdAt)));
+
+  let assigned = 0;
+  for (const entity of entities) {
+    if (isValidShortId(Number(entity.shortId))) {
+      continue;
+    }
+
+    const shortId = await allocateShortId(tableClient, kind);
+    await tableClient.updateEntity(
+      { partitionKey: kind, rowKey: entity.rowKey, shortId },
+      'Merge',
+      { etag: entity.etag },
+    );
+    assigned += 1;
+  }
+
+  return assigned;
+}
+
+app.http('contentShort', {
+  methods: ['GET', 'OPTIONS'],
+  authLevel: 'anonymous',
+  route: 'content/{kind}/short/{shortId}',
+  handler: async (request, context) => {
+    const headers = corsHeaders(request.headers.get('origin') || '');
+    if (request.method === 'OPTIONS') {
+      return { status: 204, headers };
+    }
+
+    const kind = request.params.kind;
+    const shortId = Number(request.params.shortId);
+    if (!CONTENT_KINDS.has(kind) || !isValidShortId(shortId)) {
+      return { status: 400, headers, jsonBody: { error: '올바른 콘텐츠 종류와 단축 URL 번호가 필요합니다.' } };
+    }
+
+    try {
+      const tableClient = getTableClient();
+      const entities = tableClient.listEntities({
+        queryOptions: {
+          filter: `PartitionKey eq '${kind}' and shortId eq ${shortId}`,
+        },
+      });
+      for await (const entity of entities) {
+        if (entity.status === 'published') {
+          return { status: 200, headers, jsonBody: { content: asPublicContent(entity, true) } };
+        }
+      }
+      return { status: 404, headers, jsonBody: { error: '콘텐츠를 찾을 수 없습니다.' } };
+    } catch (error) {
+      context.error('단축 URL 콘텐츠 조회 오류:', error);
+      return { status: 500, headers, jsonBody: { error: '콘텐츠를 처리하는 중 오류가 발생했습니다.' } };
+    }
+  },
+});
+
+app.http('contentShortIdMigration', {
+  methods: ['POST', 'OPTIONS'],
+  authLevel: 'anonymous',
+  route: 'content/{kind}/short-id-migration',
+  handler: async (request, context) => {
+    const headers = corsHeaders(request.headers.get('origin') || '');
+    if (request.method === 'OPTIONS') {
+      return { status: 204, headers };
+    }
+
+    const kind = request.params.kind;
+    if (!CONTENT_KINDS.has(kind)) {
+      return { status: 400, headers, jsonBody: { error: 'kind는 post 또는 event여야 합니다.' } };
+    }
+    if (!isAuthorized(request)) {
+      return { status: 401, headers, jsonBody: { error: '콘텐츠 동기화 권한이 없습니다.' } };
+    }
+
+    try {
+      const tableClient = getTableClient();
+      await tableClient.createTable().catch(() => {});
+      const assigned = await migrateShortIds(tableClient, kind);
+      context.log(`[content] ${kind} short ID migration: ${assigned} assigned`);
+      return { status: 200, headers, jsonBody: { assigned } };
+    } catch (error) {
+      context.error('단축 URL 번호 마이그레이션 오류:', error);
+      return { status: 500, headers, jsonBody: { error: '단축 URL 번호를 할당하는 중 오류가 발생했습니다.' } };
+    }
+  },
+});
 
 app.http('content', {
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -427,6 +575,9 @@ app.http('content', {
 
       const now = new Date().toISOString();
       const rendered = renderContent(markdown);
+      const shortId = isValidShortId(Number(existing?.shortId))
+        ? Number(existing.shortId)
+        : await allocateShortId(tableClient, kind);
       const entity = {
         partitionKey: kind,
         rowKey: slug,
@@ -448,6 +599,7 @@ app.http('content', {
         sourceIssueUrl: typeof body.sourceIssueUrl === 'string'
           ? body.sourceIssueUrl
           : existing?.sourceIssueUrl || '',
+        shortId,
         eventStartAt: typeof body.event?.startAt === 'string' ? body.event.startAt : '',
         eventEndAt: typeof body.event?.endAt === 'string' ? body.event.endAt : '',
         location: typeof body.event?.location === 'string' ? body.event.location : '',

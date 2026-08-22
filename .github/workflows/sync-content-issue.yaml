@@ -26,6 +26,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add posts/posts.json events/events.json
+          git add posts events
           git diff --staged --quiet || git commit -m "chore: issue #${{ github.event.issue.number }} 콘텐츠 메타데이터 동기화 [skip ci]"
           git push

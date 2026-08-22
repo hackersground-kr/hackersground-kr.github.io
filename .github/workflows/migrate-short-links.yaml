@@ -1,0 +1,28 @@
+name: Migrate short links
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Assign IDs and generate short links
+        env:
+          CONTENT_SYNC_URL: ${{ vars.CONTENT_SYNC_URL }}
+          CONTENT_SYNC_TOKEN: ${{ secrets.CONTENT_SYNC_TOKEN }}
+        run: node _scripts/migrate_short_links.mjs
+
+      - name: Commit generated short links
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add posts events
+          git diff --staged --quiet || git commit -m "chore: 기존 콘텐츠 단축 URL 생성 [skip ci]"
+          git push

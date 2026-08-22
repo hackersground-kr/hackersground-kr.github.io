@@ -12,12 +12,27 @@ on:
         required: true
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   delete:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve short URL
+        id: content
+        env:
+          CONTENT_SYNC_URL: ${{ vars.CONTENT_SYNC_URL }}
+        run: |
+          SLUG="${{ github.event.inputs.slug }}"
+          KIND="${{ github.event.inputs.kind }}"
+          URL="${CONTENT_SYNC_URL%/}/content/${KIND}/${SLUG}"
+          curl --fail-with-body --silent --show-error "$URL" > /tmp/content.json
+          SHORT_ID=$(node -e "const content = require('/tmp/content.json').content; if (!Number.isSafeInteger(content.shortId)) process.exit(1); process.stdout.write(String(content.shortId));")
+          echo "short-id=$SHORT_ID" >> "$GITHUB_OUTPUT"
+
       - name: Delete content from Azure Table Storage
         env:
           CONTENT_SYNC_URL: ${{ vars.CONTENT_SYNC_URL }}
@@ -37,3 +52,18 @@ jobs:
             echo "❌ 삭제 실패 (HTTP $STATUS)"
             exit 1
           fi
+
+      - name: Remove static short link and metadata
+        env:
+          CONTENT_KIND: ${{ github.event.inputs.kind }}
+          CONTENT_SLUG: ${{ github.event.inputs.slug }}
+          CONTENT_SHORT_ID: ${{ steps.content.outputs.short-id }}
+        run: node _scripts/delete_short_link.mjs
+
+      - name: Commit deletion metadata
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add posts events
+          git diff --staged --quiet || git commit -m "chore: ${{ github.event.inputs.kind }}/${{ github.event.inputs.slug }} 단축 URL 삭제 [skip ci]"
+          git push

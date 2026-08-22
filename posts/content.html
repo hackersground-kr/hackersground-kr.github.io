@@ -30,6 +30,7 @@
         .post-content-section { padding: 4rem 0; background: var(--dark-bg); }
         .video-embed { position: relative; width: 100%; padding-top: 56.25%; margin: 1.5rem 0; }
         .video-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+        .content-share { font: inherit; padding: 0.55rem 1rem; }
     </style>
 </head>
 <body>
@@ -55,6 +56,8 @@
             <span class="badge" data-content-tag style="margin-bottom: 1.5rem; display: inline-block;">정보글</span>
             <h1 class="hero-title" data-content-title style="font-size: clamp(1.8rem, 4vw, 3rem);">정보글을 불러오는 중입니다</h1>
             <p class="hero-subtitle" style="font-size: 1rem;"><span data-content-excerpt></span> <span data-content-date></span> <span data-content-views></span></p>
+            <button type="button" class="btn-secondary content-share" data-content-share hidden>🔗 공유하기</button>
+            <p data-content-share-result aria-live="polite"></p>
         </div>
     </section>
     <section class="post-content-section">
