@@ -1,5 +1,4 @@
 const { app } = require('@azure/functions');
-const { randomUUID } = require('node:crypto');
 const { AzureNamedKeyCredential, TableClient } = require('@azure/data-tables');
 const { Resend } = require('resend');
 
@@ -21,8 +20,6 @@ const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGIN
   .map((origin) => origin.trim())
   .filter(Boolean);
 const CONTENT_KINDS = new Set(['post', 'event']);
-const AFFILIATIONS = new Set(['developer', 'worker', 'representative', 'student']);
-const INTERESTS = new Set(['ai', 'cloud', 'github', 'career', 'opensource']);
 
 function corsHeaders(requestOrigin) {
   const origin = ALLOWED_ORIGINS.includes(requestOrigin)
@@ -31,7 +28,7 @@ function corsHeaders(requestOrigin) {
 
   return {
     'Access-Control-Allow-Origin': origin,
-    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Methods': 'GET, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Email',
     'Content-Type': 'application/json; charset=utf-8',
     Vary: 'Origin',
@@ -128,17 +125,6 @@ function parseSelection(value) {
   }
 }
 
-function validateSelection(value, allowedValues) {
-  if (!Array.isArray(value) || value.some((item) => !allowedValues.has(item))) {
-    return undefined;
-  }
-  return [...new Set(value)];
-}
-
-function isValidSlug(slug) {
-  return typeof slug === 'string' && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug);
-}
-
 async function listActiveSubscribers() {
   const subscribers = [];
   const client = getTableClient(SUBSCRIBERS_TABLE);
@@ -148,18 +134,6 @@ async function listActiveSubscribers() {
     subscribers.push(entity);
   }
   return subscribers;
-}
-
-function subscriberMatchesCampaign(subscriber, campaign) {
-  const affiliations = parseSelection(campaign.targetAffiliations);
-  const interests = parseSelection(campaign.targetInterests);
-  if (affiliations.length > 0 && !affiliations.includes(subscriber.affiliation)) {
-    return false;
-  }
-  if (interests.length === 0) {
-    return true;
-  }
-  return parseSelection(subscriber.interests).some((interest) => interests.includes(interest));
 }
 
 function escapeHtml(value) {
@@ -215,15 +189,7 @@ async function sendWithConcurrency(recipients, send) {
   await Promise.all(workers);
 }
 
-async function deliverCampaign(campaign, context) {
-  const campaigns = getTableClient(CAMPAIGNS_TABLE);
-  const contentClient = getTableClient(CONTENT_TABLE);
-  const content = await contentClient.getEntity(campaign.contentKind, campaign.contentSlug);
-  if (content.status !== 'published') {
-    throw new Error('발송할 콘텐츠가 발행 상태가 아닙니다.');
-  }
-
-  function monthlyWindow(now) {
+function monthlyWindow(now) {
     const parts = new Intl.DateTimeFormat('en-US', {
       timeZone: 'Asia/Seoul',
       year: 'numeric',
@@ -235,15 +201,15 @@ async function deliverCampaign(campaign, context) {
     const end = new Date(Date.UTC(year, month - 1, 1, -9));
     const start = new Date(Date.UTC(year, month - 2, 1, -9));
     return { start, end, label: `${month === 1 ? 12 : month - 1}월` };
-  }
+}
 
-  function isPastEvent(content, now) {
+function isPastEvent(content, now) {
     if (content.partitionKey !== 'event') return false;
     const date = new Date(content.eventEndAt || content.eventStartAt);
     return !Number.isNaN(date.getTime()) && date < now;
-  }
+}
 
-  async function wasDispatched(dispatches, content) {
+async function wasDispatched(dispatches, content) {
     try {
       await dispatches.getEntity('content', `${content.partitionKey}:${content.rowKey}`);
       return true;
@@ -251,9 +217,9 @@ async function deliverCampaign(campaign, context) {
       if (error.statusCode === 404) return false;
       throw error;
     }
-  }
+}
 
-  async function deliverMonthlyDigest(now, context) {
+async function deliverMonthlyDigest(now, context) {
     const { start, end, label } = monthlyWindow(now);
     const campaigns = await ensureCampaignsTable();
     const dispatches = await ensureDispatchesTable();
@@ -352,42 +318,10 @@ async function deliverCampaign(campaign, context) {
         dispatchedAt: completedAt,
       });
     }
-  }
-
-  const recipients = (await listActiveSubscribers())
-    .filter((subscriber) => subscriberMatchesCampaign(subscriber, campaign));
-  const resend = new Resend(RESEND_API_KEY);
-  let sent = 0;
-  let failed = 0;
-  await sendWithConcurrency([...recipients], async (recipient) => {
-    try {
-      await resend.emails.send({
-        from: NEWSLETTER_FROM,
-        to: recipient.email,
-        subject: campaign.subject,
-        html: newsletterHtml(content),
-      });
-      sent += 1;
-    } catch (error) {
-      failed += 1;
-      context.error(`[newsletter] delivery failed for ${recipient.rowKey}:`, error);
-    }
-  });
-
-  const now = new Date().toISOString();
-  await campaigns.updateEntity({
-    partitionKey: 'campaign',
-    rowKey: campaign.rowKey,
-    status: failed > 0 ? 'partial' : 'sent',
-    sentAt: now,
-    recipientCount: sent,
-    failureCount: failed,
-    updatedAt: now,
-  }, 'Merge');
 }
 
 app.http('newsletterAdmin', {
-  methods: ['GET', 'POST', 'OPTIONS'],
+  methods: ['GET', 'OPTIONS'],
   authLevel: 'anonymous',
   route: 'newsletter/{resource}',
   handler: async (request, context) => {
@@ -431,7 +365,7 @@ app.http('newsletterAdmin', {
         const campaigns = [];
         const client = await ensureCampaignsTable();
         for await (const entity of client.listEntities({
-          queryOptions: { filter: "PartitionKey eq 'campaign'" },
+          queryOptions: { filter: "PartitionKey eq 'campaign' and contentKind eq 'digest'" },
         })) {
           campaigns.push(asCampaign(entity));
         }
@@ -439,109 +373,10 @@ app.http('newsletterAdmin', {
         return { status: 200, headers, jsonBody: { campaigns } };
       }
 
-      if (request.method === 'POST' && resource === 'campaigns') {
-        const body = await request.json();
-        const contentKind = body.contentKind;
-        const contentSlug = body.contentSlug;
-        const scheduledAt = new Date(body.scheduledAt);
-        const subject = typeof body.subject === 'string' ? body.subject.trim() : '';
-        const targetAffiliations = validateSelection(body.targetAffiliations, AFFILIATIONS);
-        const targetInterests = validateSelection(body.targetInterests, INTERESTS);
-
-        if (!CONTENT_KINDS.has(contentKind) || !isValidSlug(contentSlug)) {
-          return { status: 400, headers, jsonBody: { error: '발송할 콘텐츠를 선택해주세요.' } };
-        }
-        if (!subject || subject.length > 140) {
-          return { status: 400, headers, jsonBody: { error: '제목은 1~140자로 입력해주세요.' } };
-        }
-        if (!targetAffiliations || !targetInterests) {
-          return { status: 400, headers, jsonBody: { error: '수신 대상 선택값이 올바르지 않습니다.' } };
-        }
-        if (Number.isNaN(scheduledAt.getTime()) || scheduledAt.getTime() < Date.now() + 60_000) {
-          return { status: 400, headers, jsonBody: { error: '예약 시각은 지금부터 1분 이후여야 합니다.' } };
-        }
-
-        const content = await getTableClient(CONTENT_TABLE).getEntity(contentKind, contentSlug);
-        if (content.status !== 'published') {
-          return { status: 400, headers, jsonBody: { error: '발행된 콘텐츠만 예약 발송할 수 있습니다.' } };
-        }
-
-        const now = new Date().toISOString();
-        const client = await ensureCampaignsTable();
-        const campaign = {
-          partitionKey: 'campaign',
-          rowKey: randomUUID(),
-          title: content.title,
-          subject,
-          contentKind,
-          contentSlug,
-          scheduledAt: scheduledAt.toISOString(),
-          status: 'scheduled',
-          createdAt: now,
-          createdBy: adminEmail,
-          updatedAt: now,
-          recipientCount: 0,
-          failureCount: 0,
-          targetAffiliations: JSON.stringify(targetAffiliations),
-          targetInterests: JSON.stringify(targetInterests),
-        };
-        await client.createEntity(campaign);
-        return { status: 201, headers, jsonBody: { campaign: asCampaign(campaign) } };
-      }
-
       return { status: 404, headers, jsonBody: { error: '요청한 뉴스레터 관리 기능을 찾을 수 없습니다.' } };
     } catch (error) {
       context.error('[newsletter-admin] request failed:', error);
       return { status: 500, headers, jsonBody: { error: '뉴스레터 관리 요청을 처리하지 못했습니다.' } };
-    }
-  },
-});
-
-app.timer('sendNewsletterCampaigns', {
-  schedule: '0 */5 * * * *',
-  handler: async (timer, context) => {
-    if (!RESEND_API_KEY) {
-      context.error('[newsletter] RESEND_API_KEY is not configured; scheduled delivery skipped.');
-      return;
-    }
-
-    const now = new Date().toISOString();
-    const campaigns = await ensureCampaignsTable();
-    const due = [];
-    for await (const entity of campaigns.listEntities({
-      queryOptions: { filter: "PartitionKey eq 'campaign' and status eq 'scheduled'" },
-    })) {
-      if (entity.scheduledAt <= now) {
-        due.push(entity);
-      }
-    }
-
-    for (const campaign of due) {
-      try {
-        await campaigns.updateEntity({
-          partitionKey: campaign.partitionKey,
-          rowKey: campaign.rowKey,
-          status: 'sending',
-          startedAt: new Date().toISOString(),
-        }, 'Merge', { etag: campaign.etag });
-      } catch (error) {
-        if (error.statusCode === 412) {
-          continue;
-        }
-        throw error;
-      }
-
-      try {
-        await deliverCampaign(campaign, context);
-      } catch (error) {
-        context.error(`[newsletter] campaign ${campaign.rowKey} failed:`, error);
-        await campaigns.updateEntity({
-          partitionKey: campaign.partitionKey,
-          rowKey: campaign.rowKey,
-          status: 'failed',
-          updatedAt: new Date().toISOString(),
-        }, 'Merge');
-      }
     }
   },
 });

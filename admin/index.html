@@ -604,49 +604,13 @@
                         </div>
                     </div>
                     <div class="admin-card">
-                        <h3>콘텐츠 예약 발송</h3>
-                        <form class="campaign-form" onsubmit="scheduleCampaign(event)">
-                            <label>
-                                발송할 콘텐츠
-                                <select id="campaign-content" required onchange="fillCampaignSubject()">
-                                    <option value="">콘텐츠를 선택하세요</option>
-                                </select>
-                            </label>
-                            <label>
-                                이메일 제목
-                                <input id="campaign-subject" maxlength="140" required placeholder="받는 사람에게 보일 제목">
-                            </label>
-                            <fieldset class="campaign-audience">
-                                <legend>소속 <span>선택하지 않으면 전체</span></legend>
-                                <div class="campaign-audience-options">
-                                    <label><input name="campaign-affiliation" type="checkbox" value="developer"> 개발자</label>
-                                    <label><input name="campaign-affiliation" type="checkbox" value="worker"> 직장인</label>
-                                    <label><input name="campaign-affiliation" type="checkbox" value="representative"> 대표자</label>
-                                    <label><input name="campaign-affiliation" type="checkbox" value="student"> 학생</label>
-                                </div>
-                            </fieldset>
-                            <fieldset class="campaign-audience">
-                                <legend>관심사 <span>선택하지 않으면 전체</span></legend>
-                                <div class="campaign-audience-options">
-                                    <label><input name="campaign-interest" type="checkbox" value="ai"> AI</label>
-                                    <label><input name="campaign-interest" type="checkbox" value="cloud"> Cloud</label>
-                                    <label><input name="campaign-interest" type="checkbox" value="github"> GitHub</label>
-                                    <label><input name="campaign-interest" type="checkbox" value="career"> Career</label>
-                                    <label><input name="campaign-interest" type="checkbox" value="opensource"> Open Source</label>
-                                </div>
-                            </fieldset>
-                            <label>
-                                예약 시각
-                                <input id="campaign-scheduled-at" type="datetime-local" required>
-                            </label>
-                            <button class="download-btn" id="campaign-submit" type="submit">예약 발송 등록</button>
-                            <p class="campaign-result" id="campaign-result" aria-live="polite"></p>
-                        </form>
+                        <h3>월간 뉴스레터</h3>
+                        <p class="campaign-result">매월 1일 오전 9시(KST)에 지난달 새 정보글과 유효 행사를 활성 구독자에게 목록으로 발송합니다.</p>
                     </div>
                 </div>
 
                 <div class="table-header">
-                    <h3>예약 및 발송 이력</h3>
+                    <h3>월간 발송 이력</h3>
                 </div>
                 <div class="table-wrap" style="margin-bottom:2rem;">
                     <table>
@@ -723,7 +687,6 @@
     let eventsMap = {};  // events.json에서 로드
     let newsletterData = [];
     let newsletterCampaigns = [];
-    let newsletterContents = [];
 
     function adminHeaders() {
         const account = msalInstance.getAllAccounts()[0];
@@ -757,11 +720,9 @@
         campaignBody.innerHTML = '<tr class="loading-row"><td colspan="6">🔄 로딩 중...</td></tr>';
 
         try {
-            const [subscribersResponse, campaignsResponse, postsResponse, eventsResponse] = await Promise.all([
+            const [subscribersResponse, campaignsResponse] = await Promise.all([
                 fetch(`${API_BASE}/newsletter/subscribers`, { headers: adminHeaders() }),
                 fetch(`${API_BASE}/newsletter/campaigns`, { headers: adminHeaders() }),
-                fetch(`${API_BASE}/content/post`),
-                fetch(`${API_BASE}/content/event`),
             ]);
             if (!subscribersResponse.ok || !campaignsResponse.ok) {
                 throw new Error('뉴스레터 데이터를 불러올 권한이 없어요.');
@@ -769,14 +730,10 @@
 
             const subscribers = await subscribersResponse.json();
             const campaigns = await campaignsResponse.json();
-            const posts = postsResponse.ok ? await postsResponse.json() : { items: [] };
-            const events = eventsResponse.ok ? await eventsResponse.json() : { items: [] };
             newsletterData = subscribers.subscribers || [];
             newsletterCampaigns = campaigns.campaigns || [];
-            newsletterContents = [...(posts.items || []), ...(events.items || [])];
             renderSubscribers(subscribers);
             renderCampaigns();
-            renderCampaignContentOptions();
         } catch (error) {
             subscriberBody.innerHTML = `<tr class="loading-row"><td colspan="7">❌ 오류: ${escapeHtml(error.message)}</td></tr>`;
             campaignBody.innerHTML = `<tr class="loading-row"><td colspan="5">❌ 오류: ${escapeHtml(error.message)}</td></tr>`;
@@ -817,43 +774,6 @@
                 <td>${escapeHtml(subscriber.source || '-')}</td>
             </tr>
         `).join('');
-    }
-
-    function renderCampaignContentOptions() {
-        const select = document.getElementById('campaign-content');
-        const selected = select.value;
-        select.innerHTML = '<option value="">콘텐츠를 선택하세요</option>';
-        newsletterContents
-            .filter((content) => content.kind !== 'event' || !isPastNewsletterEvent(content))
-            .sort((left, right) => String(right.publishedAt).localeCompare(String(left.publishedAt)))
-            .forEach((content) => {
-                const option = document.createElement('option');
-                option.value = `${content.kind}:${content.slug}`;
-                option.textContent = `${content.kind === 'post' ? '정보글' : '행사'} · ${content.title}`;
-                select.appendChild(option);
-            });
-        select.value = selected;
-    }
-
-    function isPastNewsletterEvent(content) {
-        const startAt = content.event?.startAt || '';
-        const isoDate = new Date(startAt);
-        if (!Number.isNaN(isoDate.getTime()) && /^\d{4}-\d{2}-\d{2}/.test(startAt)) {
-            return isoDate < new Date();
-        }
-        const match = startAt.match(/(\d{4})\.\s*(\d{1,2})\.\s*(\d{1,2})/);
-        if (!match) {
-            return false;
-        }
-        return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3])) < new Date();
-    }
-
-    function fillCampaignSubject() {
-        const [kind, slug] = document.getElementById('campaign-content').value.split(':');
-        const content = newsletterContents.find((item) => item.kind === kind && item.slug === slug);
-        if (content) {
-            document.getElementById('campaign-subject').value = `[Hackers Ground] ${content.title}`;
-        }
     }
 
     function renderCampaigns() {
@@ -906,56 +826,6 @@
             affiliations.length ? `소속: ${escapeHtml(affiliations.join(', '))}` : '',
             interests.length ? `관심사: ${escapeHtml(interests.join(', '))}` : '',
         ].filter(Boolean).join('<br>');
-    }
-
-    async function scheduleCampaign(event) {
-        event.preventDefault();
-        const result = document.getElementById('campaign-result');
-        const submit = document.getElementById('campaign-submit');
-        const [contentKind, contentSlug] = document.getElementById('campaign-content').value.split(':');
-        const subject = document.getElementById('campaign-subject').value.trim();
-        const scheduledAtValue = document.getElementById('campaign-scheduled-at').value;
-        const targetAffiliations = Array.from(document.querySelectorAll('input[name="campaign-affiliation"]:checked'))
-            .map((input) => input.value);
-        const targetInterests = Array.from(document.querySelectorAll('input[name="campaign-interest"]:checked'))
-            .map((input) => input.value);
-        if (!contentKind || !contentSlug || !scheduledAtValue) {
-            result.textContent = '콘텐츠와 예약 시각을 선택해주세요.';
-            result.className = 'campaign-result error';
-            return;
-        }
-
-        submit.disabled = true;
-        result.textContent = '예약 발송을 등록하는 중...';
-        result.className = 'campaign-result';
-        try {
-            const response = await fetch(`${API_BASE}/newsletter/campaigns`, {
-                method: 'POST',
-                headers: { ...adminHeaders(), 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contentKind,
-                    contentSlug,
-                    subject,
-                    scheduledAt: new Date(scheduledAtValue).toISOString(),
-                    targetAffiliations,
-                    targetInterests,
-                }),
-            });
-            const data = await response.json();
-            if (!response.ok) {
-                throw new Error(data.error || '예약 발송을 등록하지 못했습니다.');
-            }
-            result.textContent = '예약 발송을 등록했습니다. 5분 단위로 발송을 시작합니다.';
-            result.className = 'campaign-result success';
-            document.getElementById('campaign-scheduled-at').value = '';
-            newsletterCampaigns.unshift(data.campaign);
-            renderCampaigns();
-        } catch (error) {
-            result.textContent = error.message;
-            result.className = 'campaign-result error';
-        } finally {
-            submit.disabled = false;
-        }
     }
 
     function downloadNewsletterCSV() {
@@ -1107,9 +977,6 @@
         const name = account.name || account.username;
         document.getElementById('user-name').textContent = name;
         document.getElementById('user-avatar').textContent = name.charAt(0).toUpperCase();
-        const minScheduleTime = new Date(Date.now() + 60_000);
-        minScheduleTime.setSeconds(0, 0);
-        document.getElementById('campaign-scheduled-at').min = minScheduleTime.toISOString().slice(0, 16);
 
         // events.json에서 탭 동적 생성 후 전체 데이터 로드
         loadEventTabs().then(() => loadRegistrations(''));
