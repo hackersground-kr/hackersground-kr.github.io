@@ -37,6 +37,12 @@ jobs:
           git push
           echo "changed=true" >> "$GITHUB_OUTPUT"
 
+      - name: Notify Discord about published post
+        if: contains(github.event.issue.labels.*.name, 'post')
+        env:
+          DISCORD_ARTICLE_WEBHOOK: ${{ secrets.DISCORD_ARTICLE_WEBHOOK }}
+        run: node _scripts/notify_discord_post.mjs
+
       - name: Deploy generated short link
         if: steps.commit.outputs.changed == 'true'
         env:
