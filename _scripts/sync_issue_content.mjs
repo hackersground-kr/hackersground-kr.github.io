@@ -16,9 +16,19 @@ const labels = new Set(issue.labels.map((label) => label.name));
 const kind = labels.has('event') ? 'event' : 'post';
 
 function section(body, heading) {
-  const escapedHeading = heading.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const match = new RegExp(`^#{2,3} ${escapedHeading}\\s*\\n([\\s\\S]*?)(?=^#{2,3} |$(?![\\s\\S]))`, 'm').exec(body);
-  return match?.[1]
+  const lines = body.split(/\r?\n/);
+  const headingIndex = lines.findIndex((line) => (
+    line.match(/^#{2,3}\s+/)?.[0] && line.replace(/^#{2,3}\s+/, '').trim() === heading
+  ));
+  if (headingIndex < 0) {
+    return '';
+  }
+
+  const nextHeadingIndex = lines.findIndex(
+    (line, index) => index > headingIndex && /^#{2,3}\s+/.test(line),
+  );
+  return lines.slice(headingIndex + 1, nextHeadingIndex < 0 ? undefined : nextHeadingIndex)
+    .join('\n')
     .replace(/<!--[\s\S]*?-->/g, '')
     .trim() || '';
 }
