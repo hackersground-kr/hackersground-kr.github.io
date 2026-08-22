@@ -871,7 +871,7 @@
         };
         body.innerHTML = newsletterCampaigns.map((campaign) => `
             <tr>
-                <td><span class="event-badge">${campaign.contentKind === 'post' ? '정보글' : '행사'}</span> ${escapeHtml(campaign.title)}</td>
+                <td><span class="event-badge">${campaign.contentKind === 'digest' ? '월간' : campaign.contentKind === 'post' ? '정보글' : '행사'}</span> ${escapeHtml(campaign.title)}</td>
                 <td>${escapeHtml(campaign.subject)}</td>
                 <td>${formatCampaignAudience(campaign)}</td>
                 <td class="date">${formatDate(campaign.scheduledAt)}</td>

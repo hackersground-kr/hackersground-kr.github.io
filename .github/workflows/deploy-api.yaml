@@ -48,6 +48,11 @@ jobs:
             --account-key "$STORAGE_KEY" \
             --name NewsletterCampaigns \
             --output none
+          az storage table create \
+            --account-name hackersgroundstorage \
+            --account-key "$STORAGE_KEY" \
+            --name NewsletterContentDispatches \
+            --output none
 
       - name: Set API app settings
         run: |
