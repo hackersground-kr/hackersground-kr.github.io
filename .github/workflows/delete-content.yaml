@@ -1,0 +1,39 @@
+name: Delete content
+
+on:
+  workflow_dispatch:
+    inputs:
+      kind:
+        description: "콘텐츠 종류 (post 또는 event)"
+        required: true
+        default: "post"
+      slug:
+        description: "삭제할 slug"
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  delete:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete content from Azure Table Storage
+        env:
+          CONTENT_SYNC_URL: ${{ vars.CONTENT_SYNC_URL }}
+          CONTENT_SYNC_TOKEN: ${{ secrets.CONTENT_SYNC_TOKEN }}
+        run: |
+          SLUG="${{ github.event.inputs.slug }}"
+          KIND="${{ github.event.inputs.kind }}"
+          URL="${CONTENT_SYNC_URL%/}/content/${KIND}/${SLUG}"
+          echo "Deleting ${KIND}/${SLUG}..."
+          STATUS=$(curl -s -o /tmp/response.json -w "%{http_code}" -X DELETE "$URL" \
+            -H "Authorization: Bearer $CONTENT_SYNC_TOKEN")
+          echo "HTTP $STATUS"
+          cat /tmp/response.json || true
+          if [ "$STATUS" = "204" ] || [ "$STATUS" = "200" ]; then
+            echo "✅ ${KIND}/${SLUG} 삭제 완료"
+          else
+            echo "❌ 삭제 실패 (HTTP $STATUS)"
+            exit 1
+          fi
