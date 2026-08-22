@@ -6,7 +6,8 @@
     "emoji": "📝",
     "tag": "other",
     "excerpt": "해커그라운드 AI 빌더모임에서 나온 첫 번째 인사이트를 소개합니다. 이번 주제는 \"AI로 게임을 만들 수 있을까?\"라는 단순한 질문에서 시작됐습니다. 기획부터 개발, 아트까지, AI가 어디까지 해낼 수 있는지 직접 만들어보며 확인한 이야기입니다.",
-    "url": "/posts/content.html?slug=2026-08-22-ai-game-dev-insight"
+    "url": "/posts/content.html?slug=2026-08-22-ai-game-dev-insight",
+    "shortId": 7
   },
   {
     "slug": "2026-08-16-ai-builder-meetup-intro",
@@ -15,7 +16,8 @@
     "emoji": "🤖",
     "tag": "ai",
     "excerpt": "매달 둘째 주 목요일, AI를 직접 써서 만들어본 사람들이 모입니다. 첫 모임에서 나온 이야기를 공유합니다.",
-    "url": "/posts/content.html?slug=2026-08-16-ai-builder-meetup-intro"
+    "url": "/posts/content.html?slug=2026-08-16-ai-builder-meetup-intro",
+    "shortId": 6
   },
   {
     "slug": "2025-07-15-azure-free-tier-guide",
@@ -24,7 +26,8 @@
     "emoji": "☁️",
     "tag": "azure",
     "excerpt": "학생 계정, 스타트업 크레딧, 무료 티어 서비스까지 — 돈 안 쓰고 클라우드 실습하는 법",
-    "url": "/posts/content.html?slug=2025-07-15-azure-free-tier-guide"
+    "url": "/posts/content.html?slug=2025-07-15-azure-free-tier-guide",
+    "shortId": 5
   },
   {
     "slug": "2025-07-08-github-copilot-tips",
@@ -33,7 +36,8 @@
     "emoji": "🤖",
     "tag": "github",
     "excerpt": "실무에서 쓰는 프롬프트 패턴, 단축키, 에디터 설정까지 한 번에",
-    "url": "/posts/content.html?slug=2025-07-08-github-copilot-tips"
+    "url": "/posts/content.html?slug=2025-07-08-github-copilot-tips",
+    "shortId": 4
   },
   {
     "slug": "2025-06-20-open-source-contribution-start",
@@ -42,7 +46,8 @@
     "emoji": "🌱",
     "tag": "opensource",
     "excerpt": "첫 PR까지 4단계로 쉽게 따라가기 — 오타 수정도 기여입니다",
-    "url": "/posts/content.html?slug=2025-06-20-open-source-contribution-start"
+    "url": "/posts/content.html?slug=2025-06-20-open-source-contribution-start",
+    "shortId": 3
   },
   {
     "slug": "2024-07-27-hackersground-2024-hackathon",
@@ -51,7 +56,8 @@
     "emoji": "🏕️",
     "tag": "archive",
     "excerpt": "의성군에서 열린 제1회 해커그라운드 해커톤 — '애저 사랑해'팀이 대상을 수상했습니다",
-    "url": "/posts/content.html?slug=2024-07-27-hackersground-2024-hackathon"
+    "url": "/posts/content.html?slug=2024-07-27-hackersground-2024-hackathon",
+    "shortId": 2
   },
   {
     "slug": "2023-07-03-hackersground-2023-hackathon",
@@ -60,6 +66,7 @@
     "emoji": "🏕️",
     "tag": "archive",
     "excerpt": "경북대 × 마이크로소프트가 함께한 2023 해커그라운드 해커톤 현장 스케치 & 기사 모음",
-    "url": "/posts/content.html?slug=2023-07-03-hackersground-2023-hackathon"
+    "url": "/posts/content.html?slug=2023-07-03-hackersground-2023-hackathon",
+    "shortId": 1
   }
 ]
