@@ -139,9 +139,13 @@
     const kind = container.dataset.contentList;
     const { items } = await request(`/content/${kind}`);
     if (!items.length) return;
+    const limit = Number(container.dataset.contentLimit);
+    const visibleItems = Number.isSafeInteger(limit) && limit > 0
+      ? items.slice(0, limit)
+      : items;
 
     const fragment = document.createDocumentFragment();
-    items.forEach((item) => fragment.append(
+    visibleItems.forEach((item) => fragment.append(
       kind === 'post' ? createPostItem(item) : createEventCard(item),
     ));
     container.replaceChildren(fragment);
