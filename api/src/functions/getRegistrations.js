@@ -26,14 +26,14 @@ function getCorsHeaders(requestOrigin) {
   const origin = ALLOWED_ORIGINS.includes(requestOrigin) ? requestOrigin : ALLOWED_ORIGINS[0];
   return {
     'Access-Control-Allow-Origin': origin,
-    'Access-Control-Allow-Methods': 'GET, OPTIONS',
+    'Access-Control-Allow-Methods': 'GET, DELETE, PATCH, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Admin-Email',
     'Content-Type': 'application/json',
   };
 }
 
 app.http('getRegistrations', {
-  methods: ['GET', 'OPTIONS'],
+  methods: ['GET', 'DELETE', 'PATCH', 'OPTIONS'],
   authLevel: 'anonymous',
   route: 'registrations',
   handler: async (request, context) => {
@@ -68,6 +68,8 @@ app.http('getRegistrations', {
     }
 
     const eventId = request.query.get('event') || null;
+    const registrationId = request.query.get('id') || '';
+    const showTrash = request.query.get('trash') === 'true';
 
     try {
       const credential = new AzureNamedKeyCredential(STORAGE_ACCOUNT, STORAGE_KEY);
@@ -77,17 +79,56 @@ app.http('getRegistrations', {
         credential
       );
 
+      if (request.method === 'DELETE' || request.method === 'PATCH') {
+        if (!eventId || !registrationId) {
+          return { status: 400, headers: getCorsHeaders(request.headers.get('origin') || ''), jsonBody: { error: '행사와 신청자 식별자가 필요합니다.' } };
+        }
+
+        const registration = await tableClient.getEntity(eventId, registrationId);
+        const now = new Date().toISOString();
+        if (request.method === 'DELETE') {
+          if (registration.trashedAt) {
+            return { status: 409, headers: getCorsHeaders(request.headers.get('origin') || ''), jsonBody: { error: '이미 휴지통에 있는 신청자입니다.' } };
+          }
+          await tableClient.updateEntity({
+            partitionKey: eventId,
+            rowKey: registrationId,
+            trashedAt: now,
+            trashedBy: adminEmail,
+          }, 'Merge');
+          context.log(`[admin] 신청자 휴지통 이동: ${eventId}/${registrationId} by ${adminEmail}`);
+        } else {
+          if (!registration.trashedAt) {
+            return { status: 409, headers: getCorsHeaders(request.headers.get('origin') || ''), jsonBody: { error: '휴지통에 없는 신청자입니다.' } };
+          }
+          await tableClient.updateEntity({
+            partitionKey: eventId,
+            rowKey: registrationId,
+            trashedAt: '',
+            trashedBy: '',
+            restoredAt: now,
+          }, 'Merge');
+          context.log(`[admin] 신청자 복원: ${eventId}/${registrationId} by ${adminEmail}`);
+        }
+        return { status: 204, headers: getCorsHeaders(request.headers.get('origin') || '') };
+      }
+
       const filter = eventId ? `PartitionKey eq '${eventId}'` : undefined;
       const rows = [];
       for await (const entity of tableClient.listEntities({ queryOptions: { filter } })) {
+        if (Boolean(entity.trashedAt) !== showTrash) {
+          continue;
+        }
         rows.push({
           eventId: entity.partitionKey,
+          id: entity.rowKey,
           registeredAt: entity.registeredAt,
           name: entity.name,
           email: entity.email,
           phone: entity.phone || '',
           affiliation: entity.affiliation || '',
           message: entity.message || '',
+          trashedAt: entity.trashedAt || '',
         });
       }
 
@@ -107,5 +148,31 @@ app.http('getRegistrations', {
       context.error('조회 오류:', err);
       return { status: 500, headers: getCorsHeaders(request.headers.get("origin") || ""), jsonBody: { error: '데이터 조회 중 오류가 발생했어요.' } };
     }
+  },
+});
+
+app.timer('purgeTrashedRegistrations', {
+  schedule: '0 0 0 * * *',
+  handler: async (timer, context) => {
+    if (!STORAGE_ACCOUNT || !STORAGE_KEY) {
+      context.error('[admin] Storage 환경 변수가 설정되지 않아 휴지통 정리를 건너뜁니다.');
+      return;
+    }
+
+    const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000;
+    const tableClient = new TableClient(
+      `https://${STORAGE_ACCOUNT}.table.core.windows.net`,
+      TABLE_NAME,
+      new AzureNamedKeyCredential(STORAGE_ACCOUNT, STORAGE_KEY),
+    );
+    let deleted = 0;
+    for await (const entity of tableClient.listEntities()) {
+      const trashedAt = new Date(entity.trashedAt);
+      if (entity.trashedAt && !Number.isNaN(trashedAt.getTime()) && trashedAt.getTime() <= cutoff) {
+        await tableClient.deleteEntity(entity.partitionKey, entity.rowKey);
+        deleted += 1;
+      }
+    }
+    context.log(`[admin] 휴지통 신청자 정리 완료: ${deleted}건`);
   },
 });

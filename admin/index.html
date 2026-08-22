@@ -563,9 +563,12 @@
             <!-- 신청자 테이블 -->
             <div class="table-header">
                 <h3 id="table-title">전체 신청자</h3>
-                <button class="download-btn" id="csv-btn" onclick="downloadCSV()" disabled>
-                    ⬇️ CSV 다운로드
-                </button>
+                <div style="display:flex; gap:0.5rem;">
+                    <button class="download-btn" type="button" onclick="toggleRegistrationTrash()">🗑️ 휴지통</button>
+                    <button class="download-btn" id="csv-btn" onclick="downloadCSV()" disabled>
+                        ⬇️ CSV 다운로드
+                    </button>
+                </div>
             </div>
             <div class="table-wrap">
                 <table>
@@ -579,10 +582,11 @@
                             <th>소속</th>
                             <th>한마디</th>
                             <th>신청일시</th>
+                            <th>관리</th>
                         </tr>
                     </thead>
                     <tbody id="registrations-tbody">
-                        <tr class="loading-row"><td colspan="8">로딩 중...</td></tr>
+                        <tr class="loading-row"><td colspan="9">로딩 중...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -684,6 +688,7 @@
     // =============================================
     let currentData = [];
     let currentEvent = '';
+    let showRegistrationTrash = false;
     let eventsMap = {};  // events.json에서 로드
     let newsletterData = [];
     let newsletterCampaigns = [];
@@ -1005,13 +1010,14 @@
     // =============================================
     async function loadRegistrations(eventId) {
         const tbody = document.getElementById('registrations-tbody');
-        tbody.innerHTML = '<tr class="loading-row"><td colspan="8">🔄 로딩 중...</td></tr>';
+        tbody.innerHTML = '<tr class="loading-row"><td colspan="9">🔄 로딩 중...</td></tr>';
         document.getElementById('csv-btn').disabled = true;
 
         try {
-            const url = eventId
-                ? `${API_BASE}/registrations?event=${encodeURIComponent(eventId)}`
-                : `${API_BASE}/registrations`;
+            const params = new URLSearchParams();
+            if (eventId) params.set('event', eventId);
+            if (showRegistrationTrash) params.set('trash', 'true');
+            const url = `${API_BASE}/registrations${params.size ? `?${params}` : ''}`;
 
             const accounts = msalInstance.getAllAccounts();
             const userEmail = accounts.length > 0 ? accounts[0].username : '';
@@ -1033,7 +1039,7 @@
             document.getElementById('csv-btn').disabled = currentData.length === 0;
 
         } catch (err) {
-            tbody.innerHTML = `<tr class="loading-row"><td colspan="8">❌ 오류: ${err.message}</td></tr>`;
+            tbody.innerHTML = `<tr class="loading-row"><td colspan="9">❌ 오류: ${err.message}</td></tr>`;
         }
     }
 
@@ -1043,7 +1049,7 @@
     function renderTable(rows) {
         const tbody = document.getElementById('registrations-tbody');
         if (rows.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="8" class="empty-state">신청자가 없어요.</td></tr>';
+            tbody.innerHTML = `<tr><td colspan="9" class="empty-state">${showRegistrationTrash ? '휴지통이 비어 있어요.' : '신청자가 없어요.'}</td></tr>`;
             return;
         }
 
@@ -1069,8 +1075,32 @@
                 <td>${r.affiliation || '<span style="color:#4b5563">-</span>'}</td>
                 <td class="message">${r.message || '<span style="color:#4b5563">-</span>'}</td>
                 <td class="date">${formatDate(r.registeredAt)}</td>
+                <td><button class="download-btn" type="button" onclick="manageRegistration('${r.eventId}', '${r.id}', '${showRegistrationTrash ? 'restore' : 'trash'}')">${showRegistrationTrash ? '복원' : '휴지통'}</button></td>
             </tr>
         `).join('');
+    }
+
+    function toggleRegistrationTrash() {
+        showRegistrationTrash = !showRegistrationTrash;
+        document.getElementById('table-title').textContent = showRegistrationTrash ? '휴지통' : (currentEvent ? eventsMap[currentEvent]?.name || currentEvent : '전체 신청자');
+        loadRegistrations(currentEvent);
+    }
+
+    async function manageRegistration(eventId, id, action) {
+        const label = action === 'trash' ? '휴지통으로 이동' : '복원';
+        if (!confirm(`이 신청자를 ${label}할까요?`)) return;
+
+        const params = new URLSearchParams({ event: eventId, id });
+        const response = await fetch(`${API_BASE}/registrations?${params}`, {
+            method: action === 'trash' ? 'DELETE' : 'PATCH',
+            headers: adminHeaders(),
+        });
+        if (!response.ok) {
+            const data = await response.json().catch(() => ({}));
+            alert(data.error || `신청자를 ${label}하지 못했어요.`);
+            return;
+        }
+        loadRegistrations(currentEvent);
     }
 
     // =============================================
