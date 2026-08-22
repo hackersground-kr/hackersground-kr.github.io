@@ -25,10 +25,8 @@ function section(heading) {
 }
 
 const slug = section('Slug').toLowerCase();
-const title = section('제목');
-const excerpt = section('한 줄 요약');
-if (!slug || !title || !excerpt) {
-  throw new Error('Discord 안내에 필요한 Slug, 제목, 한 줄 요약을 찾을 수 없습니다.');
+if (!slug) {
+  throw new Error('Discord 안내에 필요한 Slug를 찾을 수 없습니다.');
 }
 
 const posts = JSON.parse(await readFile('posts/posts.json', 'utf8'));
@@ -42,14 +40,7 @@ const response = await fetch(webhookUrl, {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
-    content: '새로운 정보글이 발행되었습니다.',
-    embeds: [{
-      title,
-      description: excerpt,
-      url,
-      color: 0x22c55e,
-      footer: { text: '해커그라운드 정보글' },
-    }],
+    content: url,
   }),
 });
 

@@ -29,14 +29,7 @@ for (const shortId of shortIds) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      content: '새로운 정보글을 소개합니다.',
-      embeds: [{
-        title: post.title,
-        description: post.excerpt,
-        url: `https://hackersground.kr/posts/${post.shortId}`,
-        color: 0x22c55e,
-        footer: { text: '해커그라운드 정보글' },
-      }],
+      content: `https://hackersground.kr/posts/${post.shortId}`,
     }),
   });
 
