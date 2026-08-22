@@ -50,6 +50,18 @@
             color: var(--text-gray);
             font-size: 0.9rem;
         }
+        body[data-content-format="legacy-html"] .legacy-event-content .btn-primary,
+        body[data-content-format="legacy-html"] .legacy-event-content .apply-button {
+            color: var(--dark-bg) !important;
+        }
+        body[data-content-format="legacy-html"] .legacy-event-content .registration-closed {
+            background: rgba(255,255,255,0.1) !important;
+            border-color: rgba(255,255,255,0.18) !important;
+            box-shadow: none !important;
+            color: #9ca3af !important;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
         @media (max-width: 768px) {
             body[data-content-format="legacy-html"] .legacy-event-content .event-detail-hero {
                 padding: 5rem 0 2.25rem;

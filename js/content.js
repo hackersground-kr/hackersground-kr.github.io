@@ -18,6 +18,26 @@
       : new Intl.DateTimeFormat('ko-KR', { dateStyle: 'medium' }).format(parsed);
   }
 
+  function parseEventDate(value) {
+    if (!value || typeof value !== 'string') return undefined;
+    const parsed = new Date(value);
+    if (!Number.isNaN(parsed.getTime())) return parsed;
+
+    const match = value.match(/(\d{4})[.\-/]\s*(\d{1,2})(?:[.\-/]\s*(\d{1,2}))?/);
+    if (!match) return undefined;
+    return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3] || 1));
+  }
+
+  function hasEventEnded(event) {
+    const endAt = parseEventDate(event?.endAt);
+    if (endAt) return endAt.getTime() < Date.now();
+
+    const startAt = parseEventDate(event?.startAt);
+    if (!startAt) return false;
+    startAt.setHours(23, 59, 59, 999);
+    return startAt.getTime() < Date.now();
+  }
+
   function shortUrl(kind, shortId) {
     const section = kind === 'post' ? 'posts' : 'events';
     return new URL(`/${section}/${shortId}`, window.location.origin).href;
@@ -76,11 +96,12 @@
   }
 
   function createEventCard(event) {
+    const isClosed = hasEventEnded(event.event);
     const card = document.createElement('div');
     card.className = 'event-card';
-    card.dataset.date = event.event?.startAt || event.publishedAt || '';
+    card.dataset.date = parseEventDate(event.event?.startAt)?.toISOString() || event.publishedAt || '';
     card.dataset.type = event.event?.eventType || '';
-    card.dataset.status = event.event?.registrationUrl ? 'upcoming' : 'closed';
+    card.dataset.status = !isClosed && event.event?.registrationUrl ? 'upcoming' : 'closed';
 
     const category = document.createElement('div');
     category.className = 'event-category seminar';
@@ -108,7 +129,7 @@
     const link = document.createElement('a');
     link.className = 'event-button';
     link.href = `content.html?slug=${encodeURIComponent(event.slug)}`;
-    link.textContent = '자세히 보기';
+    link.textContent = isClosed ? '신청마감' : '자세히 보기';
     footer.append(price, link);
     card.append(category, title, meta, excerpt, footer);
     return card;
@@ -167,6 +188,14 @@
 
     container.classList.toggle('legacy-event-content', isLegacyEvent);
     container.innerHTML = content.renderedHtml;
+    if (kind === 'event' && hasEventEnded(content.event)) {
+      container.querySelectorAll('a[href*="register.html"]').forEach((link) => {
+        link.classList.add('registration-closed');
+        link.removeAttribute('href');
+        link.setAttribute('aria-disabled', 'true');
+        link.textContent = '신청마감';
+      });
+    }
     if (isLegacyEvent) {
       const legacyHeroContent = container.querySelector('.event-detail-hero .container');
       const shareButton = legacyHero?.querySelector('[data-content-share]');

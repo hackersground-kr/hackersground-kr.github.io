@@ -120,12 +120,12 @@
             past.sort(function(a,b){ return new Date(b.dataset.date) - new Date(a.dataset.date); });
             upcoming.concat(past).forEach(function(c){ grid.appendChild(c); });
 
-            // 과거 행사에 '종료' 배지 추가
+            // 지난 행사는 신청 마감 상태로 표시
             past.forEach(function(c) {
                 if (!c.querySelector('.past-badge')) {
                     var b = document.createElement('span');
                     b.className = 'past-badge';
-                    b.textContent = '종료';
+                    b.textContent = '신청마감';
                     b.style.cssText = 'display:inline-block;background:rgba(255,255,255,0.1);color:#9ca3af;font-size:0.72rem;font-weight:700;padding:0.15rem 0.55rem;border-radius:999px;margin-left:0.5rem;vertical-align:middle;';
                     var title = c.querySelector('.event-title');
                     if (title) title.appendChild(b);
