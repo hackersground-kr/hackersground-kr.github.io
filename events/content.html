@@ -16,6 +16,63 @@
         .video-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
         body[data-content-format="legacy-html"] .post-content-section { padding: 0; }
         body[data-content-format="legacy-html"] [data-content-wrapper] { display: contents; }
+        body[data-content-format="legacy-html"] [data-content-hero],
+        body[data-content-format="legacy-html"] [data-content-cta] { display: none !important; }
+        body[data-content-format="legacy-html"] .legacy-event-content .event-detail-hero {
+            min-height: 0;
+            padding: clamp(5.5rem, 10vw, 8rem) 0 clamp(2.5rem, 5vw, 4rem);
+        }
+        body[data-content-format="legacy-html"] .legacy-event-content > section:not(.event-detail-hero) {
+            padding: clamp(2.5rem, 5vw, 4rem) 0 !important;
+        }
+        body[data-content-format="legacy-html"] .legacy-event-content .event-info-card,
+        body[data-content-format="legacy-html"] .legacy-event-content .info-box {
+            margin-bottom: clamp(2rem, 4vw, 3rem);
+            padding: clamp(1.25rem, 3vw, 2rem);
+            border-radius: 16px;
+        }
+        body[data-content-format="legacy-html"] .legacy-event-content .event-meta-grid,
+        body[data-content-format="legacy-html"] .legacy-event-content .info-grid {
+            gap: clamp(0.9rem, 2vw, 1.5rem);
+        }
+        body[data-content-format="legacy-html"] .legacy-event-content .meta-item,
+        body[data-content-format="legacy-html"] .legacy-event-content .info-row {
+            align-items: flex-start;
+        }
+        body[data-content-format="legacy-html"] .legacy-event-content .content-section {
+            margin-bottom: clamp(2rem, 4vw, 3rem);
+        }
+        body[data-content-format="legacy-html"] .legacy-event-content .legacy-share-controls {
+            margin-top: 1.5rem;
+        }
+        body[data-content-format="legacy-html"] .legacy-event-content .legacy-share-controls [data-content-share-result] {
+            margin: 0.65rem 0 0;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+        @media (max-width: 768px) {
+            body[data-content-format="legacy-html"] .legacy-event-content .event-detail-hero {
+                padding: 5rem 0 2.25rem;
+            }
+            body[data-content-format="legacy-html"] .legacy-event-content .event-info-card,
+            body[data-content-format="legacy-html"] .legacy-event-content .info-box {
+                padding: 1.25rem;
+                border-radius: 14px;
+            }
+            body[data-content-format="legacy-html"] .legacy-event-content .event-meta-grid,
+            body[data-content-format="legacy-html"] .legacy-event-content .info-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            body[data-content-format="legacy-html"] .legacy-event-content .session-item {
+                flex-direction: column;
+                gap: 0.75rem;
+                padding: 1rem 1.125rem;
+            }
+            body[data-content-format="legacy-html"] .legacy-event-content .session-date {
+                min-width: 0;
+            }
+        }
         .content-share { font: inherit; padding: 0.55rem 1rem; }
     </style>
 </head>

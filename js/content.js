@@ -142,8 +142,6 @@
     const isLegacyEvent = kind === 'event' && content.bodyFormat === 'legacy-html';
     const legacyHero = document.querySelector('[data-content-hero]');
     const legacyCta = document.querySelector('[data-content-cta]');
-    if (legacyHero) legacyHero.hidden = isLegacyEvent;
-    if (legacyCta) legacyCta.hidden = isLegacyEvent;
     document.body.dataset.contentSlug = content.slug;
     document.body.dataset.contentFormat = content.bodyFormat || 'markdown';
 
@@ -169,6 +167,19 @@
 
     container.classList.toggle('legacy-event-content', isLegacyEvent);
     container.innerHTML = content.renderedHtml;
+    if (isLegacyEvent) {
+      const legacyHeroContent = container.querySelector('.event-detail-hero .container');
+      const shareButton = legacyHero?.querySelector('[data-content-share]');
+      const shareResult = legacyHero?.querySelector('[data-content-share-result]');
+      if (legacyHeroContent && shareButton && shareResult) {
+        const shareControls = document.createElement('div');
+        shareControls.className = 'legacy-share-controls';
+        shareControls.append(shareButton, shareResult);
+        legacyHeroContent.append(shareControls);
+      }
+      legacyHero?.remove();
+      legacyCta?.remove();
+    }
     request(`/content/${kind}/${encodeURIComponent(slug)}`, { method: 'POST' })
       .then(({ viewCount: nextViewCount }) => {
         if (viewCount) viewCount.textContent = `조회 ${nextViewCount}`;
