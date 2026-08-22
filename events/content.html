@@ -62,6 +62,13 @@
             cursor: not-allowed;
             pointer-events: none;
         }
+        body[data-content-format="legacy-html"] .legacy-event-content .sticky-apply.registration-bar-closed {
+            border-top-color: rgba(255,255,255,0.18);
+        }
+        body[data-content-format="legacy-html"] .legacy-event-content .sticky-apply.registration-bar-closed .apply-deadline,
+        body[data-content-format="legacy-html"] .legacy-event-content .sticky-apply.registration-bar-closed .deadline {
+            color: #9ca3af;
+        }
         @media (max-width: 768px) {
             body[data-content-format="legacy-html"] .legacy-event-content .event-detail-hero {
                 padding: 5rem 0 2.25rem;

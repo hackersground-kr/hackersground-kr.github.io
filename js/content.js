@@ -189,11 +189,22 @@
     container.classList.toggle('legacy-event-content', isLegacyEvent);
     container.innerHTML = content.renderedHtml;
     if (kind === 'event' && hasEventEnded(content.event)) {
-      container.querySelectorAll('a[href*="register.html"]').forEach((link) => {
+      const closeRegistrationLink = (link) => {
         link.classList.add('registration-closed');
         link.removeAttribute('href');
         link.setAttribute('aria-disabled', 'true');
+        link.tabIndex = -1;
         link.textContent = '신청마감';
+      };
+
+      container.querySelectorAll('a[href*="register.html"]').forEach(closeRegistrationLink);
+      container.querySelectorAll('.sticky-apply').forEach((stickyApply) => {
+        stickyApply.classList.add('registration-bar-closed');
+        stickyApply.querySelectorAll('.apply-deadline, .deadline').forEach((deadline) => {
+          deadline.textContent = '신청이 마감되었습니다.';
+        });
+        stickyApply.querySelectorAll('a.apply-button, a.cta-button, a.btn-primary')
+          .forEach(closeRegistrationLink);
       });
     }
     if (isLegacyEvent) {
