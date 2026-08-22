@@ -34,17 +34,10 @@
     button.hidden = false;
     button.addEventListener('click', async () => {
       try {
-        if (navigator.share) {
-          await navigator.share({ title: content.title, text: content.excerpt, url });
-          return;
-        }
-
         await navigator.clipboard.writeText(url);
         result.textContent = '단축 URL을 복사했습니다.';
-      } catch (error) {
-        if (error.name !== 'AbortError') {
-          result.textContent = '공유하지 못했습니다. 잠시 후 다시 시도해주세요.';
-        }
+      } catch {
+        result.textContent = '단축 URL을 복사하지 못했습니다. 잠시 후 다시 시도해주세요.';
       }
     });
   }
