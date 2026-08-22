@@ -1,0 +1,33 @@
+name: Announce weekly content on Discord
+
+on:
+  schedule:
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  announce:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Announce newly published content
+        env:
+          DISCORD_ARTICLE_WEBHOOK: ${{ secrets.DISCORD_ARTICLE_WEBHOOK }}
+          DISCORD_EVENT_WEBHOOK: ${{ secrets.DISCORD_EVENT_WEBHOOK }}
+        run: node _scripts/announce_weekly_discord_content.mjs
+
+      - name: Record announced content
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .github/discord-announcement-state.json
+          if git diff --staged --quiet; then
+            exit 0
+          fi
+          git commit -m "chore: Discord 주간 안내 상태 기록"
+          git push
