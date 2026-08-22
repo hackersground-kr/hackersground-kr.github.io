@@ -55,7 +55,7 @@ async function writeShortLink(kind, shortId, slug) {
 }
 
 async function migrate(kind) {
-  const { assigned } = await request(`/content/${kind}/short-id-migration`, { method: 'POST' });
+  const { assigned } = await request(`/content/${kind}/admin/short-id-migration`, { method: 'POST' });
   const { items } = await request(`/content/${kind}`);
   await Promise.all(items.map((item) => writeShortLink(kind, item.shortId, item.slug)));
 

@@ -461,7 +461,7 @@ app.http('contentShort', {
 app.http('contentShortIdMigration', {
   methods: ['POST', 'OPTIONS'],
   authLevel: 'anonymous',
-  route: 'content/{kind}/short-id-migration',
+  route: 'content/{kind}/admin/short-id-migration',
   handler: async (request, context) => {
     const headers = corsHeaders(request.headers.get('origin') || '');
     if (request.method === 'OPTIONS') {
