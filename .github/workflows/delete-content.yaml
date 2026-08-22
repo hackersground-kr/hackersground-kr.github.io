@@ -65,5 +65,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add posts events
-          git diff --staged --quiet || git commit -m "chore: ${{ github.event.inputs.kind }}/${{ github.event.inputs.slug }} 단축 URL 삭제 [skip ci]"
+          git diff --staged --quiet || git commit -m "chore: ${{ github.event.inputs.kind }}/${{ github.event.inputs.slug }} 단축 URL 삭제"
           git push
