@@ -1,0 +1,14 @@
+{
+  "name": "해커그라운드 - 대구경북 클라우드 개발자 커뮤니티",
+  "short_name": "해커그라운드",
+  "icons": [
+    {
+      "src": "/images/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#00ff41",
+  "background_color": "#050505",
+  "display": "standalone"
+}
