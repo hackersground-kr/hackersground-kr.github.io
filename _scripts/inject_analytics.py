@@ -47,9 +47,17 @@ SKIP_DIRS = {".git", "node_modules", "_scripts", "api"}
 
 def should_skip(path):
     rel = os.path.relpath(path, ROOT)
-    for part in rel.split(os.sep):
+    parts = rel.split(os.sep)
+    for part in parts:
         if part in SKIP_DIRS:
             return True
+    if (
+        len(parts) == 3
+        and parts[0] in {"posts", "events"}
+        and parts[1].isdigit()
+        and parts[2] == "index.html"
+    ):
+        return True
     return False
 
 
