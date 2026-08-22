@@ -14,18 +14,37 @@ const event = JSON.parse(await readFile(eventPath, 'utf8'));
 const issue = event.issue;
 const labels = new Set(issue.labels.map((label) => label.name));
 const kind = labels.has('event') ? 'event' : 'post';
+const METADATA_HEADINGS = new Set([
+  'Slug',
+  '제목',
+  '한 줄 요약',
+  '이모지',
+  '태그',
+  '본문 (Markdown)',
+  '시작 시각',
+  '종료 시각',
+  '장소',
+  '유형',
+  '참가비',
+  '모집 인원',
+  '신청 링크',
+]);
+
+function headingText(line) {
+  return line.replace(/^#{2,3}\s+/, '').trim();
+}
 
 function section(body, heading) {
   const lines = body.split(/\r?\n/);
-  const headingIndex = lines.findIndex((line) => (
-    line.match(/^#{2,3}\s+/)?.[0] && line.replace(/^#{2,3}\s+/, '').trim() === heading
-  ));
+  const headingIndex = lines.findIndex((line) => /^#{2,3}\s+/.test(line) && headingText(line) === heading);
   if (headingIndex < 0) {
     return '';
   }
 
   const nextHeadingIndex = lines.findIndex(
-    (line, index) => index > headingIndex && /^#{2,3}\s+/.test(line),
+    (line, index) => index > headingIndex
+      && /^#{2,3}\s+/.test(line)
+      && METADATA_HEADINGS.has(headingText(line)),
   );
   return lines.slice(headingIndex + 1, nextHeadingIndex < 0 ? undefined : nextHeadingIndex)
     .join('\n')
@@ -41,8 +60,18 @@ function requiredSection(body, heading) {
   return value;
 }
 
-function optionalIssueTitle(prefix) {
-  return issue.title.replace(prefix, '').trim();
+function validatePostMarkdown(markdown) {
+  const lines = markdown.split(/\r?\n/);
+  const firstSectionIndex = lines.findIndex((line) => /^##\s+/.test(line));
+  if (firstSectionIndex < 0) {
+    throw new Error('정보글 본문에는 `## 소제목`을 하나 이상 작성해야 합니다.');
+  }
+
+  const introduction = lines.slice(0, firstSectionIndex).join('\n').trim();
+  const paragraphs = introduction.split(/\n\s*\n/).map((paragraph) => paragraph.trim()).filter(Boolean);
+  if (paragraphs.length < 2 || paragraphs.some((paragraph) => paragraph.startsWith('#'))) {
+    throw new Error('정보글 본문은 소제목 전에 자연스러운 도입 문단을 두 개 이상 작성해야 합니다.');
+  }
 }
 
 function escapeHtml(value) {
@@ -96,16 +125,17 @@ async function writeShortLink(kind, shortId, slug, title, excerpt) {
 }
 
 const body = issue.body || '';
-const slug = (section(body, 'Slug') || `${kind}-${issue.number}`).toLowerCase();
-const title = section(body, '제목') || optionalIssueTitle(kind === 'post' ? '[정보글]' : '[행사]');
-const markdown = section(body, '본문 (Markdown)') || body.trim();
-if (!markdown) {
-  throw new Error('이슈 본문을 작성해야 합니다.');
+const slug = requiredSection(body, 'Slug').toLowerCase();
+const title = requiredSection(body, '제목');
+const markdown = requiredSection(body, '본문 (Markdown)');
+const excerpt = requiredSection(body, '한 줄 요약');
+if (kind === 'post') {
+  validatePostMarkdown(markdown);
 }
 const payload = {
   title,
   markdown,
-  excerpt: section(body, '한 줄 요약') || markdown.split(/\n\s*\n/)[0].replace(/^#+\s*/, '').slice(0, 140),
+  excerpt,
   emoji: section(body, '이모지') || (kind === 'event' ? '🗓️' : '📝'),
   tag: section(body, '태그') || 'other',
   status: 'published',

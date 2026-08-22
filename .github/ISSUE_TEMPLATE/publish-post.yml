@@ -8,6 +8,8 @@ body:
       value: |
         이슈를 닫으면 Azure Table Storage에 발행됩니다.
         본문은 GitHub Flavored Markdown을 지원합니다. YouTube는 `@[youtube](URL)`, 단독 URL 또는 YouTube를 가리키는 썸네일 링크 형식으로 넣을 수 있습니다.
+        본문은 **도입 문단 2개 이상 → `##` 소제목으로 이어지는 본문** 형식으로 작성합니다.
+        Slug, 제목, 한 줄 요약, 이모지, 태그는 메타데이터이므로 본문에 다시 넣지 마세요.
   - type: input
     id: slug
     attributes:
@@ -43,5 +45,14 @@ body:
     id: markdown
     attributes:
       label: 본문 (Markdown)
+      description: "도입 문단을 두 개 이상 작성한 뒤 `## 소제목`으로 본문을 전개하세요."
+      placeholder: |
+        지난 모임에서 직접 검증해본 질문이 있었습니다. 이 글은 그 경험에서 시작합니다.
+
+        처음에는 예상보다 빠른 결과에 놀랐습니다. 하지만 반복해서 살펴볼수록 더 중요한 질문이 남았습니다.
+
+        ## 첫 번째 이야기
+
+        소제목 아래에 구체적인 경험과 인사이트를 작성합니다.
     validations:
       required: true
