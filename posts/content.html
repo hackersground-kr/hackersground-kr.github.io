@@ -36,6 +36,28 @@
         .video-embed { position: relative; width: 100%; padding-top: 56.25%; margin: 1.5rem 0; }
         .video-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
         .content-share { font: inherit; padding: 0.55rem 1rem; }
+        .post-recommendations { margin-top: 4rem; padding-top: 3rem; border-top: 1px solid var(--border-green); }
+        .post-recommendations-header { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; margin-bottom: 1.5rem; }
+        .post-recommendations-title { margin: 0; color: var(--text-white); font-size: clamp(1.35rem, 3vw, 1.75rem); }
+        .post-recommendations-subtitle { margin: 0; color: var(--text-gray); font-size: 0.9rem; }
+        .post-recommendations-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+        .post-recommendation-card { display: flex; flex-direction: column; min-height: 100%; padding: 1.35rem; background: rgba(0, 255, 65, 0.03); border: 1px solid var(--border-green); border-radius: 14px; color: inherit; text-decoration: none; transition: transform 0.2s, background 0.2s, border-color 0.2s; }
+        .post-recommendation-card:hover { transform: translateY(-3px); background: rgba(0, 255, 65, 0.07); border-color: var(--primary-green); }
+        .post-recommendation-kind { display: inline-flex; align-self: flex-start; padding: 0.2rem 0.55rem; border-radius: 999px; background: rgba(0, 255, 65, 0.12); color: var(--primary-green); font-size: 0.75rem; font-weight: 700; }
+        .post-recommendation-kind.popular { background: rgba(251, 191, 36, 0.12); color: #fbbf24; }
+        .post-recommendation-title { margin: 0.9rem 0 0.6rem; color: var(--text-white); font-size: 1rem; line-height: 1.5; }
+        .post-recommendation-excerpt { margin: 0; color: var(--text-gray); font-size: 0.88rem; line-height: 1.6; }
+        .post-recommendation-meta { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: auto; padding-top: 1rem; color: var(--text-gray); font-size: 0.78rem; }
+        .post-recommendation-meta .post-tag { font-size: 0.7rem; }
+        @media (max-width: 900px) {
+            .post-recommendations-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 600px) {
+            .post-recommendations { margin-top: 3rem; padding-top: 2.5rem; }
+            .post-recommendations-header { display: block; }
+            .post-recommendations-subtitle { margin-top: 0.4rem; }
+            .post-recommendations-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -100,11 +122,13 @@
                 <p class="newsletter-notice">제출하면 해커그라운드 소식 및 행사 안내 이메일 수신에 동의하는 것으로 간주합니다. 언제든 구독 해지를 요청할 수 있습니다.</p>
                 <p class="newsletter-result" data-newsletter-result aria-live="polite"></p>
             </section>
-            <div class="community-cta" style="margin-top: 4rem;">
-                <h3>공유하고 싶은 팁이 있다면?</h3>
-                <p>정보글을 직접 제안하거나 기여할 수 있어요!</p>
-                <div class="btn-group"><a href="/posts/" class="btn-primary">← 정보글 목록으로</a></div>
-            </div>
+            <section class="post-recommendations" data-post-recommendations hidden aria-labelledby="post-recommendations-title">
+                <div class="post-recommendations-header">
+                    <h2 id="post-recommendations-title" class="post-recommendations-title">추천 정보글</h2>
+                    <p class="post-recommendations-subtitle">최신 글과 많이 읽은 글을 함께 살펴보세요.</p>
+                </div>
+                <div class="post-recommendations-grid" data-post-recommendation-list></div>
+            </section>
         </div>
     </section>
     <footer class="footer">

@@ -95,6 +95,78 @@
     return link;
   }
 
+  function dateValue(post) {
+    const value = new Date(post.publishedAt || post.createdAt || 0).getTime();
+    return Number.isNaN(value) ? 0 : value;
+  }
+
+  function recommendedPosts(posts, currentSlug) {
+    const candidates = posts.filter((post) => post.slug !== currentSlug);
+    const latest = [...candidates].sort((left, right) => dateValue(right) - dateValue(left));
+    const selected = [];
+    const add = (post, kind) => {
+      if (post && !selected.some((item) => item.post.slug === post.slug)) {
+        selected.push({ post, kind });
+      }
+    };
+
+    latest.slice(0, 2).forEach((post) => add(post, 'latest'));
+    [...candidates]
+      .sort((left, right) => Number(right.viewCount || 0) - Number(left.viewCount || 0)
+        || dateValue(right) - dateValue(left))
+      .some((post) => {
+        if (selected.some((item) => item.post.slug === post.slug)) return false;
+        add(post, 'popular');
+        return true;
+      });
+    latest.forEach((post) => add(post, 'latest'));
+
+    return selected.slice(0, 3);
+  }
+
+  function createRecommendationCard({ post, kind }) {
+    const link = document.createElement('a');
+    link.className = 'post-recommendation-card';
+    link.href = `content.html?slug=${encodeURIComponent(post.slug)}`;
+
+    const kindLabel = document.createElement('span');
+    kindLabel.className = `post-recommendation-kind ${kind}`;
+    kindLabel.textContent = kind === 'popular' ? '인기 글' : '최신 글';
+    const title = document.createElement('h3');
+    title.className = 'post-recommendation-title';
+    title.textContent = post.title;
+    const excerpt = document.createElement('p');
+    excerpt.className = 'post-recommendation-excerpt';
+    excerpt.textContent = post.excerpt || '';
+    const meta = document.createElement('div');
+    meta.className = 'post-recommendation-meta';
+    const tag = document.createElement('span');
+    tag.className = `post-tag ${post.tag || 'other'}`;
+    tag.textContent = post.tag || 'other';
+    const date = document.createElement('span');
+    date.textContent = formatDate(post.publishedAt || post.createdAt);
+    const views = document.createElement('span');
+    views.textContent = `조회 ${Number(post.viewCount || 0)}`;
+    meta.append(tag, date, views);
+    link.append(kindLabel, title, excerpt, meta);
+    return link;
+  }
+
+  async function loadPostRecommendations(currentSlug) {
+    const section = document.querySelector('[data-post-recommendations]');
+    const list = document.querySelector('[data-post-recommendation-list]');
+    if (!section || !list) return;
+
+    const { items } = await request('/content/post');
+    const recommendations = recommendedPosts(items, currentSlug);
+    if (!recommendations.length) return;
+
+    const fragment = document.createDocumentFragment();
+    recommendations.forEach((item) => fragment.append(createRecommendationCard(item)));
+    list.replaceChildren(fragment);
+    section.hidden = false;
+  }
+
   function createEventCard(event) {
     const isClosed = hasEventEnded(event.event);
     const card = document.createElement('div');
@@ -192,6 +264,9 @@
 
     container.classList.toggle('legacy-event-content', isLegacyEvent);
     container.innerHTML = content.renderedHtml;
+    if (kind === 'post') {
+      loadPostRecommendations(content.slug).catch(() => {});
+    }
     if (kind === 'event' && hasEventEnded(content.event)) {
       const closeRegistrationLink = (link) => {
         link.classList.add('registration-closed');
