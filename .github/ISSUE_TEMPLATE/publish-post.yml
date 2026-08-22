@@ -12,7 +12,8 @@ body:
     id: slug
     attributes:
       label: Slug
-      description: "영문 소문자, 숫자, 하이픈만 사용합니다. 예: ai-builder-meetup-intro"
+      description: "날짜-주제 형식으로 작성합니다. 예: 2026-08-22-ai-game-dev-insight (YYYY-MM-DD-주제-키워드, 영문 소문자·숫자·하이픈만 사용)"
+      placeholder: "YYYY-MM-DD-topic-keyword"
     validations:
       required: true
   - type: input
