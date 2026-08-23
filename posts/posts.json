@@ -1,5 +1,15 @@
 [
   {
+    "slug": "2026-08-23-github-copilot-cli",
+    "shortId": 9,
+    "title": "터미널을 떠나지 않아도 되는 이유 — GitHub Copilot CLI",
+    "date": "2026-08-23",
+    "emoji": "💻",
+    "tag": "github",
+    "excerpt": "터미널에서 이슈, PR, 코드 작성을 한 흐름으로 처리할 수 있는 GitHub Copilot CLI의 진짜 강점과, AI 빌더모임에서 나눈 맥락 전환 비용에 관한 이야기입니다.",
+    "url": "/posts/content.html?slug=2026-08-23-github-copilot-cli"
+  },
+  {
     "slug": "2026-08-23-github-copilot-model-lock-in",
     "shortId": 8,
     "title": "최신 모델은 나왔는데, 왜 나는 못 쓰고 있었을까 — GitHub Copilot으로 모델 락인을 풀어본 이야기",
