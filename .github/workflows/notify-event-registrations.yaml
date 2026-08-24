@@ -40,7 +40,7 @@ jobs:
             --filter "PartitionKey eq '$EVENT_ID'" \
             --output json)
 
-          pending=$(jq -c '.[] | select((.slackNotifiedAt // "") == "")' <<< "$registrations")
+          pending=$(jq -c '.. | objects | select(.PartitionKey == env.EVENT_ID and (.slackNotifiedAt? // "") == "")' <<< "$registrations")
           count=0
           while IFS= read -r registration; do
             [ -z "$registration" ] && continue
