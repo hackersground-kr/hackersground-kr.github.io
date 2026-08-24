@@ -94,5 +94,17 @@
     "deadline": "2025.09.04 (목)",
     "url": "/events/content.html?slug=workshop-azure-ai",
     "shortId": 8
+  },
+  "ai-searchable-homepage": {
+    "shortId": 9,
+    "name": "AI 검색되는 홈페이지 만들기",
+    "emoji": "🔎",
+    "date": "2026-09-30T20:30:00+09:00",
+    "location": "대구 더 루디",
+    "type": "offline",
+    "price": "₩30,000",
+    "capacity": "6명 한정",
+    "deadline": "",
+    "url": "/events/content.html?slug=ai-searchable-homepage"
   }
 }
