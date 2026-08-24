@@ -7,6 +7,11 @@ on:
         description: Event ID to notify
         required: true
         default: ai-searchable-homepage
+      resend_latest:
+        description: Resend the latest registration even when already notified
+        required: true
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -23,6 +28,7 @@ jobs:
       - name: Send pending registration notifications
         env:
           EVENT_ID: ${{ inputs.event_id }}
+          RESEND_LATEST: ${{ inputs.resend_latest }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
           set -euo pipefail
@@ -40,7 +46,11 @@ jobs:
             --filter "PartitionKey eq '$EVENT_ID'" \
             --output json)
 
-          pending=$(jq -c '.. | objects | select(.PartitionKey == env.EVENT_ID and (.slackNotifiedAt? // "") == "")' <<< "$registrations")
+          if [ "$RESEND_LATEST" = "true" ]; then
+            pending=$(jq -c '[.. | objects | select(.PartitionKey == env.EVENT_ID)] | sort_by(.registeredAt) | last | select(. != null)' <<< "$registrations")
+          else
+            pending=$(jq -c '.. | objects | select(.PartitionKey == env.EVENT_ID and (.slackNotifiedAt? // "") == "")' <<< "$registrations")
+          fi
           count=0
           while IFS= read -r registration; do
             [ -z "$registration" ] && continue
