@@ -22,6 +22,7 @@ const RESEND_API_KEY   = process.env.RESEND_API_KEY || '';
 const SLACK_WEBHOOK    = process.env.SLACK_WEBHOOK_URL || '';
 const AI_SEARCHABLE_HOMEPAGE_EVENT_ID = 'ai-searchable-homepage';
 const VIBE_CODING_WORKSHOP_EVENT_ID = 'vibe-coding-workshop';
+const VIBE_CODING_WORKSHOP_NOTIFICATION_EMAIL = process.env.VIBE_CODING_WORKSHOP_NOTIFICATION_EMAIL || '';
 const PAYMENT_INSTRUCTIONS = process.env.EVENT_PAYMENT_INSTRUCTIONS
   || process.env.AI_SEARCHABLE_HOMEPAGE_PAYMENT_INSTRUCTIONS
   || '';
@@ -93,6 +94,31 @@ async function sendConfirmEmail({ eventId, name, email, eventName }) {
   } catch (err) {
     // 이메일 실패해도 신청 자체는 성공 처리
     console.error('[Resend] 이메일 발송 실패:', err.message);
+  }
+}
+
+async function sendRegistrationNotificationEmail({ eventId, eventName, name, email, phone, affiliation, message }) {
+  if (eventId !== VIBE_CODING_WORKSHOP_EVENT_ID || !RESEND_API_KEY || !VIBE_CODING_WORKSHOP_NOTIFICATION_EMAIL) return;
+  try {
+    const resend = new Resend(RESEND_API_KEY);
+    await resend.emails.send({
+      from: 'Hackers Ground <events@hackersground.kr>',
+      to: VIBE_CODING_WORKSHOP_NOTIFICATION_EMAIL,
+      subject: `[Hackers Ground] ${escapeHtml(eventName)} 새 신청`,
+      html: `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #00ff41;">새 행사 신청</h2>
+          <p><strong>행사:</strong> ${escapeHtml(eventName)}</p>
+          <p><strong>이름:</strong> ${escapeHtml(name)}</p>
+          <p><strong>이메일:</strong> ${escapeHtml(email)}</p>
+          ${phone ? `<p><strong>전화번호:</strong> ${escapeHtml(phone)}</p>` : ''}
+          ${affiliation ? `<p><strong>소속:</strong> ${escapeHtml(affiliation)}</p>` : ''}
+          ${message ? `<p><strong>한마디:</strong> ${escapeHtml(message)}</p>` : ''}
+        </div>
+      `,
+    });
+  } catch (err) {
+    console.error('[Resend] 운영자 알림 이메일 발송 실패:', err.message);
   }
 }
 
@@ -205,6 +231,15 @@ app.http('register', {
       // 이메일 + 슬랙 알림 (실패해도 신청 성공 처리)
       await Promise.all([
         sendConfirmEmail({ eventId, name, email, eventName }),
+        sendRegistrationNotificationEmail({
+          eventId,
+          eventName,
+          name,
+          email,
+          phone: body.phone,
+          affiliation: body.affiliation,
+          message: body.message,
+        }),
         notifySlack({ name, email, phone: body.phone, eventName, affiliation: body.affiliation }),
       ]);
 

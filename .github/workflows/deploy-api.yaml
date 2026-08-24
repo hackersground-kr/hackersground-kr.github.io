@@ -64,6 +64,7 @@ jobs:
               "SLACK_WEBHOOK_URL=${{ secrets.SLACK_WEBHOOK_URL }}" \
               "CONTENT_SYNC_TOKEN=${{ secrets.CONTENT_SYNC_TOKEN }}" \
               "EVENT_PAYMENT_INSTRUCTIONS=${{ secrets.AI_SEARCHABLE_HOMEPAGE_PAYMENT_INSTRUCTIONS }}" \
+              "VIBE_CODING_WORKSHOP_NOTIFICATION_EMAIL=${{ secrets.VIBE_CODING_WORKSHOP_NOTIFICATION_EMAIL }}" \
               "ALLOWED_ORIGIN=https://hackersground.kr,https://hackersground-kr.github.io"
 
       - name: Deploy to Azure Functions
