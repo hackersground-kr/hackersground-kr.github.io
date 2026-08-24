@@ -72,6 +72,7 @@
     "shortId": 6
   },
   "vibe-coding-workshop": {
+    "shortId": 7,
     "name": "바이브코딩으로 홈페이지 만들자!",
     "emoji": "💻",
     "date": "2026-09-28T10:30:00+09:00",
@@ -80,8 +81,7 @@
     "price": "₩50,000",
     "capacity": "선착순 20명",
     "deadline": "",
-    "url": "/events/content.html?slug=vibe-coding-workshop",
-    "shortId": 7
+    "url": "/events/content.html?slug=vibe-coding-workshop"
   },
   "workshop-azure-ai": {
     "name": "Azure AI 입문 워크샵",
