@@ -61,6 +61,7 @@ jobs:
             --resource-group hackersground-community \
             --settings \
               "RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}" \
+              "SLACK_WEBHOOK_URL=${{ secrets.SLACK_WEBHOOK_URL }}" \
               "CONTENT_SYNC_TOKEN=${{ secrets.CONTENT_SYNC_TOKEN }}" \
               "AI_SEARCHABLE_HOMEPAGE_PAYMENT_INSTRUCTIONS=${{ secrets.AI_SEARCHABLE_HOMEPAGE_PAYMENT_INSTRUCTIONS }}" \
               "ALLOWED_ORIGIN=https://hackersground.kr,https://hackersground-kr.github.io"
