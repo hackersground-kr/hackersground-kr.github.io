@@ -83,7 +83,7 @@ async function sendConfirmEmail({ eventId, name, email, eventName }) {
 }
 
 // 슬랙 알림
-async function notifySlack({ name, email, eventName, affiliation }) {
+async function notifySlack({ name, email, phone, eventName, affiliation }) {
   if (!SLACK_WEBHOOK) return;
   try {
     await fetch(SLACK_WEBHOOK, {
@@ -96,7 +96,7 @@ async function notifySlack({ name, email, eventName, affiliation }) {
             type: 'section',
             text: {
               type: 'mrkdwn',
-              text: `*🎉 새 행사 신청!*\n*행사:* ${eventName}\n*이름:* ${name}\n*이메일:* ${email}${affiliation ? `\n*소속:* ${affiliation}` : ''}`,
+              text: `*🎉 새 행사 신청!*\n*행사:* ${eventName}\n*이름:* ${name}\n*이메일:* ${email}${phone ? `\n*전화:* ${phone}` : ''}${affiliation ? `\n*소속:* ${affiliation}` : ''}`,
             },
           },
         ],
@@ -191,7 +191,7 @@ app.http('register', {
       // 이메일 + 슬랙 알림 (실패해도 신청 성공 처리)
       await Promise.all([
         sendConfirmEmail({ eventId, name, email, eventName }),
-        notifySlack({ name, email, eventName, affiliation: body.affiliation }),
+        notifySlack({ name, email, phone: body.phone, eventName, affiliation: body.affiliation }),
       ]);
 
       return {

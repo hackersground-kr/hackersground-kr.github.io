@@ -57,11 +57,15 @@ jobs:
 
             name=$(jq -r '.name // "이름 없음"' <<< "$registration")
             email=$(jq -r '.email // "이메일 없음"' <<< "$registration")
+            phone=$(jq -r '.phone // ""' <<< "$registration")
             event_name=$(jq -r '.eventName // env.EVENT_ID' <<< "$registration")
             affiliation=$(jq -r '.affiliation // ""' <<< "$registration")
             row_key=$(jq -r '.RowKey' <<< "$registration")
 
             printf -v text '🎉 새 행사 신청!\n행사: %s\n이름: %s\n이메일: %s' "$event_name" "$name" "$email"
+            if [ -n "$phone" ]; then
+              printf -v text '%s\n전화: %s' "$text" "$phone"
+            fi
             if [ -n "$affiliation" ]; then
               printf -v text '%s\n소속: %s' "$text" "$affiliation"
             fi
