@@ -51,9 +51,9 @@ jobs:
             affiliation=$(jq -r '.affiliation // ""' <<< "$registration")
             row_key=$(jq -r '.RowKey' <<< "$registration")
 
-            text="🎉 새 행사 신청!\n행사: $event_name\n이름: $name\n이메일: $email"
+            printf -v text '🎉 새 행사 신청!\n행사: %s\n이름: %s\n이메일: %s' "$event_name" "$name" "$email"
             if [ -n "$affiliation" ]; then
-              text="$text\n소속: $affiliation"
+              printf -v text '%s\n소속: %s' "$text" "$affiliation"
             fi
 
             payload=$(jq -nc --arg text "$text" '{text: $text}')
