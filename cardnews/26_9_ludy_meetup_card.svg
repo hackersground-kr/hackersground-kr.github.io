@@ -66,7 +66,7 @@
   <rect x="76" y="1070" width="928" height="124" rx="62" fill="url(#collabAccent)"/>
   <text x="540" y="1148" fill="#000000" font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="36" font-weight="900" text-anchor="middle">지금 신청하기  →  hackersground.kr/events/9</text>
 
-  <text x="620" y="1264" fill="#f34c9e" font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="20" font-weight="500" text-anchor="end">@theludy_casual_bar</text>
-  <text x="644" y="1264" fill="#b9c0c9" font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="20">×</text>
-  <text x="676" y="1264" fill="#b9c0c9" font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="20">@hackers_ground</text>
+  <text x="516" y="1264" fill="#f34c9e" font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="20" font-weight="500" text-anchor="end">@theludy_casual_bar</text>
+  <text x="540" y="1264" fill="#b9c0c9" font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="20">×</text>
+  <text x="572" y="1264" fill="#b9c0c9" font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="20">@hackers_ground</text>
 </svg>
