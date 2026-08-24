@@ -1120,6 +1120,50 @@ body {
     width: 24%;
 }
 
+.prose[data-content-detail="event"] ol {
+    counter-reset: program;
+    list-style: none;
+    margin: 1.25rem 0;
+    padding: 0;
+}
+
+.prose[data-content-detail="event"] ol li {
+    position: relative;
+    margin: 0.75rem 0;
+    padding: 0.9rem 1rem 0.9rem 3.25rem;
+    border: 1px solid rgba(0, 255, 65, 0.16);
+    border-radius: 12px;
+    background: rgba(0, 255, 65, 0.03);
+}
+
+.prose[data-content-detail="event"] ol li::before {
+    position: absolute;
+    top: 0.9rem;
+    left: 0.9rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background: rgba(0, 255, 65, 0.12);
+    color: var(--primary-green);
+    content: counter(program);
+    counter-increment: program;
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 1.5rem;
+    text-align: center;
+}
+
+.prose[data-content-detail="event"] ol li strong {
+    display: block;
+    margin-bottom: 0.35rem;
+    line-height: 1.5;
+    word-break: keep-all;
+}
+
+.prose[data-content-detail="event"] ol li br {
+    display: none;
+}
+
 /* 브레드크럼 */
 .breadcrumb {
     font-size: 0.85rem;
