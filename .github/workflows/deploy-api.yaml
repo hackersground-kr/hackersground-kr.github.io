@@ -62,6 +62,7 @@ jobs:
             --settings \
               "RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}" \
               "CONTENT_SYNC_TOKEN=${{ secrets.CONTENT_SYNC_TOKEN }}" \
+              "AI_SEARCHABLE_HOMEPAGE_PAYMENT_INSTRUCTIONS=${{ secrets.AI_SEARCHABLE_HOMEPAGE_PAYMENT_INSTRUCTIONS }}" \
               "ALLOWED_ORIGIN=https://hackersground.kr,https://hackersground-kr.github.io"
 
       - name: Deploy to Azure Functions
