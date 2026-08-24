@@ -30,6 +30,7 @@ const PAYMENT_EVENTS = {
   [VIBE_CODING_WORKSHOP_EVENT_ID]: {
     amount: '50,000원',
     venue: '<p style="margin: 0 0 12px;">진행 장소: <a href="https://naver.me/57VikWUS">함장종합사회복지관 2층 프로그램 1실</a></p>',
+    preparation: '<p style="margin: 0;">실습을 위해 행사 전 <a href="https://github.com/signup">GitHub 회원가입</a>을 완료해 주세요.</p>',
   },
 };
 
@@ -58,6 +59,7 @@ async function sendConfirmEmail({ eventId, name, email, eventName }) {
   try {
     const resend = new Resend(RESEND_API_KEY);
     const paymentEvent = PAYMENT_EVENTS[eventId];
+    const preparationNotice = paymentEvent?.preparation || '';
     const paymentNotice = paymentEvent && PAYMENT_INSTRUCTIONS
       ? `
           <section style="margin: 24px 0; padding: 20px; border: 1px solid #00ff41; border-radius: 12px; background: #f4fff7;">
@@ -78,6 +80,7 @@ async function sendConfirmEmail({ eventId, name, email, eventName }) {
           <h2 style="color: #00ff41;">안녕하세요, ${escapeHtml(name)}님! 👋</h2>
           <p><strong>${escapeHtml(eventName)}</strong> 신청이 완료되었습니다.</p>
           ${paymentNotice}
+          ${preparationNotice}
           <p>행사 관련 상세 안내는 신청하신 이메일(<strong>${escapeHtml(email)}</strong>)로 발송해 드릴 예정입니다.</p>
           <hr style="border-color: #333;" />
           <p style="color: #888; font-size: 0.85em;">
