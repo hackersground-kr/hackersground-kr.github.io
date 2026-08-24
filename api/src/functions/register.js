@@ -21,7 +21,17 @@ const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGIN || 'https://hackersground-kr
 const RESEND_API_KEY   = process.env.RESEND_API_KEY || '';
 const SLACK_WEBHOOK    = process.env.SLACK_WEBHOOK_URL || '';
 const AI_SEARCHABLE_HOMEPAGE_EVENT_ID = 'ai-searchable-homepage';
-const AI_SEARCHABLE_HOMEPAGE_PAYMENT_INSTRUCTIONS = process.env.AI_SEARCHABLE_HOMEPAGE_PAYMENT_INSTRUCTIONS || '';
+const VIBE_CODING_WORKSHOP_EVENT_ID = 'vibe-coding-workshop';
+const PAYMENT_INSTRUCTIONS = process.env.EVENT_PAYMENT_INSTRUCTIONS
+  || process.env.AI_SEARCHABLE_HOMEPAGE_PAYMENT_INSTRUCTIONS
+  || '';
+const PAYMENT_EVENTS = {
+  [AI_SEARCHABLE_HOMEPAGE_EVENT_ID]: { amount: '30,000원' },
+  [VIBE_CODING_WORKSHOP_EVENT_ID]: {
+    amount: '50,000원',
+    venue: '<p style="margin: 0 0 12px;">진행 장소: <a href="https://naver.me/57VikWUS">함장종합사회복지관 2층 프로그램 1실</a></p>',
+  },
+};
 
 function escapeHtml(value) {
   return String(value)
@@ -47,13 +57,14 @@ async function sendConfirmEmail({ eventId, name, email, eventName }) {
   if (!RESEND_API_KEY) return;
   try {
     const resend = new Resend(RESEND_API_KEY);
-    const paymentNotice = eventId === AI_SEARCHABLE_HOMEPAGE_EVENT_ID
-      && AI_SEARCHABLE_HOMEPAGE_PAYMENT_INSTRUCTIONS
+    const paymentEvent = PAYMENT_EVENTS[eventId];
+    const paymentNotice = paymentEvent && PAYMENT_INSTRUCTIONS
       ? `
           <section style="margin: 24px 0; padding: 20px; border: 1px solid #00ff41; border-radius: 12px; background: #f4fff7;">
             <h3 style="margin: 0 0 12px; color: #137333;">참가비 입금 안내</h3>
-            <p style="margin: 0 0 12px;">참가 확정을 위해 아래 계좌로 <strong>30,000원</strong>을 입금해 주세요.</p>
-            <p style="margin: 0 0 12px; font-size: 1.05em;"><strong>${escapeHtml(AI_SEARCHABLE_HOMEPAGE_PAYMENT_INSTRUCTIONS)}</strong></p>
+            <p style="margin: 0 0 12px;">참가 확정을 위해 아래 계좌로 <strong>${paymentEvent.amount}</strong>을 입금해 주세요.</p>
+            <p style="margin: 0 0 12px; font-size: 1.05em;"><strong>${escapeHtml(PAYMENT_INSTRUCTIONS)}</strong></p>
+            ${paymentEvent.venue || ''}
             <p style="margin: 0;">입금자명은 신청하신 성함으로 부탁드립니다. 입금 확인 후 참가가 확정됩니다.</p>
           </section>
         `
