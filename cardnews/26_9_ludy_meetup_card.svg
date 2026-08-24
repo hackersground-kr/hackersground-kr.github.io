@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#050b08"/>
+      <stop offset="0.56" stop-color="#000000"/>
+      <stop offset="1" stop-color="#06130c"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.9" cy="0.08" r="0.72">
+      <stop offset="0" stop-color="#00ff41" stop-opacity="0.25"/>
+      <stop offset="1" stop-color="#00ff41" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="54" height="54" patternUnits="userSpaceOnUse">
+      <path d="M 54 0 L 0 0 0 54" fill="none" stroke="#00ff41" stroke-opacity="0.08" stroke-width="1"/>
+    </pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#000000" flood-opacity="0.48"/>
+    </filter>
+  </defs>
+
+  <rect width="1080" height="1350" fill="url(#background)"/>
+  <rect width="1080" height="1350" fill="url(#glow)"/>
+  <rect width="1080" height="1350" fill="url(#grid)"/>
+  <rect x="28" y="28" width="1024" height="1294" rx="28" fill="none" stroke="#00ff41" stroke-opacity="0.38" stroke-width="2"/>
+
+  <text x="78" y="104" fill="#00ff41" font-family="Fira Code, monospace" font-size="25" font-weight="700" letter-spacing="1">● HACKERSGROUND × THE LUDY</text>
+  <rect x="758" y="68" width="244" height="54" rx="27" fill="#00ff41"/>
+  <text x="880" y="104" fill="#000000" font-family="Fira Code, monospace" font-size="23" font-weight="700" text-anchor="middle">MEETUP 01</text>
+
+  <text x="76" y="230" fill="#b9c0c9" font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="30" font-weight="700">9.30 WED · 20:30–22:30</text>
+  <text x="76" y="327" fill="#ffffff" font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="73" font-weight="900" letter-spacing="-3">퇴근 후,</text>
+  <text x="76" y="422" fill="#ffffff" font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="73" font-weight="900" letter-spacing="-3">하이볼 한 잔과</text>
+  <text x="76" y="517" fill="#00ff41" font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="73" font-weight="900" letter-spacing="-3">AI에게 검색되는</text>
+  <text x="76" y="612" fill="#ffffff" font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="73" font-weight="900" letter-spacing="-3">홈페이지 만들기</text>
+
+  <text x="76" y="686" fill="#b9c0c9" font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="31" font-weight="500">AI 도구를 쓰는 개발자부터, 홈페이지와 브랜드를</text>
+  <text x="76" y="734" fill="#b9c0c9" font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="31" font-weight="500">운영하는 누구나 함께하는 작은 스터디형 밋업.</text>
+
+  <text x="837" y="770" fill="#00ff41" fill-opacity="0.12" font-family="Fira Code, monospace" font-size="290" font-weight="700" text-anchor="middle">AI</text>
+
+  <g filter="url(#shadow)">
+    <rect x="76" y="806" width="928" height="216" rx="24" fill="#0a1510" fill-opacity="0.94" stroke="#00ff41" stroke-opacity="0.34" stroke-width="2"/>
+    <line x1="385" y1="840" x2="385" y2="988" stroke="#00ff41" stroke-opacity="0.22" stroke-width="2"/>
+    <line x1="695" y1="840" x2="695" y2="988" stroke="#00ff41" stroke-opacity="0.22" stroke-width="2"/>
+    <text x="112" y="866" fill="#00ff41" font-family="Fira Code, monospace" font-size="20" font-weight="700">WHEN</text>
+    <text x="112" y="920" fill="#ffffff" font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="28" font-weight="700">9월 30일 수요일</text>
+    <text x="112" y="962" fill="#b9c0c9" font-family="Fira Code, monospace" font-size="25">20:30 - 22:30</text>
+    <text x="421" y="866" fill="#00ff41" font-family="Fira Code, monospace" font-size="20" font-weight="700">WHERE</text>
+    <text x="421" y="920" fill="#ffffff" font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="30" font-weight="700">대구 더 루디</text>
+    <text x="421" y="962" fill="#b9c0c9" font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="23">캐주얼바 콜라보</text>
+    <text x="731" y="866" fill="#00ff41" font-family="Fira Code, monospace" font-size="20" font-weight="700">LIMIT</text>
+    <text x="731" y="928" fill="#ffffff" font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="42" font-weight="900">6명 한정</text>
+    <text x="731" y="968" fill="#b9c0c9" font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="22">논알코올도 가능</text>
+  </g>
+
+  <rect x="76" y="1070" width="928" height="124" rx="62" fill="#00ff41"/>
+  <text x="540" y="1148" fill="#000000" font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="36" font-weight="900" text-anchor="middle">지금 신청하기  →  hackersground.kr/events/9</text>
+
+  <text x="78" y="1264" fill="#b9c0c9" font-family="Apple SD Gothic Neo, Noto Sans KR, sans-serif" font-size="23">@theludy_casual_bar  ×  @hackers_ground</text>
+  <text x="1002" y="1264" fill="#ffffff" font-family="Fira Code, monospace" font-size="25" font-weight="700" text-anchor="end">HACKERS<tspan fill="#00ff41">GROUND</tspan></text>
+</svg>
