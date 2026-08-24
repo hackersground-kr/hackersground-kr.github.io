@@ -1094,6 +1094,32 @@ body {
 
 .prose strong { color: var(--text-white); }
 
+.prose table {
+    width: 100%;
+    margin: 1.25rem 0;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.prose th,
+.prose td {
+    padding: 0.65rem 0.75rem;
+    border-bottom: 1px solid rgba(0, 255, 65, 0.18);
+    text-align: left;
+    vertical-align: top;
+    overflow-wrap: anywhere;
+}
+
+.prose th {
+    color: var(--text-white);
+    font-weight: 700;
+}
+
+.prose th:first-child,
+.prose td:first-child {
+    width: 24%;
+}
+
 /* 브레드크럼 */
 .breadcrumb {
     font-size: 0.85rem;
