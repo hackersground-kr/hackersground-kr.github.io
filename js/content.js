@@ -261,6 +261,13 @@
         content.event.price && `💳 ${content.event.price}`,
       ].filter(Boolean).join(' · ');
     }
+    if (kind === 'event') {
+      const registrationLink = document.querySelector('[data-content-registration]');
+      if (registrationLink && content.event.registrationUrl) {
+        registrationLink.href = content.event.registrationUrl;
+        registrationLink.hidden = false;
+      }
+    }
 
     container.classList.toggle('legacy-event-content', isLegacyEvent);
     container.innerHTML = content.renderedHtml;
