@@ -1,0 +1,76 @@
+name: Notify event registrations on Slack
+
+on:
+  workflow_dispatch:
+    inputs:
+      event_id:
+        description: Event ID to notify
+        required: true
+        default: ai-searchable-homepage
+
+permissions:
+  contents: read
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: '{"clientId":"${{ secrets.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","tenantId":"${{ secrets.AZURE_TENANT_ID }}","subscriptionId":"${{ secrets.AZURE_SUBSCRIPTION_ID }}"}'
+
+      - name: Send pending registration notifications
+        env:
+          EVENT_ID: ${{ inputs.event_id }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          set -euo pipefail
+
+          storage_key=$(az storage account keys list \
+            --account-name hackersgroundstorage \
+            --resource-group hackersground-community \
+            --query '[0].value' \
+            --output tsv)
+
+          registrations=$(az storage entity query \
+            --account-name hackersgroundstorage \
+            --account-key "$storage_key" \
+            --table-name EventRegistrations \
+            --filter "PartitionKey eq '$EVENT_ID'" \
+            --output json)
+
+          pending=$(jq -c '.[] | select((.slackNotifiedAt // "") == "")' <<< "$registrations")
+          count=0
+          while IFS= read -r registration; do
+            [ -z "$registration" ] && continue
+
+            name=$(jq -r '.name // "이름 없음"' <<< "$registration")
+            email=$(jq -r '.email // "이메일 없음"' <<< "$registration")
+            event_name=$(jq -r '.eventName // env.EVENT_ID' <<< "$registration")
+            affiliation=$(jq -r '.affiliation // ""' <<< "$registration")
+            row_key=$(jq -r '.RowKey' <<< "$registration")
+
+            text="🎉 새 행사 신청!\n행사: $event_name\n이름: $name\n이메일: $email"
+            if [ -n "$affiliation" ]; then
+              text="$text\n소속: $affiliation"
+            fi
+
+            payload=$(jq -nc --arg text "$text" '{text: $text}')
+            curl --fail --silent --show-error \
+              --request POST \
+              --header 'Content-Type: application/json' \
+              --data "$payload" \
+              "$SLACK_WEBHOOK_URL" >/dev/null
+
+            notified_at=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+            az storage entity merge \
+              --account-name hackersgroundstorage \
+              --account-key "$storage_key" \
+              --table-name EventRegistrations \
+              --entity "PartitionKey=$EVENT_ID" "RowKey=$row_key" "slackNotifiedAt=$notified_at" \
+              --output none
+            count=$((count + 1))
+          done <<< "$pending"
+
+          echo "Sent Slack notifications for $count registration(s)."
