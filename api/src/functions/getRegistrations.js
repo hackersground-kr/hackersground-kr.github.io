@@ -86,6 +86,14 @@ app.http('getRegistrations', {
 
         const registration = await tableClient.getEntity(eventId, registrationId);
         const now = new Date().toISOString();
+        let requestBody = {};
+        if (request.method === 'PATCH') {
+          try {
+            requestBody = await request.json();
+          } catch {
+            requestBody = {};
+          }
+        }
         if (request.method === 'DELETE') {
           if (registration.trashedAt) {
             return { status: 409, headers: getCorsHeaders(request.headers.get('origin') || ''), jsonBody: { error: '이미 휴지통에 있는 신청자입니다.' } };
@@ -97,6 +105,18 @@ app.http('getRegistrations', {
             trashedBy: adminEmail,
           }, 'Merge');
           context.log(`[admin] 신청자 휴지통 이동: ${eventId}/${registrationId} by ${adminEmail}`);
+        } else if (requestBody.paymentStatus) {
+          if (!['paid', 'unpaid'].includes(requestBody.paymentStatus)) {
+            return { status: 400, headers: getCorsHeaders(request.headers.get('origin') || ''), jsonBody: { error: '올바른 입금 상태가 아닙니다.' } };
+          }
+          await tableClient.updateEntity({
+            partitionKey: eventId,
+            rowKey: registrationId,
+            paymentStatus: requestBody.paymentStatus,
+            paymentConfirmedAt: requestBody.paymentStatus === 'paid' ? now : '',
+            paymentConfirmedBy: requestBody.paymentStatus === 'paid' ? adminEmail : '',
+          }, 'Merge');
+          context.log(`[admin] 입금 상태 변경: ${eventId}/${registrationId} -> ${requestBody.paymentStatus} by ${adminEmail}`);
         } else {
           if (!registration.trashedAt) {
             return { status: 409, headers: getCorsHeaders(request.headers.get('origin') || ''), jsonBody: { error: '휴지통에 없는 신청자입니다.' } };
@@ -129,6 +149,9 @@ app.http('getRegistrations', {
           affiliation: entity.affiliation || '',
           message: entity.message || '',
           trashedAt: entity.trashedAt || '',
+          paymentStatus: entity.paymentStatus || 'unpaid',
+          paymentConfirmedAt: entity.paymentConfirmedAt || '',
+          paymentConfirmedBy: entity.paymentConfirmedBy || '',
         });
       }
 

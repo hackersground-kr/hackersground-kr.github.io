@@ -181,6 +181,9 @@ app.http('register', {
         affiliation: body.affiliation || '',
         message: body.message || '',
         registeredAt: new Date().toISOString(),
+        paymentStatus: 'unpaid',
+        paymentConfirmedAt: '',
+        paymentConfirmedBy: '',
       });
 
       context.log(`[등록] ${eventId} | ${name} <${email}>`);
