@@ -241,10 +241,7 @@
     const legacyCta = document.querySelector('[data-content-cta]');
     document.body.dataset.contentSlug = content.slug;
     document.body.dataset.contentFormat = content.bodyFormat || 'markdown';
-    const vibeShowcase = document.querySelector('[data-vibe-showcase]');
-    if (vibeShowcase) {
-      vibeShowcase.hidden = content.slug !== 'vibe-coding-workshop';
-    }
+    window.renderEventShowcase?.(content.slug);
 
     document.title = `${content.title} · 해커그라운드`;
     document.querySelector('[data-content-title]').textContent = `${content.emoji || ''} ${content.title}`;
