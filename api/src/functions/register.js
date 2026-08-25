@@ -30,7 +30,12 @@ const PAYMENT_EVENTS = {
   [VIBE_CODING_WORKSHOP_EVENT_ID]: {
     amount: '50,000원',
     venue: '<p style="margin: 0 0 12px;">진행 장소: <a href="https://naver.me/57VikWUS">함장종합사회복지관 2층 프로그램 1실</a></p>',
-    preparation: '<p style="margin: 0;">실습을 위해 행사 전 <a href="https://github.com/signup">GitHub 회원가입</a>을 완료해 주세요.</p>',
+    preparation: `
+      <section style="margin: 24px 0;">
+        <h3 style="margin: 0 0 12px;">실습 전 준비 사항</h3>
+        <p style="margin: 0;">행사 전 <a href="https://github.com/signup">GitHub</a>과 <a href="https://zapier.com/sign-up">Zapier</a> 회원가입을 완료해 주세요.</p>
+      </section>
+    `,
   },
 };
 
