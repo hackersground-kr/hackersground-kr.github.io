@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07180d"/>
+      <stop offset="0.54" stop-color="#020302"/>
+      <stop offset="1" stop-color="#07110c"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.92" cy="0.06" r="0.82">
+      <stop offset="0" stop-color="#00ff41" stop-opacity="0.34"/>
+      <stop offset="1" stop-color="#00ff41" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="54" height="54" patternUnits="userSpaceOnUse">
+      <path d="M54 0H0V54" fill="none" stroke="#00ff41" stroke-opacity="0.1" stroke-width="1"/>
+    </pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000" flood-opacity="0.55"/>
+    </filter>
+  </defs>
+
+  <rect width="1080" height="1350" fill="url(#background)"/>
+  <rect width="1080" height="1350" fill="url(#glow)"/>
+  <rect width="1080" height="1350" fill="url(#grid)"/>
+  <rect x="28" y="28" width="1024" height="1294" rx="28" fill="none" stroke="#00ff41" stroke-opacity="0.55" stroke-width="2"/>
+
+  <g font-family="Noto Sans KR, Apple SD Gothic Neo, sans-serif">
+    <circle cx="87" cy="88" r="8" fill="#00ff41"/>
+    <text x="110" y="97" fill="#00ff41" font-family="Menlo, monospace" font-size="24" font-weight="700" letter-spacing="2">HACKERS GROUND</text>
+    <text x="918" y="97" fill="#b9c0c9" font-family="Menlo, monospace" font-size="20">EVENT 07</text>
+
+    <rect x="76" y="166" width="373" height="56" rx="28" fill="none" stroke="#00ff41" stroke-width="2"/>
+    <text x="105" y="204" fill="#00ff41" font-family="Menlo, monospace" font-size="22" font-weight="700">VIBE CODING WORKSHOP</text>
+    <rect x="465" y="166" width="180" height="56" rx="28" fill="#00ff41"/>
+    <text x="497" y="204" fill="#000" font-family="Menlo, monospace" font-size="22" font-weight="700">SOLD OUT</text>
+
+    <text x="76" y="360" fill="#00ff41" font-size="118" font-weight="900" letter-spacing="-5">신청 마감</text>
+    <text x="76" y="452" fill="#fff" font-size="46" font-weight="800" letter-spacing="-1">20석이 모두 채워졌어요!</text>
+    <text x="78" y="522" fill="#b9c0c9" font-size="29" font-weight="400">뜨거운 관심 보내주신 모든 분들께 감사드립니다.</text>
+
+    <line x1="76" x2="1004" y1="590" y2="590" stroke="#fff" stroke-opacity="0.18"/>
+
+    <g filter="url(#shadow)">
+      <rect x="76" y="640" width="928" height="220" rx="20" fill="#0d1810" stroke="#00ff41" stroke-opacity="0.42"/>
+      <text x="116" y="700" fill="#00ff41" font-family="Menlo, monospace" font-size="20" font-weight="700">AI와 함께 나만의 홈페이지 만들기</text>
+      <text x="116" y="760" fill="#fff" font-size="36" font-weight="700">9.28 MON  10:30 - 12:00</text>
+      <text x="116" y="820" fill="#b9c0c9" font-size="26">수성구 들안길 일대 · 정확한 장소는 이메일로 안내드려요</text>
+    </g>
+
+    <text x="76" y="948" fill="#fff" font-size="32" font-weight="800">신청하신 분들은 확인 메일을 꼭 체크해 주세요!</text>
+    <text x="76" y="998" fill="#b9c0c9" font-size="26">노트북 지참 · 당일 현장에서 만나요</text>
+
+    <rect x="76" y="1066" width="928" height="150" rx="20" fill="none" stroke="#00ff41" stroke-opacity="0.42" stroke-dasharray="10 8"/>
+    <text x="116" y="1122" fill="#00ff41" font-family="Menlo, monospace" font-size="20" font-weight="700">NEXT EVENT</text>
+    <text x="116" y="1176" fill="#fff" font-size="30" font-weight="700">다음 이벤트 소식은 인스타그램에서 가장 먼저 만나요</text>
+
+    <text x="76" y="1292" fill="#b9c0c9" font-size="20">놓치셨다면? 팔로우하고 다음 기회를 잡으세요.</text>
+    <text x="1004" y="1292" fill="#00ff41" text-anchor="end" font-family="Menlo, monospace" font-size="20" font-weight="700">hackersground.kr/events/7</text>
+  </g>
+</svg>
