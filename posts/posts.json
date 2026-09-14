@@ -1,5 +1,15 @@
 [
   {
+    "slug": "2026-09-14-azure-sql-service-cost-guide",
+    "shortId": 12,
+    "title": "Azure SQL Database, 우리 서비스에는 어떤 구성과 비용 모델이 맞을까?",
+    "date": "2026-09-14",
+    "emoji": "🗄️",
+    "tag": "azure",
+    "excerpt": "Azure SQL Database의 단일 데이터베이스·탄력적 풀·Managed Instance 구성과 vCore/DTU 비용 모델을 비교해 서비스 규모에 맞는 선택을 돕습니다.",
+    "url": "/posts/content.html?slug=2026-09-14-azure-sql-service-cost-guide"
+  },
+  {
     "slug": "2026-09-14-azure-container-apps-vs-aci",
     "shortId": 11,
     "title": "Azure Container Apps vs Azure Container Instances — 어떤 컨테이너 서비스를 선택할까?",
