@@ -1,5 +1,15 @@
 [
   {
+    "slug": "2026-09-14-github-actions-azure-container-apps-cicd",
+    "shortId": 13,
+    "title": "GitHub Actions로 Azure Container Apps에 Docker 이미지 자동 배포하기",
+    "date": "2026-09-14",
+    "emoji": "🚀",
+    "tag": "azure",
+    "excerpt": "GitHub Actions에서 컨테이너 이미지를 빌드해 Azure Container Registry에 푸시하고, Azure Container Apps에 새 리비전을 배포하는 CI/CD 흐름을 정리합니다.",
+    "url": "/posts/content.html?slug=2026-09-14-github-actions-azure-container-apps-cicd"
+  },
+  {
     "slug": "2026-09-14-azure-sql-service-cost-guide",
     "shortId": 12,
     "title": "Azure SQL Database, 우리 서비스에는 어떤 구성과 비용 모델이 맞을까?",
