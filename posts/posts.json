@@ -1,5 +1,15 @@
 [
   {
+    "slug": "2026-09-14-iaas-paas-saas-azure-guide",
+    "shortId": 10,
+    "title": "IaaS·PaaS·SaaS, 무엇이 다를까? Azure로 내 프로젝트에 맞는 클라우드 고르기",
+    "date": "2026-09-14",
+    "emoji": "☁️",
+    "tag": "azure",
+    "excerpt": "IaaS·PaaS·SaaS의 책임 범위를 비교하고, Azure가 제공하는 통합 환경과 확장성으로 프로젝트에 맞는 선택을 돕습니다.",
+    "url": "/posts/content.html?slug=2026-09-14-iaas-paas-saas-azure-guide"
+  },
+  {
     "slug": "2026-08-23-github-copilot-cli",
     "shortId": 9,
     "title": "터미널을 떠나지 않아도 되는 이유 — GitHub Copilot CLI",
