@@ -1,5 +1,15 @@
 [
   {
+    "slug": "2026-09-14-on-premises-vs-cloud",
+    "shortId": 14,
+    "title": "온프레미스와 클라우드, 무엇이 어떻게 다를까?",
+    "date": "2026-09-15",
+    "emoji": "☁️",
+    "tag": "azure",
+    "excerpt": "서버를 어디에 두느냐를 넘어, 비용·운영·확장성·보안을 기준으로 온프레미스와 클라우드를 선택하는 방법을 알아봅니다.",
+    "url": "/posts/content.html?slug=2026-09-14-on-premises-vs-cloud"
+  },
+  {
     "slug": "2026-09-14-github-actions-azure-container-apps-cicd",
     "shortId": 13,
     "title": "GitHub Actions로 Azure Container Apps에 Docker 이미지 자동 배포하기",
