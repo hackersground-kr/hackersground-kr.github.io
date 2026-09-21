@@ -10,8 +10,14 @@ function normalizeKoreanMobileNumber(value) {
   return /^01[016789]\d{7,8}$/.test(localNumber) ? localNumber : '';
 }
 
+function normalizeKoreanSenderNumber(value) {
+  const digits = String(value || '').replace(/\D/g, '');
+  const localNumber = digits.startsWith('82') ? `0${digits.slice(2)}` : digits;
+  return /^0\d{8,10}$/.test(localNumber) ? localNumber : '';
+}
+
 function isConfigured() {
-  return Boolean(SOLAPI_API_KEY && SOLAPI_API_SECRET && normalizeKoreanMobileNumber(SOLAPI_SENDER_NUMBER));
+  return Boolean(SOLAPI_API_KEY && SOLAPI_API_SECRET && normalizeKoreanSenderNumber(SOLAPI_SENDER_NUMBER));
 }
 
 async function sendSms({ to, text }) {
@@ -24,7 +30,7 @@ async function sendSms({ to, text }) {
     const messageService = new SolapiMessageService(SOLAPI_API_KEY, SOLAPI_API_SECRET);
     await messageService.sendOne({
       to: recipient,
-      from: normalizeKoreanMobileNumber(SOLAPI_SENDER_NUMBER),
+      from: normalizeKoreanSenderNumber(SOLAPI_SENDER_NUMBER),
       text,
     });
     return true;
@@ -37,5 +43,6 @@ async function sendSms({ to, text }) {
 module.exports = {
   isConfigured,
   normalizeKoreanMobileNumber,
+  normalizeKoreanSenderNumber,
   sendSms,
 };
