@@ -28,7 +28,7 @@ async function sendSms({ to, text }) {
 
   try {
     const messageService = new SolapiMessageService(SOLAPI_API_KEY, SOLAPI_API_SECRET);
-    await messageService.sendOne({
+    await messageService.send({
       to: recipient,
       from: normalizeKoreanSenderNumber(SOLAPI_SENDER_NUMBER),
       text,
