@@ -62,6 +62,9 @@ jobs:
             --settings \
               "RESEND_API_KEY=${{ secrets.RESEND_API_KEY }}" \
               "SLACK_WEBHOOK_URL=${{ secrets.SLACK_WEBHOOK_URL }}" \
+              "SOLAPI_API_KEY=${{ secrets.SOLAPI_API_KEY }}" \
+              "SOLAPI_API_SECRET=${{ secrets.SOLAPI_API_SECRET }}" \
+              "SOLAPI_SENDER_NUMBER=${{ secrets.SOLAPI_SENDER_NUMBER }}" \
               "CONTENT_SYNC_TOKEN=${{ secrets.CONTENT_SYNC_TOKEN }}" \
               "EVENT_PAYMENT_INSTRUCTIONS=${{ secrets.AI_SEARCHABLE_HOMEPAGE_PAYMENT_INSTRUCTIONS }}" \
               "ALLOWED_ORIGIN=https://hackersground.kr,https://hackersground-kr.github.io"

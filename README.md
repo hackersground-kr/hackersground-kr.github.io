@@ -109,6 +109,12 @@ Azure Portal → Entra ID → 엔터프라이즈 애플리케이션
 
 예약한 뉴스레터는 Azure Functions 타이머가 5분 간격으로 확인해 발송합니다. `RESEND_API_KEY`가 Function App에 설정되어 있어야 합니다.
 
+행사 신청 확인 및 행사 7일 전 안내 문자에는 Solapi를 사용합니다. GitHub 저장소의 **Settings → Secrets and variables → Actions**에 아래 Secret을 추가하면 API 배포 시 Azure Function App 설정으로 전달됩니다.
+
+- `SOLAPI_API_KEY`
+- `SOLAPI_API_SECRET`
+- `SOLAPI_SENDER_NUMBER` - Solapi에 등록한 발신번호 (`01012345678` 형식)
+
 ---
 
 ## Azure 인프라
