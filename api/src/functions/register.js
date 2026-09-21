@@ -1,6 +1,7 @@
 const { app } = require('@azure/functions');
 const { TableClient, AzureNamedKeyCredential } = require('@azure/data-tables');
 const { Resend } = require('resend');
+const { sendSms } = require('./sms');
 
 /**
  * POST /api/register
@@ -99,6 +100,13 @@ async function sendConfirmEmail({ eventId, name, email, eventName }) {
     // 이메일 실패해도 신청 자체는 성공 처리
     console.error('[Resend] 이메일 발송 실패:', err.message);
   }
+}
+
+async function sendConfirmSms({ name, phone, eventName }) {
+  return sendSms({
+    to: phone,
+    text: `[Hackers Ground] ${name}님, ${eventName} 신청이 완료되었습니다. 행사 안내는 신청하신 이메일과 문자로 보내드릴게요.`,
+  });
 }
 
 // 슬랙 알림
@@ -203,15 +211,29 @@ app.http('register', {
         paymentStatus: 'unpaid',
         paymentConfirmedAt: '',
         paymentConfirmedBy: '',
+        confirmationSmsSentAt: '',
+        reminderSmsSentAt: '',
+        reminderEmailSentAt: '',
       });
 
       context.log(`[등록] ${eventId} | ${name} <${email}>`);
 
       // 이메일 + 슬랙 알림 (실패해도 신청 성공 처리)
-      await Promise.all([
+      const [, , confirmationSmsSent] = await Promise.all([
         sendConfirmEmail({ eventId, name, email, eventName }),
         notifySlack({ name, email, phone: body.phone, eventName, affiliation: body.affiliation }),
+        sendConfirmSms({ name, phone: body.phone, eventName }),
       ]);
+
+      if (confirmationSmsSent) {
+        await tableClient.updateEntity({
+          partitionKey: eventId,
+          rowKey,
+          confirmationSmsSentAt: new Date().toISOString(),
+        }, 'Merge').catch((error) => {
+          context.error('[Solapi] SMS delivery timestamp update failed:', error.message);
+        });
+      }
 
       return {
         status: 201,
